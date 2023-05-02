@@ -16,8 +16,6 @@ return new class extends Migration
             $table->string('occu_staff_name',100);
             $table->string('type_shift',3);
             $table->integer('display_order');
-            $table->integer('updated_by');
-            $table->integer('created_by');   
             $table->timestamps();
         });
     }

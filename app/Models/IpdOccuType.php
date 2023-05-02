@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class IpdOccuType extends Model
 {
     use HasFactory;
+
+    protected $fillable = ['ipd_occu_type_name'];
 }

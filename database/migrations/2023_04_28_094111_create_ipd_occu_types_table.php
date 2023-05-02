@@ -14,8 +14,6 @@ return new class extends Migration
         Schema::create('ipd_occu_types', function (Blueprint $table) {
             $table->id();
             $table->string('ipd_occu_type_name',100);
-            $table->integer('updated_by');
-            $table->integer('created_by');   
             $table->timestamps();
         });
     }

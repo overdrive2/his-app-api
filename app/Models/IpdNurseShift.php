@@ -9,5 +9,5 @@ class IpdNurseShift extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nurse_shift_name',	'stime',	'etime',	'display_order', 'updated_by',	'created_by'];
+    protected $fillable = ['nurse_shift_name',	'stime',	'etime',	'display_order'];
 }

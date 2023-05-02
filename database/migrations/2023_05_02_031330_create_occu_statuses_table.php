@@ -14,8 +14,6 @@ return new class extends Migration
         Schema::create('occu_statuses', function (Blueprint $table) {
             $table->id();
             $table->string('occu_status_name',100);
-            $table->integer('updated_by');
-            $table->integer('created_by');   
             $table->timestamps();
         });
     }
