@@ -11,19 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('departments', function (Blueprint $table) {
+        Schema::create('wards', function (Blueprint $table) {
             $table->id();
             $table->string('name',150);
-            $table->string('depcode',3);
+            $table->string('wardcode',3);
             $table->boolean('active');
-            $table->text('detail',150);
-            $table->integer('ward_id');
-            $table->string('phone',50);
+            $table->text('detail');
             $table->integer('hospital_department_id');
-            $table->integer('stock_department_id');
             $table->integer('display_order');
-            $table->integer('created_by');
             $table->integer('updated_by');
+            $table->integer('created_by');  
             $table->timestamps();
         });
     }
@@ -33,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('departments');
+        Schema::dropIfExists('wards');
     }
 };

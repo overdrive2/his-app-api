@@ -11,19 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('departments', function (Blueprint $table) {
+        Schema::create('occu_deps', function (Blueprint $table) {
             $table->id();
-            $table->string('name',150);
-            $table->string('depcode',3);
-            $table->boolean('active');
-            $table->text('detail',150);
-            $table->integer('ward_id');
-            $table->string('phone',50);
-            $table->integer('hospital_department_id');
-            $table->integer('stock_department_id');
+            $table->integer('occu_group_dep_id');
+            $table->string('occu_dep_name',100);
             $table->integer('display_order');
-            $table->integer('created_by');
             $table->integer('updated_by');
+            $table->integer('created_by');   
             $table->timestamps();
         });
     }
@@ -33,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('departments');
+        Schema::dropIfExists('occu_deps');
     }
 };
