@@ -17,7 +17,8 @@ class DatabaseSeeder extends Seeder
             IpdNurseShiftSeeder::class,
             IpdOccuTypeSeeder::class,
             OccuStaffSeeder::class,
-            OccuStatusSeeder::class
+            OccuStatusSeeder::class,
+            RoomTypeSeeder::class
         ]);
     }
 }
