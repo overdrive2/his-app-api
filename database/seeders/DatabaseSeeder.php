@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-use App\Models\IpdBedmoveType;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -21,7 +20,8 @@ class DatabaseSeeder extends Seeder
             OccuStatusSeeder::class,
             RoomTypeSeeder::class,
             BedStatusSeeder::class,
-            IpdBedmoveType::class
+            IpdBedmoveTypeSeeder::class,
+            DietSeeder::class,
         ]);
     }
 }
