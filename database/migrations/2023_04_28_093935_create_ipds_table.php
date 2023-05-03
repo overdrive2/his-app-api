@@ -20,7 +20,6 @@ return new class extends Migration
             $table->date('regdate');
             $table->time('regtime');
             $table->string('spclty',2);
-            $table->integer('ward_id');
             $table->integer('firstward_id');
             $table->string('pttype',2);
             $table->integer('severe_type_id');
