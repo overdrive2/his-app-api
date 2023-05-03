@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class IpdBedmoveType extends Model
 {
     use HasFactory;
+
+    protected $fillable = ['bedmove_type_name'];
 }

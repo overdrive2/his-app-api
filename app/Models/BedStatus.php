@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class BedStatus extends Model
 {
     use HasFactory;
+
+    protected $fillable = ['bed_status_name',	'is_available'];
 }

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('ipd_bedmove_types', function (Blueprint $table) {
             $table->id();
             $table->string('bedmove_type_name',100);
+            $table->boolean('bedmove_type_available');
             $table->timestamps();
         });
     }
