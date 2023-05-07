@@ -25,4 +25,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::middleware('auth:sanctum')->post('/diet', [App\Http\Controllers\Api\DietController::class, 'index']);
 Route::post('/order-master', [MasterController::class, 'store']);

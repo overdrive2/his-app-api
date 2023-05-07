@@ -14,14 +14,14 @@ return new class extends Migration
         Schema::create('diets', function (Blueprint $table) {
             $table->increments('id');
             $table->string('diet_name');
-            $table->smallInteger('cal');
-            $table->decimal('cho',8, 2);
-            $table->decimal('protein',8, 2);
-            $table->decimal('fat', 8, 2);
-            $table->string('other');
-            $table->smallInteger('diet_type_id');
-            $table->smallInteger('diet_option_id');
-            $table->smallInteger('display_order');
+            $table->smallInteger('cal')->nullable();;
+            $table->decimal('cho',8, 2)->nullable();;
+            $table->decimal('protein',8, 2)->nullable();;
+            $table->decimal('fat', 8, 2)->nullable();;
+            $table->string('other')->nullable();
+            $table->smallInteger('diet_type_id')->nullable();
+            $table->smallInteger('diet_option_id')->nullable();
+            $table->smallInteger('display_order')->nullable();
             $table->boolean('active');
             $table->timestamps();
         });
