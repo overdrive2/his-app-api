@@ -9,8 +9,8 @@
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
+        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900&display=swap" rel="stylesheet" />
+        <script src="https://kit.fontawesome.com/f7ba90fa0d.js" crossorigin="anonymous"></script>
         <!-- Scripts -->
         <script>
 
@@ -24,32 +24,33 @@
 
         <!-- Styles -->
         @livewireStyles
-        @laravelPWA
     </head>
     <body class="bg-gray-50 dark:bg-gray-800">
         <x-nav-menu :user="Auth::user()" />
         <div class="flex pt-16 overflow-hidden bg-gray-50 dark:bg-gray-900">
             <x-aside />
             <div class="fixed inset-0 z-10 bg-gray-900/50 dark:bg-gray-900/90 hidden" id="sidebarBackdrop"></div>
-        </div>
-        <div id="main-centent" class="relative w-full h-full overflow-y-auto bg-gray-50 lg:ml-64 dark:bg-gray-900">
-            <!-- Page Heading -->
-            @if (isset($header))
-                <header class="bg-white dark:bg-gray-800 shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
+            <div id="main-centent" class="relative w-full h-full overflow-y-auto bg-gray-50 lg:ml-64 dark:bg-gray-900">
+                <!-- Page Heading -->
+                @if (isset($header))
+                    <header class="bg-white dark:bg-gray-800 shadow">
+                        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                            {{ $header }}
+                        </div>
+                    </header>
+                @endif
+                <!-- Page Content -->
+                <main>
+                    <div class="px-4 pt-6">
+                        {{ $slot }}
                     </div>
-                </header>
-            @endif
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
+                </main>
 
-            <!-- Page Footer -->
-            @if(isset($footer))
-                {{ $footer }}
-            @endif
+                <!-- Page Footer -->
+                @if(isset($footer))
+                    {{ $footer }}
+                @endif
+            </div>
         </div>
         @stack('modals')
 
