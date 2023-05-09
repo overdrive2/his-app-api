@@ -5,3 +5,8 @@
 [x-cloak] {
     display: none;
 }
+
+h6 {
+    font-size: medium;
+    font-weight: bold;
+}

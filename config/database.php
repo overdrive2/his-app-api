@@ -77,7 +77,19 @@ return [
             'search_path' => 'public',
             'sslmode' => 'prefer',
         ],
-
+        'his' => [
+            'driver' => 'pgsql',
+            'host' => env('HIS_HOST', '127.0.0.1'),
+            'port' => env('HIS_PORT', '5432'),
+            'database' => env('HIS_DATABASE', ''),
+            'username' => env('HIS_USERNAME', ''),
+            'password' => env('HIS_PASSWORD', ''),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'schema' => 'public',
+            'sslmode' => 'prefer',
+        ],
         'sqlsrv' => [
             'driver' => 'sqlsrv',
             'url' => env('DATABASE_URL'),
