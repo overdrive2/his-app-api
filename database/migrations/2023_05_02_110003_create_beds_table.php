@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('beds', function (Blueprint $table) {
             $table->id();
             $table->string('bed_name',100);
-            $table->string('bed_code',6);
-            $table->integer('room_id');
+            $table->string('bed_code',6)->nullable();
+            $table->integer('room_id')->nullable();
             $table->integer('bed_status_id');
-            $table->integer('display_order');
+            $table->integer('display_order')->nullable();
             $table->integer('updated_by');
             $table->integer('created_by');  
             $table->timestamps();

@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('officers', function (Blueprint $table) {
             $table->id();
-            $table->string('doctor_code',10);
-            $table->integer('officer_id');
+            $table->string('doctor_code',10)->nullable();
+            $table->integer('officer_id')->nullable();
             $table->string('login_name',100);
             $table->string('password_md5',200);
             $table->string('fullname',200);
@@ -22,11 +22,11 @@ return new class extends Migration
             $table->string('fname',100);
             $table->string('lname',100);
             $table->boolean('active');
-            $table->string('licenseno',100);
-            $table->string('cid',13);
+            $table->string('licenseno',100)->nullable();
+            $table->string('cid',13)->nullable();
             $table->integer('position_id');
-            $table->boolean('auto_lockout');
-            $table->integer('auto_lockout_minute');
+            $table->boolean('auto_lockout')->nullable();
+            $table->integer('auto_lockout_minute')->nullable();
             $table->integer('updated_by');
             $table->integer('created_by');  
             $table->timestamps();

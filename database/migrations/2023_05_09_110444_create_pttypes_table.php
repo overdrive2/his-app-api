@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('occu_dep_groups', function (Blueprint $table) {
+        Schema::create('pttypes', function (Blueprint $table) {
             $table->id();
-            $table->string('occu_dep_group_name',100);
-            $table->text('sql_command')->nullable();  
+            $table->string('name',150);
+            $table->boolean('active');
+            $table->string('pttype_code',3)->nullable();
+            $table->integer('pttype_price_group_id')->nullable();
+            $table->integer('created_by');
             $table->integer('updated_by');
-            $table->integer('created_by');   
             $table->timestamps();
         });
     }
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('occu_dep_groups');
+        Schema::dropIfExists('pttypes');
     }
 };

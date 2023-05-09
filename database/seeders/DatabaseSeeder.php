@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             BedStatusSeeder::class,
             IpdBedmoveTypeSeeder::class,
             DietSeeder::class,
+            PttypePriceGroupSeeder::class,
         ]);
     }
 }

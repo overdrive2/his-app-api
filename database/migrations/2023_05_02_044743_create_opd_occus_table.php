@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('occu_dep_id');
             $table->integer('occu_status_id');
             $table->integer('ipd_nurse_shift_id');
-            $table->text('note');
+            $table->text('note')->nullable();
             $table->integer('updated_by');
             $table->integer('created_by');  
             $table->timestamps();

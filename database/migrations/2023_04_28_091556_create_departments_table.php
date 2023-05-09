@@ -14,16 +14,17 @@ return new class extends Migration
         Schema::create('departments', function (Blueprint $table) {
             $table->id();
             $table->string('name',150);
-            $table->string('depcode',3);
+            $table->string('depcode',3)->nullable();
             $table->boolean('active');
-            $table->text('detail',150);
-            $table->integer('ward_id');
-            $table->string('phone',50);
-            $table->integer('hospital_department_id');
-            $table->integer('stock_department_id');
-            $table->integer('display_order');
-            $table->integer('created_by');
-            $table->integer('updated_by');
+            $table->text('detail',150)->nullable();
+            $table->integer('ward_id')->nullable();
+            $table->integer('spclty_id')->nullable();
+            $table->string('phone',50)->nullable();
+            $table->integer('hospital_department_id')->nullable();
+            $table->integer('stock_department_id')->nullable();
+            $table->integer('display_order')->nullable();
+            $table->integer('created_by')->nullable();
+            $table->integer('updated_by')->nullable();
             $table->timestamps();
         });
     }

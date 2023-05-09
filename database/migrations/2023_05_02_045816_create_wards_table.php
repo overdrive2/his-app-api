@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('wards', function (Blueprint $table) {
             $table->id();
             $table->string('name',150);
-            $table->string('wardcode',3);
+            $table->string('wardcode',3)->nullable();
             $table->boolean('active');
-            $table->text('detail');
-            $table->integer('hospital_department_id');
+            $table->text('detail')->nullable();
+            $table->integer('hospital_department_id')->nullable();
             $table->integer('display_order');
             $table->integer('updated_by');
             $table->integer('created_by');  
