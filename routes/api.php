@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Doctor\Order\MasterController;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -20,10 +21,9 @@ Route::get('/users', function () {
     return UserResource::collection(User::all());
 });
 
-Route::get('/user/{id}', function (string $id) {
-    return new UserResource(User::findOrFail($id));
-});
-
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::middleware('auth:sanctum')->post('/diet', [App\Http\Controllers\Api\DietController::class, 'index']);
+Route::post('/order-master', [MasterController::class, 'store']);

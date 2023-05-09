@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class IpdBedmoveType extends Model
+class IpdOrderMaster extends Model
 {
     use HasFactory;
-
-    protected $fillable = ['bedmove_type_name', 'bedmove_type_available'];
+    
+    protected $fillable = ['hn', 'an', 'order_time', 'order_time'];
 }

@@ -25,4 +25,9 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
+    Route::get('nurse-ipd-list', [App\Http\Livewire\NurseIpdList::class, '__invoke'])->name('nurse.ipdlist');
 });
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
