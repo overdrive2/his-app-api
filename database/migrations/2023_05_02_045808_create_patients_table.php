@@ -14,17 +14,17 @@ return new class extends Migration
         Schema::create('patients', function (Blueprint $table) {
             $table->id();
             $table->string('hn',9);
-            $table->string('pname',30);
-            $table->string('fname',10);
-            $table->boolean('lname',100);
-            $table->text('cid',13);
-            $table->date('birthday');
-            $table->integer('sex');
-            $table->boolean('is_death');
-            $table->string('mobile_phone_number',50);
-            $table->boolean('is_admit');
-            $table->integer('updated_by');
-            $table->integer('created_by');  
+            $table->string('pname',30)->nullable();
+            $table->string('fname',100)->nullable();
+            $table->string('lname',100)->nullable();
+            $table->text('cid',13)->nullable();
+            $table->date('birthday')->nullable();
+            $table->integer('sex')->nullable();
+            $table->boolean('is_death')->nullable();
+            $table->string('mobile_phone_number',50)->nullable();
+            $table->boolean('is_admit')->nullable();
+            $table->integer('updated_by')->nullable();
+            $table->integer('created_by')->nullable();  
             $table->timestamps();
         });
     }
