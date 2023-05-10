@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('var_name', 100);
             $table->string('var_value')->nullable();
-            $table->integer('officer_id')->nullable();
+            $table->integer('user_id')->nullable();
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
             $table->timestamps();

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('officers', function (Blueprint $table) {
             $table->id();
             $table->string('doctor_code',10)->nullable();
-            $table->integer('officer_id')->nullable();
+            $table->integer('officer_his_id')->nullable();
             $table->string('login_name',100);
             $table->string('password_md5',200);
             $table->string('fullname',200);

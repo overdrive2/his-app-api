@@ -19,8 +19,8 @@ class PttypePriceGroupSeeder extends Seeder
 
         foreach ($json as $key => $value) {
             PttypePriceGroup::create([
-                "id"   => $value['0'],
-                "name" => $value['1']
+                "id"   => $value['id'],
+                "name" => $value['name']
             ]);
         }
     }

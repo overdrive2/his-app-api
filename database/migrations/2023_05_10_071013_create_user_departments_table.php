@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('officer_departments', function (Blueprint $table) {
+        Schema::create('user_departments', function (Blueprint $table) {
             $table->id();
-            $table->integer('officer_id');
+            $table->integer('user_id');
             $table->integer('department_id');   
-            $table->integer('updated_by');
-            $table->integer('created_by');   
+            $table->integer('updated_by')->nullable();
+            $table->integer('created_by')->nullable();   
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('officer_departments');
+        Schema::dropIfExists('user_departments');
     }
 };

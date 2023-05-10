@@ -19,9 +19,9 @@ class DchStatusSeeder extends Seeder
 
         foreach ($json as $key => $value) {
             DchStatus::create([
-                "id"   => $value['0'],
-                "name" => $value['1'],
-                "code" => $value['2']
+                "id"   => $value['id'],
+                "name" => $value['name'],
+                "code" => $value['code']
             ]);
         }
     }

@@ -18,9 +18,9 @@ return new class extends Migration
             $table->boolean('active');
             $table->text('detail')->nullable();
             $table->integer('hospital_department_id')->nullable();
-            $table->integer('display_order');
-            $table->integer('updated_by');
-            $table->integer('created_by');  
+            $table->integer('display_order')->nullable();
+            $table->integer('updated_by')->nullable();
+            $table->integer('created_by')->nullable();  
             $table->timestamps();
         });
     }
