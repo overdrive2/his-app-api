@@ -5,9 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class IpdBedmoveType extends Model
+class DchType extends Model
 {
     use HasFactory;
-
-    protected $fillable = ['bedmove_type_name'];
 }

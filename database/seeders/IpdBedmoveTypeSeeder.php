@@ -21,9 +21,8 @@ class IpdBedmoveTypeSeeder extends Seeder
         while (($data = fgetcsv($csvFile, 2000, ",")) !== FALSE) {
             if (!$firstline) {
                 IpdBedmoveType::create([
-                    "id"              => $data['0'],
-                    "bedmove_type_name" => $data['1'],
-                    "bedmove_type_available" => true,
+                    "id"                     => $data['0'],
+                    "bedmove_type_name"      => $data['1'],
                 ]);
             }
             $firstline = false;

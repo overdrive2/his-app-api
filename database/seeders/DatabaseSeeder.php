@@ -23,6 +23,8 @@ class DatabaseSeeder extends Seeder
             IpdBedmoveTypeSeeder::class,
             DietSeeder::class,
             PttypePriceGroupSeeder::class,
+            DchTypeSeeder::class,
+            DchStatusSeeder::class,
         ]);
     }
 }

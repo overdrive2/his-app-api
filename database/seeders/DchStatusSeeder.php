@@ -2,25 +2,26 @@
 
 namespace Database\Seeders;
 
-use App\Models\PttypePriceGroup;
+use App\Models\DchStatus;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class PttypePriceGroupSeeder extends Seeder
+class DchStatusSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        PttypePriceGroup::truncate();
+        DchStatus::truncate();
 
-        $json = json_decode(file_get_contents("database/data/pttype_price_group.json"), true);
+        $json = json_decode(file_get_contents("database/data/dch_statuses.json"), true);
 
         foreach ($json as $key => $value) {
-            PttypePriceGroup::create([
+            DchStatus::create([
                 "id"   => $value['0'],
-                "name" => $value['1']
+                "name" => $value['1'],
+                "code" => $value['2']
             ]);
         }
     }

@@ -1,0 +1,47 @@
+[
+  {
+    "id": "1",
+    "name": "Complete Recovery",
+    "code": "01"
+  },
+  {
+    "id": "2",
+    "name": "Improved",
+    "code": "02"
+  },
+  {
+    "id": "3",
+    "name": "Not Improved",
+    "code": "03"
+  },
+  {
+    "id": "4",
+    "name": "Normal Delivery",
+    "code": "04"
+  },
+  {
+    "id": "5",
+    "name": "Un-Delivery",
+    "code": "05"
+  },
+  {
+    "id": "6",
+    "name": "Normal Child Discharged with Mother",
+    "code": "06"
+  },
+  {
+    "id": "7",
+    "name": "Normal Child Discharged separately",
+    "code": "07"
+  },
+  {
+    "id": "8",
+    "name": "Dead Still Birth",
+    "code": "08"
+  },
+  {
+    "id": "9",
+    "name": "Dead",
+    "code": "09"
+  }
+]

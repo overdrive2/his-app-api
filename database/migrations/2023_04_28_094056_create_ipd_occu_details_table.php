@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('an',9);
             $table->integer('ipd_occu_type_id');
             $table->boolean('is_getout');
-            $table->string('dchtype',2)->nullable();
+            $table->integer('dch_type_id')->nullable();
             $table->string('ovstist',2)->nullable();
             $table->integer('ipd_severe_type_id');
             $table->integer('ipd_admit_type_id');

@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ipd_bedmove_types', function (Blueprint $table) {
+        Schema::create('dch_types', function (Blueprint $table) {
             $table->id();
-            $table->string('bedmove_type_name',100);
+            $table->string('name',150);
+            $table->string('code',30);
             $table->timestamps();
         });
     }
@@ -23,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ipd_bedmove_types');
+        Schema::dropIfExists('dch_types');
     }
 };
