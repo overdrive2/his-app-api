@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('an',9);
             $table->string('vn',12);
-            $table->string('hn',9);
+            $table->integer('patient_id');
             $table->integer('adm_officer_id')->nullable();
             $table->date('regdate');
             $table->time('regtime');

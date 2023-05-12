@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\IpdDoctorType;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -25,6 +26,8 @@ class DatabaseSeeder extends Seeder
             PttypePriceGroupSeeder::class,
             DchTypeSeeder::class,
             DchStatusSeeder::class,
+            IpdDoctorTypeSeeder::class,
+            IpdSevereSeeder::class,
         ]);
     }
 }

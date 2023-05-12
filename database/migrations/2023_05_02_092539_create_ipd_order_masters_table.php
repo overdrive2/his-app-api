@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::create('ipd_order_masters', function (Blueprint $table) {
             $table->id();
-            $table->string('an', 9);
-            $table->string('hn', 9);
+            $table->integer('ipd_id');
             $table->date('order_date');
             $table->time('order_time');
             $table->string('doctor_code', 30);

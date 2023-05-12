@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_wards', function (Blueprint $table) {
+        Schema::create('ipd_doctor_types', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id');
-            $table->integer('ward_id');   
-            $table->integer('updated_by')->nullable();
-            $table->integer('created_by')->nullable();  
+            $table->string('name',50);
             $table->timestamps();
         });
     }
@@ -26,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_wards');
+        Schema::dropIfExists('ipd_doctor_types');
     }
 };

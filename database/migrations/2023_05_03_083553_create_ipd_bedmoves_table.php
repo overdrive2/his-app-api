@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('ipd_bedmoves', function (Blueprint $table) {
             $table->id();
-            $table->string('an',9);
+            $table->integer('ipd_id');
             $table->date('movedate');
             $table->time('movetime');
             $table->integer('bed_id');

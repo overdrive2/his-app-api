@@ -14,11 +14,10 @@ return new class extends Migration
         Schema::create('ipd_occu_details', function (Blueprint $table) {
             $table->id();
             $table->integer('occu_id');
-            $table->string('an',9);
+            $table->integer('ipd_id');
             $table->integer('ipd_occu_type_id');
             $table->boolean('is_getout');
             $table->integer('dch_type_id')->nullable();
-            $table->string('ovstist',2)->nullable();
             $table->integer('ipd_severe_type_id');
             $table->integer('ipd_admit_type_id');
             $table->string('bedno',6);
