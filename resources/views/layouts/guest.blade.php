@@ -16,6 +16,9 @@
 </head>
 
 <body class="transition-colors duration-500 dark:bg-neutral-800">
+    <div id="theme-toggle-dark-icon"></div>
+    <div id="theme-toggle-light-icon"></div>
+    <div id="theme-toggle"></div>
     <div class="mt-10" id="page-content" style="style="padding-left: 240px; margin-right: 0px; transition: all 0s ease 0s;"">
         <main>
             <div class="flex flex-row justify-center">

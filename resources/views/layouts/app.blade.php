@@ -10,7 +10,7 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900&display=swap" rel="stylesheet" />
-        <script src="https://kit.fontawesome.com/f7ba90fa0d.js" crossorigin="anonymous"></script>
+        <script src="{{ asset('./fontawesome-free-6.4.0-web/fontawesome.min.js') }}"></script>
         <!-- Scripts -->
         <script>
 

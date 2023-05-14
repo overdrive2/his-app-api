@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Doctor\Order\MasterController;
 use App\Http\Resources\UserResource;
 use App\Models\User;
@@ -27,3 +28,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::middleware('auth:sanctum')->post('/diet', [App\Http\Controllers\Api\DietController::class, 'index']);
 Route::post('/order-master', [MasterController::class, 'store']);
+
+Route::post('login', [App\Http\Controllers\LoginController::class, 'login']);
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('logout', [App\Http\Controllers\LoginController::class, 'logout']);
+    Route::post('profile', [App\Http\Controllers\LoginController::class, 'profile']);
+});

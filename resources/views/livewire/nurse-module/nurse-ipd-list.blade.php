@@ -126,7 +126,7 @@
                 <div class="flex flex-wrap gap-2"></div>
             </div>
             <div class="flex-none">
-                <button type="button"
+                <button type="button" wire:click="$set('showEditModal', true)"
                     class="inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
                     data-te-ripple-init data-te-ripple-color="light">
                     Info
@@ -139,4 +139,30 @@
             </div>
         </div>
     </div>
+
+    <!-- Delete User Confirmation Modal -->
+    <x-dialog-modal wire:model="showEditModal">
+    <x-slot name="title">
+        {{ __('Delete Account') }}
+    </x-slot>
+
+    <x-slot name="content">
+        {{ __('Are you sure you want to delete your account? Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.') }}
+
+        <div class="mt-4" x-data="{}" x-on:confirming-delete-user.window="setTimeout(() => $refs.password.focus(), 250)">
+            Test
+        </div>
+    </x-slot>
+
+    <x-slot name="footer">
+        <x-secondary-button wire:click="$toggle('confirmingUserDeletion')" wire:loading.attr="disabled">
+            {{ __('Cancel') }}
+        </x-secondary-button>
+
+        <x-danger-button class="ml-3" wire:click="deleteUser" wire:loading.attr="disabled">
+            {{ __('Delete Account') }}
+        </x-danger-button>
+    </x-slot>
+</x-dialog-modal>
+
 </div>
