@@ -1,35 +1,36 @@
 <div x-data="{
         wardSelect: @entangle('ward_id'),
+        wards: {{ json_encode($wards) }},
         an: @entangle('an'),
         ipd: @entangle('ipd'),
-        pname: null,
+        editing: $wire.editing,
         modalShow: (row) => {
-            let pname = setPname(row)
-            console.log(pname)
-            //ipd.an = val
+            $wire.new();
+            setIpd(row);
             modal.show();
         }
     }" x-init="
         modal = new Modal($refs.modal);
         pname = 'Rachet';
-        setPname = (row) => {
+        setIpd = (row) => {
             ipd = JSON.parse(row)
             return ipd
         }
     ">
     <!--Verically centered scrollable modal-->
     <div class="mb-2">
-        <div class="max-w-xs" wire:ignore>
+        <div
+            class="max-w-xs"
+            wire:ignore
+        >
             <!--Select default-->
             <x-input.select wire:model="ward_id" :label="__('หอผู้ป่วย')">
-                <option>-- ทั้งหมด --</option>
-                <option value="1">Ward1</option>
-                <option value="2">Ward2</option>
-                <option value="3">Ward3</option>
+                <option value="0">-- ทั้งหมด --</option>
+                @foreach($wards as $ward)
+                <option value="{{$ward->id}}">{{$ward->name}}</option>
+                @endforeach
             </x-input.select>
-            <div x-text="wardSelect"></div>
         </div>
-        <x-button.primary wire:click="save">Save</x-button.primary>
     </div>
     <table class="min-w-full text-left text-sm font-light dark:text-gray-50">
         <thead class="border-b bg-white font-medium dark:border-gray-500 dark:bg-gray-600">
@@ -40,6 +41,7 @@
                 <th scope="col" class="px-6 py-4">AN</th>
                 <th scope="col" class="px-6 py-4">HN</th>
                 <th scope="col" class="px-6 py-4">Patient name</th>
+                <th scope="col" class="px-6 py-4">Ward</th>
                 <th scope="col" class="px-6 py-4">Action</th>
             </tr>
         </thead>
@@ -52,6 +54,7 @@
                 <td class="whitespace-nowrap px-6 py-4">{{ $row->an }}</td>
                 <td class="whitespace-nowrap px-6 py-4">{{ $row->hn }}</td>
                 <td class="whitespace-nowrap px-6 py-4">{{ $row->fullname }}</td>
+                <td class="whitespace-nowrap px-6 py-4">{{ $row->ward_name }}</td>
                 <td class="whitespace-nowrap px-6 py-4">
                     <x-button.primary x-on:click="modalShow('{{ $row }}')">รับใหม่</x-button.primary>
                 </td>
@@ -131,17 +134,21 @@
                             </div>
 
                             <div class="mb-6">
-                                <!--Select default-->
-                                <select x-model="wardSelect" data-te-select-init>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
-                                    <option value="4">Four</option>
-                                    <option value="5">Five</option>
-                                </select>
-                                <label data-te-select-label-ref>หอผู้ป่วย</label>
+                                <x-input.select wire:model="editing.bed_id" :label="__('หอผู้ป่วย')">
+                                    <option value="0">-- ทั้งหมด --</option>
+                                    @foreach($wards as $ward)
+                                    <option value="{{$ward->id}}">{{$ward->name}}</option>
+                                    @endforeach
+                                </x-input.select>
                             </div>
-
+                            <div class="mb-6">
+                                <x-input.select wire:model="editing.bed_id" :label="__('หอผู้ป่วย')">
+                                    <option value="0">-- ทั้งหมด --</option>
+                                    @foreach($wards as $ward)
+                                    <option value="{{$ward->id}}">{{$ward->name}}</option>
+                                    @endforeach
+                                </x-input.select>
+                            </div>
                             <!--Subscribe newsletter checkbox-->
                             <div class="mb-6 flex min-h-[1.5rem] items-center justify-center pl-[1.5rem]">
                                 <input class="relative float-left -ml-[1.5rem] mr-[6px] h-[1.125rem] w-[1.125rem] appearance-none rounded-[0.25rem] border-[0.125rem] border-solid border-neutral-300 outline-none before:pointer-events-none before:absolute before:h-[0.875rem] before:w-[0.875rem] before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:shadow-[0px_0px_0px_13px_transparent] before:content-[''] checked:border-primary checked:bg-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:-mt-px checked:after:ml-[0.25rem] checked:after:block checked:after:h-[0.8125rem] checked:after:w-[0.375rem] checked:after:rotate-45 checked:after:border-[0.125rem] checked:after:border-l-0 checked:after:border-t-0 checked:after:border-solid checked:after:border-white checked:after:bg-transparent checked:after:content-[''] hover:cursor-pointer hover:before:opacity-[0.04] hover:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:shadow-none focus:transition-[border-color_0.2s] focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-[0.875rem] focus:after:w-[0.875rem] focus:after:rounded-[0.125rem] focus:after:content-[''] checked:focus:before:scale-100 checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] checked:focus:after:-mt-px checked:focus:after:ml-[0.25rem] checked:focus:after:h-[0.8125rem] checked:focus:after:w-[0.375rem] checked:focus:after:rotate-45 checked:focus:after:rounded-none checked:focus:after:border-[0.125rem] checked:focus:after:border-l-0 checked:focus:after:border-t-0 checked:focus:after:border-solid checked:focus:after:border-white checked:focus:after:bg-transparent dark:border-neutral-600 dark:checked:border-primary dark:checked:bg-primary" type="checkbox" value="" id="exampleCheck25" />

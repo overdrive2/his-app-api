@@ -30,7 +30,7 @@
   <div
     class="min-h-screen w-full bg-gray-50 !pl-0 text-center sm:!pl-60"
     id="content">
-    <div class="py-12 text-center">
+    <div class="py-12 text-center px-4">
       {{ $slot }}
     </div>
   </div>
