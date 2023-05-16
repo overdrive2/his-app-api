@@ -16,10 +16,12 @@ class IpdBedmove extends Model
         'movedate',
         'movetime',
         'bed_id',
-        'bedmove_type_id'
+        'bedmove_type_id',
+        'created_by',
+        'updated_by'
     ];
 
-    protected $appends = ['date_for_editing'];
+    protected $appends = ['date_for_editing', 'time_for_editing'];
 
     public function getDateForEditingAttribute()
     {
@@ -30,5 +32,16 @@ class IpdBedmove extends Model
     {
         $date = Carbon::createFromFormat('d/m/Y',  $value);
         $this->movedate = $date->format('Y-m-d');
+    }
+
+    public function getTimeForEditingAttribute()
+    {
+        return Carbon::parse($this->movetime)->format('H:i');
+    }
+
+    public function setTimeForEditingAttribute($value)
+    {
+        $time = Carbon::createFromFormat('H:i',  $value);
+        $this->movetime = $time->format('H:i');
     }
 }

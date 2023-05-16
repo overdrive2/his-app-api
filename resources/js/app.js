@@ -1,12 +1,25 @@
 import './bootstrap';
 import Alpine from 'alpinejs';
 import focus from '@alpinejs/focus';
-import { Datepicker, Input, Select, Ripple, initTE, Collapse, Dropdown, Sidenav, Button, Modal } from "tw-elements";
+import {
+    Datepicker,
+    Input,
+    Select,
+    Ripple,
+    initTE,
+    Collapse,
+    Dropdown,
+    Sidenav,
+    Button,
+    Modal,
+    Timepicker
+} from "tw-elements";
 
-initTE({ Datepicker, Select, Input, Ripple, Collapse, Dropdown, Sidenav, Button, Modal});
+initTE({ Datepicker, Select, Input, Ripple, Collapse, Dropdown, Sidenav, Button, Modal, Timepicker});
 
 window.Modal = Modal;
 window.Datepicker = Datepicker;
+window.Timepicker = Timepicker;
 
 const sidenav = document.getElementById("sidenav-main");
 const sidenavInstance = Sidenav.getInstance(sidenav);

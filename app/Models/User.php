@@ -58,4 +58,9 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    public function wards()
+    {
+        return UserWard::selectRaw('wards.id, wards.name')->join('wards', 'wards.id', 'ward_id')->where('user_id', $this->id)->get();
+    }
 }
