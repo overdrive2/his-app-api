@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('ipd_doctor_lists', function (Blueprint $table) {
             $table->id();
-            $table->string('an',9);
+            $table->integer('ipd_id');
             $table->integer('officer_id');  
             $table->integer('ipd_doctor_type_id');  
             $table->boolean('active');  

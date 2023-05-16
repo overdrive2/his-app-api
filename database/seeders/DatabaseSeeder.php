@@ -28,6 +28,9 @@ class DatabaseSeeder extends Seeder
             DchStatusSeeder::class,
             IpdDoctorTypeSeeder::class,
             IpdSevereSeeder::class,
+            HisIpdNewcaseSeeder::class,
+            IpdAdmitTypeSeeder::class,
+            HisIpdSeeder::class,
         ]);
     }
 }

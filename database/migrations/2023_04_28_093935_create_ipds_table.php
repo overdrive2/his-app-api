@@ -23,7 +23,7 @@ return new class extends Migration
             $table->integer('firstward_id')->nullable();
             $table->integer('pttype_id')->nullable();
             $table->integer('severe_type_id')->nullable();
-            $table->integer('ipt_admit_type_id')->nullable();
+            $table->integer('ipd_admit_type_id')->nullable();
             $table->boolean('confirm_discharge');
             $table->date('dchdate')->nullable();
             $table->time('dchtime')->nullable();
