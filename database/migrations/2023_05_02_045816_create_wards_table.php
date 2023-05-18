@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('wards', function (Blueprint $table) {
             $table->id();
             $table->string('name',150);
-            $table->string('wardcode',3)->nullable();
+            $table->string('ward_code',30)->nullable();
             $table->boolean('active');
             $table->text('detail')->nullable();
             $table->integer('hospital_department_id')->nullable();

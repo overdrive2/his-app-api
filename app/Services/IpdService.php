@@ -20,7 +20,6 @@ use App\Models\Ipd;
                     'dch_doctor',
                     'hn',
                     'first_ward',
-                    'ward',
                     'regdate',
                     'regtime',
                     'prediag',
@@ -41,6 +40,12 @@ use App\Models\Ipd;
                 $ipd = Ipd::make($hisIpd);
 
                 $ipd->adm_officer_id = $hisIpd->adm_officer_id;
+                $ipd->dch_status_id = $hisIpd->dch_status_id;
+                $ipd->dch_type_id = $hisIpd->dch_type_id;
+                $ipd->dch_officer_id = $hisIpd->dch_officer_id;
+                $ipd->firstward_id = $hisIpd->firstward_id;
+                $ipd->pttype_id = $hisIpd->pttype_id;
+                $ipd->spclty_id = $hisIpd->spclty_id;
                 $ipd->save();
 
             return $ipd;

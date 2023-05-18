@@ -13,4 +13,34 @@ class HisIpd extends Model
     {
         return Officer::where('doctor_code', $this->admdoctor)->value('id');
     }
+
+    public function getDchStatusIdAttribute()
+    {
+        return DchStatus::where('code', $this->dchstts)->value('id');
+    }
+
+    public function getDchTypsIdAttribute()
+    {
+        return DchType::where('code', $this->dchtype)->value('id');
+    }
+
+    public function getDchOfficerIdAttribute()
+    {
+        return Officer::where('doctor_code', $this->dch_doctor)->value('id');
+    }
+
+    public function getFirstWardIdAttribute()
+    {
+        return Ward::where('ward_code', $this->first_ward)->value('id');
+    }
+
+    public function getPttypeIdAttribute()
+    {
+        return Pttype::where('pttype_code', $this->pttype)->value('id');
+    }
+
+    public function getSpcltyIdAttribute()
+    {
+        return Spclty::where('spclty_code', $this->spclty)->value('id');
+    }
 }
