@@ -4,7 +4,7 @@ namespace App\Http\Livewire\NurseModule;
 
 use App\Http\Livewire\DataTable\WithCachedRows;
 use App\Http\Livewire\DataTable\WithPerPagePagination;
-use App\Models\HisIpdNewcase;
+use App\Models\His\HisIpdNewcase;
 use App\Models\Ward;
 use App\Models\Room;
 use App\Models\Bed;
@@ -19,7 +19,7 @@ class IpdNewCases extends Component
 
     public $showEditModal = false;
     public $an;
-    public $ward_id, $room_id;
+    public $ward_id, $filter_ward_id, $room_id;
     public $ward_name = '';
     public $wards = [];
     public $rooms = [];
@@ -72,7 +72,7 @@ class IpdNewCases extends Component
         $this->editing->an = $row['an'];
 
         /* Load ward by wardcode */
-        $ward = Ward::where('wardcode', $row['ward'])->first();
+        $ward = Ward::where('ward_code', $row['ward'])->first();
 
         $this->ward_id = $ward->id;
         $this->ward_name = $this->ward_id ? Ward::find($this->ward_id)->name : ' ';
@@ -90,8 +90,8 @@ class IpdNewCases extends Component
     {
         return HisIpdNewcase::selectRaw("an, hn, ward, date_part('year', age(birthday)) as ay,
             date_part('month', age(birthday)) as am, pname, fname, lname, fullname, regdate, regtime")
-            ->when($this->ward_id, function($query, $id) {
-                return $query->where('ward', Ward::find($id)->wardcode);
+            ->when($this->filter_ward_id, function($query, $id) {
+                return $query->where('ward', Ward::find($id)->ward_code);
             });
     }
 
@@ -110,8 +110,9 @@ class IpdNewCases extends Component
 
     public function mount()
     {
-       $ipd = (new IpdService())->create('123456');
+       $ipd = (new IpdService())->create('660019840');
        dd($ipd);
+
        $this->wards = auth()->user()->wards();
       // $this->rooms = Room::all();
        $this->editing = $this->makeBlank();

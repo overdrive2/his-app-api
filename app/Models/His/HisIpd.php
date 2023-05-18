@@ -1,7 +1,13 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\His;
 
+use App\Models\DchStatus;
+use App\Models\DchType;
+use App\Models\Officer;
+use App\Models\Pttype;
+use App\Models\Spclty;
+use App\Models\Ward;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
