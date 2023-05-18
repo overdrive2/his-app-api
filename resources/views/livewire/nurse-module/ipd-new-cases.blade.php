@@ -1,29 +1,34 @@
-<div x-data="{
-    wardSelect: @entangle('ward_id'),
-    wards: {{ json_encode($wards) }},
-    rooms: [],
-    beds: [],
-    room_id: @entangle('room_id'),
-    an: @entangle('an'),
-    ipd: @entangle('ipd'),
-    editing: $wire.editing,
-    modalShow: (row) => {
-        $wire.new(JSON.parse(row));
-        setIpd(row);
-        modal.show();
-    }
-}" x-init="modal = new Modal($refs.modal);
-pname = 'Rachet';
-setIpd = (row) => {
-    ipd = JSON.parse(row)
-    return ipd
-}">
+<div
+    x-data = "{
+        wardSelect: @entangle('ward_id'),
+        wards: {{ json_encode($wards) }},
+        room_id: @entangle('room_id'),
+        an: @entangle('an'),
+        ipd: @entangle('ipd'),
+        rooms: [],
+        beds: [],
+        editing: $wire.editing,
+        modalShow: (row) => {
+            $wire.new(JSON.parse(row));
+            setIpd(row);
+            modal.show();
+        }
+    }"
+    x-init = "
+        modal = new Modal($refs.modal);
+        pname = 'Rachet';
+        setIpd = (row) => {
+            ipd = JSON.parse(row)
+            return ipd
+        }
+    "
+>
     <!--Verically centered scrollable modal-->
     <div class="mb-2">
         Time {{ $editing->time_for_editing }}
         <div class="max-w-xs" wire:ignore>
             <!--Select default-->
-            <x-input.select wire:model="ward_id" :label="__('หอผู้ป่วย')">
+            <x-input.select wire:model="filter_ward_id" :label="__('หอผู้ป่วย')">
                 <option value="0">-- ทั้งหมด --</option>
                 @foreach ($wards as $ward)
                     <option value="{{ $ward->id }}">{{ $ward->name }}</option>

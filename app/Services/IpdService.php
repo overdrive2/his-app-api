@@ -1,48 +1,67 @@
 <?php
     namespace App\Services;
 
-use App\Models\HisIpd;
-use App\Models\Ipd;
+    use App\Models\His\HisIpd;
+    use App\Models\Ipd;
+    use App\Models\Officer;
+    use App\Models\Ward;
 
     class IpdService
     {
+
+        public function mapData($row)
+        {
+            $uid = auth()->user()->id;
+
+            return [
+                'an' => $row->an,
+                'admdoctor' => Officer::where('doctor_code', $row->admdoctor)->value('id'),
+                'dchdate' => $row->dchdate,
+                'dchtime' => $row->dchtime,
+                'dchstts' => $row->dchstts,
+                'dchtype' => $row->dchtype,
+                'dch_doctor' => $row->dch_doctor,
+                'first_ward' => Ward::where('ward_code', $row->first_ward)->value('id'),
+                'ward' => Ward::where('ward_code', $row->ward)->value('id'),
+                'regdate' => $row->regdate,
+                'regtime' => $row->regtime,
+                'prediag' => $row->prediag,
+                //'pttype' => $row->pttype,
+                'spclty' => $row->spclty,
+                'vn' => $row->vn,
+                'ipd_admit_type_id' => $row->ipd_admit_type_id,
+                'confirm_discharge' => $row->confirm_discharge,
+                'pname' => $row->pname,
+                'fname' => $row->fname,
+                'lname' => $row->lname,
+                'birthday' => $row->birthday,
+                'cid' => $row->cid,
+                'sex' => $row->sex,
+                'fullname' => $row->fullname,
+                'created_by' => $uid,
+                'updated_by' => $uid
+            ];
+        }
+
         public function create($an)
         {
             if(Ipd::where('an', $an)->count() == 0)
+            {
+                $hisIpd = HisIpd::where('an', $an)->first();
 
-                $hisIpd = HisIpd::select(
-                    'an',
-                    'admdoctor',
-                    'dchdate',
-                    'dchtime',
-                    'dchstts',
-                    'dchtype',
-                    'dch_doctor',
-                    'hn',
-                    'first_ward',
-                    'ward',
-                    'regdate',
-                    'regtime',
-                    'prediag',
-                    'pttype',
-                    'spclty',
-                    'vn',
-                    'ipd_admit_type_id',
-                    'confirm_discharge',
-                    'pname',
-                    'fname',
-                    'lname',
-                    'birthday',
-                    'cid',
-                    'sex',
-                    'fullname')
-                    ->where('an', $an)->first();
+                if($hisIpd)
+                {
+                    $patient = (new PatientService())->load($hisIpd->hn);
 
-                $ipd = Ipd::make($hisIpd);
+                    $data = $this->mapData($hisIpd);
+                    $ipd = Ipd::make($data);
 
-                $ipd->adm_officer_id = $hisIpd->adm_officer_id;
-                $ipd->save();
+                    $ipd->patient_id = $patient->id;
+                    $ipd->adm_officer_id = $hisIpd->adm_officer_id;
+                    $ipd->save();
+                }
+            }
 
-            return $ipd;
+            return Ipd::where('an', $an)->first();
         }
     }
