@@ -22,6 +22,10 @@
             return ipd
         }
     "
+    @toast-event.window = "async (event) => {
+        await modal.hide()
+        $dispatch('toastify', { text: event.detail.text });
+    }"
 >
     <!--Verically centered scrollable modal-->
     <div class="mb-2">

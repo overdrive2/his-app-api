@@ -2,6 +2,8 @@ import './bootstrap';
 import Alpine from 'alpinejs';
 import focus from '@alpinejs/focus';
 import './theme';
+import Swal from 'sweetalert2'
+import 'sweetalert2/src/sweetalert2.scss'
 
 import {
     Datepicker,
@@ -22,6 +24,7 @@ initTE({ Datepicker, Select, Input, Ripple, Collapse, Dropdown, Sidenav, Button,
 window.Modal = Modal;
 window.Datepicker = Datepicker;
 window.Timepicker = Timepicker;
+window.Swal = Swal;
 
 const sidenav = document.getElementById("sidenav-main");
 const sidenavInstance = Sidenav.getInstance(sidenav);
@@ -51,6 +54,14 @@ if (window.innerWidth < sidenavInstance.getBreakpoint("sm")) {
 
 // Event listeners
 window.addEventListener("resize", setMode);
+
+window.addEventListener('toastify', event => {
+    Swal.fire(
+        'Good job!',
+        'You clicked the button!',
+        'success'
+    )
+})
 
 window.Alpine = Alpine;
 

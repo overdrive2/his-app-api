@@ -12,6 +12,9 @@ class HisIpdNewcase extends Model
 {
     use HasFactory, FunctionDateTimes;
 
+    protected $connection = 'his';
+    protected $table = 'his_ipd_newcase';
+
     public function getRegDateThaiAttribute()
     {
         return $this->thai_date_short_number2(Carbon::parse($this->regdate));

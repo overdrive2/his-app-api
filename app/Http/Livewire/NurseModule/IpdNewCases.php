@@ -74,7 +74,7 @@ class IpdNewCases extends Component
         /* Load ward by wardcode */
         $ward = Ward::where('ward_code', $row['ward'])->first();
 
-        $this->ward_id = $ward->id;
+        $this->ward_id = $ward->id ?? 0;
         $this->ward_name = $this->ward_id ? Ward::find($this->ward_id)->name : ' ';
         $this->rooms = Room::where('ward_id', $this->ward_id)->get();
         $this->dispatchBrowserEvent('rooms-update', ['rooms' => $this->rooms]);
@@ -88,8 +88,8 @@ class IpdNewCases extends Component
 
     public function getRowsQueryProperty()
     {
-        return HisIpdNewcase::selectRaw("an, hn, ward, date_part('year', age(birthday)) as ay,
-            date_part('month', age(birthday)) as am, pname, fname, lname, fullname, regdate, regtime")
+        return HisIpdNewcase::selectRaw("an, hn, ward, date_part('year', age(birthday::date)) as ay,
+            date_part('month', age(birthday::date)) as am, pname, fname, lname, fullname, regdate, regtime")
             ->when($this->filter_ward_id, function($query, $id) {
                 return $query->where('ward', Ward::find($id)->ward_code);
             });
@@ -104,15 +104,12 @@ class IpdNewCases extends Component
 
     public function save()
     {
-        dd($this->editing);
-        dd($this->ipd);
+        sleep(1);
+        $this->dispatchBrowserEvent('toast-event', ['text' => 'Save success !']);
     }
 
     public function mount()
     {
-       $ipd = (new IpdService())->create('660019840');
-       dd($ipd);
-
        $this->wards = auth()->user()->wards();
       // $this->rooms = Room::all();
        $this->editing = $this->makeBlank();
