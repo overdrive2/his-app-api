@@ -111,6 +111,7 @@ class IpdNewCases extends Component
     public function mount()
     {
        $ipd = (new IpdService())->create('660019840');
+       dd($ipd);
 
        $this->wards = auth()->user()->wards();
       // $this->rooms = Room::all();
