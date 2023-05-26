@@ -31,6 +31,8 @@ class DatabaseSeeder extends Seeder
             HisIpdNewcaseSeeder::class,
             IpdAdmitTypeSeeder::class,
             HisIpdSeeder::class,
+            IpdFormAsmSeeder::class,
+            IpdFormAsmDetailSeeder::class,
         ]);
     }
 }
