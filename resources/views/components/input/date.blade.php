@@ -1,13 +1,7 @@
 <div
     class="flex items-center justify-center w-full"
     x-data="{
-        @if ($value && ! $attributes->whereStartsWith('wire:model')->first())
-            value: '{{ $value }}',
-        @elseif ($attributes->whereStartsWith('wire:model')->first())
             value: @entangle($attributes->wire('model')),
-        @else
-            value: null,
-        @endif
 
     }"
     x-init="

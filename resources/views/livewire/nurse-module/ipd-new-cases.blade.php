@@ -7,8 +7,10 @@
         ipd: @entangle('ipd'),
         rooms: [],
         beds: [],
+        errors: [],
         editing: $wire.editing,
         modalShow: (row) => {
+            clearError()
             $wire.new(JSON.parse(row));
             setIpd(row);
             modal.show();
@@ -21,23 +23,68 @@
             ipd = JSON.parse(row)
             return ipd
         }
+        clearError = () => {
+            errors = [];
+        }
     "
     @toast-event.window = "async (event) => {
         await modal.hide()
         $dispatch('toastify', { text: event.detail.text });
     }"
+
+    @err-message.window = "(event) => {
+        errors = event.detail.errors;
+    }"
 >
     <!--Verically centered scrollable modal-->
-    <div class="mb-2">
-        Time {{ $editing->time_for_editing }}
-        <div class="max-w-xs" wire:ignore>
+    <div class="mb-4">
+        <nav class="bg-grey-light w-full rounded-md mb-4">
+            <ol class="list-reset flex">
+              <li>
+                <a
+                  href="{{ route('nurse.ipdlist') }}"
+                  class="text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
+                  >หน้าแรก</a
+                >
+              </li>
+              <li>
+                <span class="mx-2 text-neutral-500 dark:text-neutral-400">></span>
+              </li>
+              <li class="text-neutral-500 dark:text-neutral-400">รับใหม่</li>
+            </ol>
+        </nav>
+        <div class="lg:max-w-xs flex gap-2 lg:flex-row flex-col" wire:ignore>
             <!--Select default-->
-            <x-input.select wire:model="filter_ward_id" :label="__('หอผู้ป่วย')">
-                <option value="0">-- ทั้งหมด --</option>
-                @foreach ($wards as $ward)
-                    <option value="{{ $ward->id }}">{{ $ward->name }}</option>
-                @endforeach
-            </x-input.select>
+            <div class="lg:min-w-[350px] w-full">
+                <x-input.select wire:model="filter_ward_id" :label="__('หอผู้ป่วย')">
+                    <option value="0">-- ทั้งหมด --</option>
+                    @foreach ($wards as $ward)
+                        <option value="{{ $ward->id }}">{{ $ward->name }}</option>
+                    @endforeach
+                </x-input.select>
+            </div>
+            <div class="flex gap-2 justify-between lg:min-w-[400px]">
+                <div class="relative w-1/2" data-te-input-wrapper-init>
+                    <x-input.tw-text
+                        wire:model.debounce.600ms="filters.an"
+                        type="text"
+                        id="searchAnInput"
+                        aria-describedby="searchAnHelp"
+                        placeholder="ค้นหา AN"
+                    />
+                    <x-input.tw-label for="searchAnHelp" label="AN" />
+                </div>
+                <div class="relative w-1/2" data-te-input-wrapper-init>
+                    <x-input.tw-text
+                        wire:model.debounce.600ms="filters.hn"
+                        type="text"
+                        id="searchHnInput"
+                        aria-describedby="searchHnHelp"
+                        placeholder="ค้นหา HN"
+                    />
+                    <x-input.tw-label for="searchHnHelp" label="HN" />
+                </div>
+            </div>
         </div>
     </div>
     <table class="min-w-full text-left text-sm font-light dark:text-gray-50">
@@ -102,7 +149,7 @@
     </x-dialog-modal>
 
     <!-- Modal -->
-    <div wire:ignore data-te-modal-init
+    <div data-te-modal-init wire:ignore
         class="fixed left-0 top-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
         x-ref="modal" id="newcaseModal" tabindex="-1" aria-labelledby="newcaseModalLabel" aria-hidden="true">
         <div data-te-modal-dialog-ref
@@ -110,15 +157,15 @@
             <div
                 class="min-[576px]:shadow-[0_0.5rem_1rem_rgba(#000, 0.15)] pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current shadow-lg outline-none dark:bg-neutral-600">
                 <div
-                    class="flex flex-shrink-0 items-center justify-between rounded-t-md border-b-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
+                    class="flex flex-shrink-0 items-center justify-between rounded-t-md border-b-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-30">
                     <!--Modal title-->
                     <h5 class="text-xl font-medium leading-normal text-neutral-800 dark:text-neutral-200"
                         id="newcaseModalLabel">
-                        รับใหม่
+                        รับเข้าเตียง
                     </h5>
                     <!--Close button-->
                     <button type="button"
-                        class="box-content rounded-none border-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
+                        class="box-content dark:text-white rounded-none border-none hover:no-underline hover:opacity-75 focus:opacity-100 focus:shadow-none focus:outline-none"
                         data-te-modal-dismiss aria-label="Close">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="h-6 w-6">
@@ -132,31 +179,19 @@
                     <div class="block max-w-md rounded-lg bg-white p-6 dark:bg-neutral-700">
                         <form>
                             <div class="grid grid-cols-2 gap-4">
-                                <div class="mb-6">
-                                    <div
-                                        class="relative" id="timepicker-inline-24"
-                                        data-te-timepicker-init
-                                        data-te-input-wrapper-init
-                                        data-te-format24="true"
-                                        data-te-inline="true"
-                                    >
-                                        <input type="text"
-                                            class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
-                                            wire:model.defer="editing.time_for_editing"
-                                            id="movetime" />
-                                        <label for="movetime"
-                                            class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary">Select
-                                            a time</label>
-                                    </div>
-                                </div>
+                                <x-input.date wire:model.defer="editing.date_for_editing" />
+                                <x-input.tw-time
+                                    id="time_edit"
+                                    wire:model.defer="editing.time_for_editing"
+                                />
                             </div>
                             <div class="grid grid-cols-2 gap-4">
                                 <!--First name input-->
                                 <div class="relative mb-6" data-te-input-wrapper-init>
                                     <input x-model="ipd.an" type="text"
                                         class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
-                                        id="exampleInput123" aria-describedby="emailHelp123" placeholder="First name" />
-                                    <label for="emailHelp123"
+                                        id="editingAnInput" aria-describedby="editingAn" placeholder="First name" />
+                                    <label for="editingAn"
                                         class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary">AN
                                     </label>
                                 </div>
@@ -216,20 +251,24 @@
                             </div>
                         </form>
                     </div>
+                    <div x-show="errors">
+                        <template x-for="err in errors">
+                            <div class="text-sm text-red-500 dark:text-red-300" x-text="err"></div>
+                        </template>
+                    </div>
                 </div>
-
                 <!--Modal footer-->
                 <div
-                    class="flex flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
+                    class="flex flex-shrink-0 flex-wrap items-center justify-end rounded-b-md border-t-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-30">
                     <button type="button"
                         class="inline-block rounded bg-primary-100 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-primary-700 transition duration-150 ease-in-out hover:bg-primary-accent-100 focus:bg-primary-accent-100 focus:outline-none focus:ring-0 active:bg-primary-accent-200"
                         data-te-modal-dismiss data-te-ripple-init data-te-ripple-color="light">
-                        Close
+                        ปิด
                     </button>
                     <button type="button" wire:click="save"
                         class="ml-1 inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
                         data-te-ripple-init data-te-ripple-color="light">
-                        Save changes
+                        บันทึก
                     </button>
                 </div>
             </div>

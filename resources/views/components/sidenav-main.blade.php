@@ -8,14 +8,9 @@
     data-te-sidenav-mode="side"
     data-te-sidenav-content="#page-content"
     data-te-sidenav-accordion="true">
-    <a href="/" class="mb-3 flex items-center justify-center rounded-md py-6 pr-3 text-lg font-medium outline-none dark:text-neutral-100" aria-current="page">
-        <picture>
-            <source srcset="
-              https://tecdn.b-cdn.net/img/logo/te-transparent-noshadows.webp
-            " type="image/webp">
-            <img src="https://tecdn.b-cdn.net/img/logo/te-transparent-noshadows.png" class="mr-2 h-[20px]" alt="logo">
-        </picture>
-        Tailwind Elements
+    <a href="/" class="sticky top-0 z-50 shadow-sm mb-3 flex items-center bg-white dark:bg-neutral-800 justify-center rounded-md py-6 pr-3 outline-none dark:text-neutral-100" aria-current="page">
+        <x-icon.hospital class="text-teal-700" />
+        <span class="ml-2 text-lg font-bold text-teal-500">HIS Go</span>
     </a>
     <ul class="relative m-0 list-none px-[0.2rem] pb-80" data-te-sidenav-menu-ref="">
         <li class="relative">

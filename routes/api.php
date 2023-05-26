@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Doctor\Order\MasterController;
+use App\Http\Controllers\IpdNewCaseController;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -35,3 +36,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('logout', [App\Http\Controllers\LoginController::class, 'logout']);
     Route::post('profile', [App\Http\Controllers\LoginController::class, 'profile']);
 });
+
+Route::post('/ipd/newcase', [IpdNewCaseController::class, 'store']);

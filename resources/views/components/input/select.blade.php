@@ -9,5 +9,5 @@
     >
         {{ $slot }}
     </select>
-    <label class="z-50" data-te-select-label-ref>{{ $label ?? '' }}</label>
+    <label data-te-select-label-ref class="z-20 bg-white dark:bg-opacity-0">{{ $label ?? '' }}</label>
 </div>

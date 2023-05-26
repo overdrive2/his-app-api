@@ -12,6 +12,8 @@ use App\Models\IpdBedmove;
 use Livewire\Component;
 use App\Http\Livewire\Traits\DateTimeHelpers;
 use App\Services\IpdService;
+use Exception;
+use Illuminate\Support\Facades\Validator;
 
 class IpdNewCases extends Component
 {
@@ -30,6 +32,11 @@ class IpdNewCases extends Component
         'fullname' => ''
     ];
 
+    public $filters = [
+        'hn' => '',
+        'an' => '',
+    ];
+
     public IpdBedmove $editing;
 
     public function rules()
@@ -43,6 +50,7 @@ class IpdNewCases extends Component
             'editing.updated_by' => 'required',
             'editing.created_by' => 'required',
             'editing.time_for_editing' => '',
+            'editing.date_for_editing' => '',
         ];
     }
 
@@ -90,6 +98,12 @@ class IpdNewCases extends Component
     {
         return HisIpdNewcase::selectRaw("an, hn, ward, date_part('year', age(birthday::date)) as ay,
             date_part('month', age(birthday::date)) as am, pname, fname, lname, fullname, regdate, regtime")
+            ->when($this->filters['hn'], function($query, $val) {
+                return $query->where('hn', str_pad($val, 9, '0', STR_PAD_LEFT));
+            })
+            ->when($this->filters['an'], function($query, $val) {
+                return $query->where('an', str_pad($val, 9, '0', STR_PAD_LEFT));
+            })
             ->when($this->filter_ward_id, function($query, $id) {
                 return $query->where('ward', Ward::find($id)->ward_code);
             });
@@ -104,8 +118,19 @@ class IpdNewCases extends Component
 
     public function save()
     {
-        sleep(1);
-        $this->dispatchBrowserEvent('toast-event', ['text' => 'Save success !']);
+        $validation = Validator::make([
+            'ipd_id' => $this->editing->ipd_id,
+            'movedate' => null,
+
+         ], [
+           'ipd_id' => 'required',
+           'movedate' => 'required',
+         ]);
+         if ($validation->fails()) {
+            $errorMsg =  $validation->errors()->all();
+            $this->dispatchBrowserEvent('err-message',['errors' => $errorMsg]);
+            $validation->validate();
+         }
     }
 
     public function mount()

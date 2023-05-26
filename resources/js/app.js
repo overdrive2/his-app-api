@@ -22,6 +22,7 @@ import {
 initTE({ Datepicker, Select, Input, Ripple, Collapse, Dropdown, Sidenav, Button, Modal, Timepicker});
 
 window.Modal = Modal;
+window.Input = Input;
 window.Datepicker = Datepicker;
 window.Timepicker = Timepicker;
 window.Swal = Swal;
