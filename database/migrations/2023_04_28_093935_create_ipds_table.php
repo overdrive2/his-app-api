@@ -47,6 +47,7 @@ return new class extends Migration
             $table->text('sdx2')->nullable();
             $table->boolean('confirm_summary_dc')->nullable();
             $table->integer('summary_dc_officer_id')->nullable();
+            $table->mediumInteger('current_bedmove_id')->nullable();
             $table->text('plan')->nullable();
             $table->text('operation')->nullable();
             $table->integer('created_by')->nullable();

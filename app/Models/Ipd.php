@@ -49,4 +49,32 @@ class Ipd extends Model
         'updated_by',
         'patient_id',
     ];
+
+    public function getPatientNameAttribute()
+    {
+        $row = Patient::select('pname', 'fname', 'lname')
+            ->where('id', $this->patient_id)->first();
+        return $row ? $row->pname.$row->fname.' '.$row->lname : '';
+    }
+
+    public function getHnAttribute()
+    {
+        return Patient::find($this->patient_id)->hn;
+    }
+
+    public function lastBed()
+    {
+        return IpdBedmove::where('ipd_id', $this->id)
+            ->orderBy('movedate', 'desc')
+            ->orderBy('movetime', 'desc')
+            ->first();
+    }
+
+    public function bedmoves()
+    {
+        return  IpdBedmove::where('ipd_id', $this->id)
+            ->orderBy('movedate', 'asc')
+            ->orderBy('movetime', 'asc')
+            ->get();
+    }
 }

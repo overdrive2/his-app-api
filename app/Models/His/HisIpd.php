@@ -15,6 +15,9 @@ class HisIpd extends Model
 {
     use HasFactory;
 
+    protected $connection = 'his';
+    protected $table  = 'ipt';
+
     public function getAdmOfficerIdAttribute()
     {
         return Officer::where('doctor_code', $this->admdoctor)->value('id');

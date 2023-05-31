@@ -3,9 +3,6 @@
 
     use App\Models\His\HisIpd;
     use App\Models\Ipd;
-    use App\Models\Officer;
-use App\Models\Spclty;
-use App\Models\Ward;
 
     class IpdService
     {
@@ -40,7 +37,6 @@ use App\Models\Ward;
                 if($hisIpd)
                 {
                     $patient = (new PatientService())->load($hisIpd->hn);
-
                     $data = $this->mapData($hisIpd);
                     $ipd = Ipd::make($data);
 

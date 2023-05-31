@@ -1,20 +1,55 @@
-<div x-data="{
-    wardSelect: @entangle('wardSelected'),
-    wardName: @entangle('wardName')
-}">
+<div
+    x-data="{
+        moveout: {{ config('ipd.moveout') }},
+        ward_id: @entangle('ward_id'),
+        type_id: @entangle('editing.bedmove_type_id'),
+        ipd: @entangle('ipd'),
+        bedmoveName: 'ย้ายเตียง',
+        wards: [],
+        rooms: [],
+        beds: [],
+        errors: [],
+        bedmoves: [],
+        modalShow: (id) => {
+            clearError()
+            $wire.newMove(id)
+        },
+    }"
+    x-init="
+        modal = new Modal($refs.modal);
+        lgModal = new Modal($refs.lgModal);
+
+        clearError = () => {
+            errors = [];
+        }
+    "
+    @toast-event.window = "async (event) => {
+        await modal.hide()
+        $dispatch('toastify', { text: event.detail.text });
+    }"
+
+    @modal-show.window = "(e) => {
+        ipd = e.detail.ipd
+        wards = e.detail.wards
+        modal.show()
+    }"
+
+    @lgmodal-show.window = "(e) => {
+        bedmoves = e.detail.rows
+        lgModal.show()
+    }"
+>
     <div class="lg:flex gap-2">
         <div class="flex-1 mt-2">
             <div class="grid grid-cols-3 gap-3">
-                <div>
+                <div wire:ignore>
                     <!--Select default-->
-                    <select data-te-select-init required wire:model="wardSelected" data-te-select-filter="true"
-                        data-te-select-size="lg">
-                        <option>-- ทั้งหมด --</option>
-                        <option value="1">Ward1</option>
-                        <option value="2">Ward2</option>
-                        <option value="3">Ward3</option>
-                    </select>
-                    <label data-te-select-label-ref>หอผู้ป่วย</label>
+                    <x-input.select data-te-select-filter="true" wire:model="filter_ward_id" :label="__('หอผู้ป่วย')">
+                        <option value="0">-- ทั้งหมด --</option>
+                        @foreach ($wards as $ward)
+                            <option value="{{ $ward->id }}">{{ $ward->name }}</option>
+                        @endforeach
+                    </x-input.select>
                 </div>
                 <div>
                     <div class="relative mb-3" data-te-input-wrapper-init>
@@ -47,9 +82,6 @@
                 </button>
             </div>
         </div>
-    </div>
-    <div class="flex flex-wrap gap-2">
-
     </div>
     <div class="w-full grid grid-cols-5 gap-4">
         <div>
@@ -99,24 +131,27 @@
         </div>
     </div>
     <div class="grid grid-flow-row gap-3 mb-4">
+        @foreach($rows as $key => $item)
+        @php
+            $bedmove = $item->lastBed();
+        @endphp
         <div
             class="lg:flex rounded-lg bg-white p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
-            <div class="flex-1 mb-2">
-                <div class="grid grid-cols-4 dark:text-gray-200">
+            <div class="flex-1 mb-2 dark:text-gray-300">
+                <div class="flex gap-4">
+                    <div class="p-4 flex-none w-20 min-h-full rounded-lg flex items-center justify-center bg-sky-300 dark:bg-sky-800 dark:text-sky-400">
+                        <div class="font-bold">{{ $bedmove->bed_name ?? 'รอ' }}</div>
+                    </div>
                     <div class="col-span-4 sm:col-span-2 lg:col-span-1">
                         <div class="flex gap-2">
-                            <h6 class="inline-block">AN: 660012546</h6>
-                            <h6 class="inline-block">HN: 660012546</h6>
+                            <h6 class="inline-block">AN: {{ $item->an }}</h6>
+                            <h6 class="inline-block">HN: {{ $item->hn }}</h6>
                         </div>
-                        <p class="w-full">ผู้ป่วยทดสอบ</p>
+                        <p class="w-full text-left">{{ $item->patient_name }}</p>
                     </div>
                     <div class="col-span-3 lg:col-span-1">
                         <h6>Ward</h6>
-                        <p>xxxxxxxxxxx</p>
-                    </div>
-                    <div class="col-span-1 lg:col-span-1">
-                        <h6>Bed</h6>
-                        <p>xxxxxxxxxxx</p>
+                        <p>{{ $bedmove->ward_name }}</p>
                     </div>
                     <div class="lg:col-span-1 col-span-4">
                         <h6>Doctor</h6>
@@ -126,43 +161,62 @@
                 <div class="flex flex-wrap gap-2"></div>
             </div>
             <div class="flex-none">
-                <button type="button" wire:click="$set('showEditModal', true)"
+                <button type="button" x-on:click="modalShow('{{ $item->id }}')"
                     class="inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
                     data-te-ripple-init data-te-ripple-color="light">
-                    Info
+                    Move
                 </button>
-                <button type="button"
+                <button type="button" wire:click="moveInfo('{{ $item->id }}')"
                     class="ml-2 inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
                     data-te-ripple-init data-te-ripple-color="light">
-                    Task
+                    History
                 </button>
             </div>
         </div>
+        @endforeach
     </div>
+    <x-nurse.ipd-bedmove-modal />
 
-    <!-- Delete User Confirmation Modal -->
-    <x-dialog-modal wire:model="showEditModal">
-    <x-slot name="title">
-        {{ __('Delete Account') }}
-    </x-slot>
-
-    <x-slot name="content">
-        {{ __('Are you sure you want to delete your account? Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.') }}
-
-        <div class="mt-4" x-data="{}" x-on:confirming-delete-user.window="setTimeout(() => $refs.password.focus(), 250)">
-            Test
-        </div>
-    </x-slot>
-
-    <x-slot name="footer">
-        <x-secondary-button wire:click="$toggle('confirmingUserDeletion')" wire:loading.attr="disabled">
-            {{ __('Cancel') }}
-        </x-secondary-button>
-
-        <x-danger-button class="ml-3" wire:click="deleteUser" wire:loading.attr="disabled">
-            {{ __('Delete Account') }}
-        </x-danger-button>
-    </x-slot>
-</x-dialog-modal>
-
+    <x-large-modal>
+        <x-slot name="title">
+            Bed move list
+        </x-slot>
+        <x-slot name="content">
+            <table class="w-full dark:text-gray-300">
+                <thead>
+                    <tr>
+                        <th>ลำดับ</th>
+                        <th>วันที่</th>
+                        <th>เวลา</th>
+                        <th>สถานะ</th>
+                        <th>เตียง</th>
+                        <th>คำสั่ง</th>
+                    </tr>
+                </thead>
+                <template x-for="(row, idx) in bedmoves" :key="idx">
+                    <tr class="border-b">
+                        <td x-text="idx + 1"></td>
+                        <td x-text="row.date_for_thai">
+                        </td>
+                        <td x-text="row.time_for_editing">
+                        </td>
+                        <td x-text="row.movetype_name">
+                        </td>
+                        <td x-text="row.bed_id">
+                        </td>
+                        <td>
+                            <div class="flex justify-center gap-2">
+                                <x-button.edit style="background-color: #f48024">
+                                </x-button.edit>
+                                <x-button.delete style="background-color: #ea4c89"
+                                    x-on:click="$dispatch('delete:confirm', { action: 'delete:bedmove'});"
+                                >
+                                </x-button.delete>
+                            </div>
+                        </td>
+                    </tr>
+                </template>
+            </table>
+        </x-slot>
+    </x-large-modal>
 </div>

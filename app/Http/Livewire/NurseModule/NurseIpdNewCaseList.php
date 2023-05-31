@@ -11,11 +11,11 @@ use App\Models\Bed;
 use App\Models\IpdBedmove;
 use Livewire\Component;
 use App\Http\Livewire\Traits\DateTimeHelpers;
+use App\Models\his\HisTransferData;
 use App\Services\IpdService;
-use Exception;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Validator;
 
-class IpdNewCases extends Component
+class NurseIpdNewcaseList extends Component
 {
     use WithCachedRows, WithPerPagePagination, DateTimeHelpers;
 
@@ -25,6 +25,7 @@ class IpdNewCases extends Component
     public $ward_name = '';
     public $wards = [];
     public $rooms = [];
+    public $user;
 
     public $ipd = [
         'an' => '',
@@ -45,7 +46,8 @@ class IpdNewCases extends Component
             'editing.ipd_id' => 'required',
             'editing.movedate' => 'required',
             'editing.movetime' => 'required',
-            'editing.bed_id' => 'required',
+            'editing.ward_id' => 'required',
+            'editing.bed_id' => 'required|exists:beds,id',
             'editing.bedmove_type_id' => 'required',
             'editing.updated_by' => 'required',
             'editing.created_by' => 'required',
@@ -76,10 +78,18 @@ class IpdNewCases extends Component
 
     public function new($row)
     {
+        // New bedmove cache
         $this->editing = $this->makeBlank();
-        $this->editing->an = $row['an'];
 
-        /* Load ward by wardcode */
+        // Check ipd record
+        $ipd = (new IpdService)->create($row['an']);
+
+        // put ipd to bedmove
+        $this->an = $ipd->an;
+        $this->editing->an = $ipd->an;
+        $this->editing->ipd_id = $ipd->id;
+
+        /* Load ward  from His wardcode */
         $ward = Ward::where('ward_code', $row['ward'])->first();
 
         $this->ward_id = $ward->id ?? 0;
@@ -98,6 +108,7 @@ class IpdNewCases extends Component
     {
         return HisIpdNewcase::selectRaw("an, hn, ward, date_part('year', age(birthday::date)) as ay,
             date_part('month', age(birthday::date)) as am, pname, fname, lname, fullname, regdate, regtime")
+            ->whereIn('ward', $this->user->wards()->pluck('ward_code'))
             ->when($this->filters['hn'], function($query, $val) {
                 return $query->where('hn', str_pad($val, 9, '0', STR_PAD_LEFT));
             })
@@ -116,33 +127,53 @@ class IpdNewCases extends Component
         });
     }
 
+    public function tranferCommit()
+    {
+        $row = [
+            'code' => 'ipt',
+            'pk_fieldname' => 'an',
+            'value' => $this->an,
+            'created_by' => $this->user->id
+        ];
+
+        HisTransferData::create($row);
+    }
+
     public function save()
     {
-        $validation = Validator::make([
-            'ipd_id' => $this->editing->ipd_id,
-            'movedate' => null,
+        $this->editing->ward_id = $this->ward_id;
+        // Validate check and dispatch to front-end
+        $this->withValidator(function (Validator $validator) {
+            $validator->after(function ($validator) {
+                if ($validator->errors()->isNotEmpty()) {
+                    $errorMsg =  $validator->errors()->messages();
+                    $this->dispatchBrowserEvent('err-message',['errors' => json_encode($errorMsg)]);
+                }
+            });
+        })->validate();
 
-         ], [
-           'ipd_id' => 'required',
-           'movedate' => 'required',
-         ]);
-         if ($validation->fails()) {
-            $errorMsg =  $validation->errors()->all();
-            $this->dispatchBrowserEvent('err-message',['errors' => $errorMsg]);
-            $validation->validate();
-         }
+        $saved = $this->editing->save();
+
+        if($saved) {
+
+            $this->tranferCommit(); // Make a new record his transfer data
+
+            $this->dispatchBrowserEvent('toast-event', [
+                'text' => 'ดำเนินการสำเร็จ'
+            ]);
+        }
     }
 
     public function mount()
     {
-       $this->wards = auth()->user()->wards();
-      // $this->rooms = Room::all();
+       $this->user = auth()->user();
+       $this->wards = $this->user->wards();
        $this->editing = $this->makeBlank();
     }
 
     public function render()
     {
-        return view('livewire.nurse-module.ipd-new-cases', [
+        return view('livewire.nurse-module.nurse-ipd-new-case-list', [
             'rows' => $this->rows
         ]);
     }
