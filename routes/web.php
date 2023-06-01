@@ -34,6 +34,11 @@ Route::middleware(['auth:sanctum'])->prefix('nurse')->group(function () {
     Route::get('ipd-bedmove', [App\Http\Livewire\NurseModule\IpdBedMoveList::class, '__invoke'])->name('nurse.ipd.bedmove.list');
 });
 
+Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function () {
+    Route::get('user', [App\Http\Livewire\Admin\Users::class, '__invoke'])->name('admin.user');
+    Route::get('user-profile', [App\Http\Livewire\Admin\UserProfile::class, '__invoke'])->name('admin.user-profile');
+});
+
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

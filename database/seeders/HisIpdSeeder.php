@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\HisIpd;
+use App\Models\His\HisIpd;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 

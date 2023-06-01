@@ -42,7 +42,7 @@ class LoginController extends Controller
     public function profile()
     {
         return response()->json([
-            'data' => auth()->user()
+            'user' => auth()->user()
         ]);
     }
 }

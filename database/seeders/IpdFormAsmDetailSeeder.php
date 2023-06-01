@@ -29,9 +29,6 @@ class IpdFormAsmDetailSeeder extends Seeder
                 'group_display' => $value['group_display'],
                 'sub_group_display' => $value['sub_group_display'],
                 'display' => $value['display'],
-                'name' => $value['name'],
-                'name' => $value['name'],
-                'name' => $value['name'],
             ]);
         }
     }

@@ -9,5 +9,5 @@ class IpdBedmoveType extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['bedmove_type_name'];
+    protected $fillable = ['bedmove_type_name', 'bedmove_type_available'];
 }

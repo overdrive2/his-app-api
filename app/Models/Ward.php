@@ -9,6 +9,8 @@ class Ward extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['name', 'ward_code', 'active'];
+
     public function getWaitRoomIdAttribute()
     {
         return Room::where('ward_id', $this->id)

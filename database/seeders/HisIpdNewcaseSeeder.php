@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\HisIpdNewcase;
+use App\Models\His\HisIpdNewcase;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 

@@ -12,8 +12,8 @@ class HisIpdNewcase extends Model
 {
     use HasFactory, FunctionDateTimes;
 
-    protected $connection = 'his';
-    protected $table = 'his_ipd_newcase';
+    //protected $connection = 'his';
+    //protected $table = 'his_ipd_newcase';
 
     protected $fillable = ['an', 'fullname', 'regdate', 'regtime', 'ward'];
 
