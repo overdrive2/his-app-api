@@ -23,6 +23,7 @@
             errors = [];
         }
 
+        // load new case
         $wire.emit('load:data')
     "
     @toast-event.window = "async (event) => {
