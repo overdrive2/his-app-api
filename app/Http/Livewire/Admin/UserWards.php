@@ -16,10 +16,15 @@ class UserWards extends Component
 
     public function selectWard($id)
     {
+        $uid = auth()->user();
+
         UserWard::create([
             'user_id' => $this->uid,
-            'ward_id' => $id
+            'ward_id' => $id,
+            'created_by' => $uid,
+            'updated_by' => $uid,
         ]);
+
         $this->dispatchBrowserEvent('hide-modal', ['status' => 200]);
     }
 
