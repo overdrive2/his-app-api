@@ -22,6 +22,8 @@
         clearError = () => {
             errors = [];
         }
+
+        $wire.emit('load:data')
     "
     @toast-event.window = "async (event) => {
         await modal.hide()
