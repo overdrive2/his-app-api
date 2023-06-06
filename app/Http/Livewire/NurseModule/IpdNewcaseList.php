@@ -6,6 +6,7 @@ use App\Http\Livewire\DataTable\WithCachedRows;
 use App\Http\Livewire\DataTable\WithPerPagePagination;
 use App\Models\His\HisIpdNewcase;
 use App\Models\Ward;
+use App\Services\IpdService;
 use Livewire\Component;
 
 class IpdNewcaseList extends Component
@@ -22,8 +23,17 @@ class IpdNewcaseList extends Component
     ];
 
     public $listeners = [
-        'load:data' => 'loadData'
+        'load:data' => 'loadData',
+        'set:an' => 'setAn'
     ];
+
+    public function setAn($an)
+    {
+      $ipd = (new IpdService)->create($an);
+      $this->dispatchBrowserEvent('set-ipd', [
+        'data' => $ipd
+      ]);
+    }
 
     public function loadData()
     {

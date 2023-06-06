@@ -18,12 +18,14 @@ import {
     Button,
     Modal,
     Timepicker,
-    Tab
+    Tab,
+    Stepper
 } from "tw-elements";
 
-initTE({ Datepicker, Select, Input, Ripple, Collapse, Dropdown, Sidenav, Button, Modal, Timepicker, Tab});
+initTE({ Datepicker, Select, Input, Ripple, Collapse, Dropdown, Sidenav, Button, Modal, Timepicker, Tab, Stepper});
 
 window.Modal = Modal;
+window.Stepper =Stepper;
 window.Input = Input;
 window.Datepicker = Datepicker;
 window.Timepicker = Timepicker;

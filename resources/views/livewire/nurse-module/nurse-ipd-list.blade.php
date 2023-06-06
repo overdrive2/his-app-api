@@ -123,7 +123,7 @@
         role="tabpanel"
         data-te-tab-active
         aria-labelledby="tabs-newcase-tab">
-        @livewire('nurse-module.ipd-newcase-list')
+        @livewire('nurse-module.ipd-newcase-list', key('ipd-newcase'))
     </div>
     <div
         class="hidden opacity-0 transition-opacity duration-150 ease-linear data-[te-tab-active]:block"

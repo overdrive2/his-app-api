@@ -15,8 +15,8 @@ class HisIpd extends Model
 {
     use HasFactory;
 
-  //  protected $connection = 'his';
-  //  protected $table  = 'ipt';
+    protected $connection = 'his';
+    protected $table  = 'ipt';
 
     public function getAdmOfficerIdAttribute()
     {
