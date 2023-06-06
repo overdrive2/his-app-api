@@ -27,8 +27,12 @@
         console.log(ipds);
     }"
 
-    @set-ipd.window="(e) => {
+    @set-ipd.window = "(e) => {
         ipd = e.detail.data;
+    }"
+
+    @err-display.window = "(e) => {
+        alert(e.detail.message)
     }"
     >
     <div x-ref="table" id="list" class="grid grid-flow-row dark:text-white" :class="!dt ? '' : 'hidden'">
@@ -74,6 +78,8 @@
                 <div data-te-stepper-content-ref class="absolute w-full p-4 transition-all duration-500 ease-in-out">
                     <div>
                         AN <span x-text="ipd.an"></span>
+                        regdate <span x-text="ipd.regdate"></span>
+                        regtime <span x-text="ipd.regtime"></span>
                     </div>
                 </div>
             </li>
