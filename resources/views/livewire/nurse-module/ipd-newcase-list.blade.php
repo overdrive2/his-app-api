@@ -1,4 +1,5 @@
 <div x-data="{
+        ward: @entangle('ward'),
         ipds:[],
         an:'',
         dt: false,
@@ -18,6 +19,12 @@
             dt = true
             stepper.changeStep(0)
         }
+
+        recpAn = async (val) => {
+            stepper.changeStep(1)
+            console.log(val)
+        }
+
         detailToggle = () => {
             this.dt = !this.dt
         }
@@ -29,6 +36,7 @@
 
     @set-ipd.window = "(e) => {
         ipd = e.detail.data;
+        console.log(ipd);
     }"
 
     @err-display.window = "(e) => {
@@ -41,16 +49,18 @@
             <div class="flex none w-20">Time</div>
             <div class="flex-none w-20">AN</div>
             <div class="flex none w-20">HN</div>
-            <div class="grow"> Full Name</div>
+            <div class="grow">ชื่อ - นามสกุล</div>
+            <div class="grow">หอผู้ป่วย</div>
         </div>
         @foreach ($rows as $ipd)
             <div id="row{{$ipd->an}}" x-on:click="setAn('{{ $ipd->an }}')"
-                class="flex border-b gap-2 dark:border-gray-500 dark:hover:bg-gray-700 hover:bg-gray-100" role="button" x-bind:disabled="buttonDisabled" >
-                <div class="flex-none w-24">{{ $ipd->regdate }}</div>
+                class="flex border-b gap-2 dark:border-gray-500 dark:hover:bg-gray-700 hover:bg-gray-100 py-2" role="button" x-bind:disabled="buttonDisabled" >
+                <div class="flex-none w-24">{{ $ipd->reg_date_thai }}</div>
                 <div class="flex-none w-20">{{ $ipd->regtime }}</div>
                 <div class="flex-none w-20">{{ $ipd->an }}</div>
                 <div class="flex-none w-20">{{ $ipd->hn }}</div>
                 <div class="grow text-left">{{ $ipd->pname . $ipd->fname . ' ' . $ipd->lname }}</div>
+                <div class="flex-none w-40">{{ $ipd->ward }}</div>
             </div>
         @endforeach
     </div>
@@ -61,7 +71,7 @@
         <x-button.custom x-on:click="dt = false">Back</x-button.custom>
         <ul x-ref="stepper"
             data-te-stepper-init
-            class="relative m-0 flex list-none justify-between overflow-hidden p-0 transition-[height] duration-200 ease-in-out">
+            class="relative m-0 flex list-none justify-between overflow-hidden p-0 duration-200 ease-in-out">
             <!--First item-->
             <li data-te-stepper-step-ref class="w-[4.5rem] flex-auto">
                 <div data-te-stepper-head-ref
@@ -72,14 +82,18 @@
                     </span>
                     <span data-te-stepper-head-text-ref
                         class="font-medium text-neutral-500 after:flex after:text-[0.8rem] after:content-[data-content] dark:text-neutral-300">
-                        step1
+                        Admit info
                     </span>
                 </div>
                 <div data-te-stepper-content-ref class="absolute w-full p-4 transition-all duration-500 ease-in-out">
-                    <div>
-                        AN <span x-text="ipd.an"></span>
-                        regdate <span x-text="ipd.regdate"></span>
-                        regtime <span x-text="ipd.regtime"></span>
+                    <div class="flex flex-col gap-2 dark:text-gray-300 mb-4">
+                        <div>AN <span x-text="ipd.an" class="font-bold"></span> HN <span x-text="ipd.hn" class="font-bold"></span></div>
+                        <div>Admit เมื่อ <span x-text="ipd.regdate_for_thai" class="font-bold"></span> เวลา <span x-text="ipd.regtime" class="font-bold"></span> น.</div>
+                        <div>หอผู้ป่วย <span x-text="ward.id"></span> <span x-text="ward.name"></span></div>
+                    </div>
+                    <div class="flex gap-2 justify-center">
+                        <x-button.secondary type="button" x-on:click="dt = false">ย้อนกลับ</x-button.secondary>
+                        <x-button.primary type="button" x-on:click="recpAn(ipd.an)">รับเข้าเตียง</x-button.primary>
                     </div>
                 </div>
             </li>
@@ -94,7 +108,7 @@
                     </span>
                     <span data-te-stepper-head-text-ref
                         class="text-neutral-500 after:flex after:text-[0.8rem] after:content-[data-content] dark:text-neutral-300">
-                        step2
+                        Register for admit
                     </span>
                 </div>
                 <div data-te-stepper-content-ref
@@ -114,7 +128,7 @@
                     </span>
                     <span data-te-stepper-head-text-ref
                         class="text-neutral-500 after:flex after:text-[0.8rem] after:content-[data-content] dark:text-neutral-300">
-                        step3
+                        Doctor
                     </span>
                 </div>
                 <div data-te-stepper-content-ref

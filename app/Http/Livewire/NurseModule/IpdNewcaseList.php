@@ -15,6 +15,10 @@ class IpdNewcaseList extends Component
 
     public $open = false;
     public $user;
+    public $ward = [
+        'id' => '',
+        'name' => 'ทดสอบ'
+    ];
 
     public $filters = [
         'hn' => '',
@@ -29,6 +33,8 @@ class IpdNewcaseList extends Component
 
     public function setAn($an)
     {
+      $ward_code = HisIpdNewcase::where('an', $an)->value('ward');
+      $this->ward = Ward::where('ward_code', $ward_code)->first();
       $ipd = (new IpdService)->create($an);
       $this->dispatchBrowserEvent('set-ipd', [
         'data' => $ipd

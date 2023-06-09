@@ -46,6 +46,7 @@
                 }
             }
 
-            return Ipd::where('an', $an)->first();
+            return Ipd::select('id', 'an', 'admit_for', 'regdate', 'regtime', 'pttype_id', 'patient_id')
+                ->where('an', $an)->first();
         }
     }

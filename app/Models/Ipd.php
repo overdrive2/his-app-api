@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Helpers\FunctionDateTimes;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Ipd extends Model
 {
-    use HasFactory;
+    use HasFactory, FunctionDateTimes;
 
     protected $fillable = [
         'an',
@@ -49,6 +51,18 @@ class Ipd extends Model
         'updated_by',
         'patient_id',
     ];
+
+    protected $appends = ['hn', 'regdate_for_thai', 'ward_name'];
+
+    public function getWardNameAttribute()
+    {
+        return Ward::find($this->ward_id)->name ?? '';
+    }
+
+    public function getRegdateForThaiAttribute()
+    {
+        return $this->thai_date_short_number2(Carbon::parse($this->regdate));
+    }
 
     public function getPatientNameAttribute()
     {
