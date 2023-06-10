@@ -43,14 +43,14 @@
         alert(e.detail.message)
     }"
     >
-    <div x-ref="table" id="list" class="grid grid-flow-row dark:text-white" :class="!dt ? '' : 'hidden'">
+    <div x-ref="table" id="list" class="overflow-x-auto grid grid-flow-row dark:text-white" :class="!dt ? '' : 'hidden'">
         <div class="flex gap-2">
             <div class="flex-none w-24">Date</div>
-            <div class="flex none w-20">Time</div>
+            <div class="flex-none w-20">Time</div>
             <div class="flex-none w-20">AN</div>
-            <div class="flex none w-20">HN</div>
+            <div class="flex-none w-20">HN</div>
             <div class="grow">ชื่อ - นามสกุล</div>
-            <div class="grow">หอผู้ป่วย</div>
+            <div class="flex-none w-56 text-center">หอผู้ป่วย</div>
         </div>
         @foreach ($rows as $ipd)
             <div id="row{{$ipd->an}}" x-on:click="setAn('{{ $ipd->an }}')"
@@ -59,8 +59,8 @@
                 <div class="flex-none w-20">{{ $ipd->regtime }}</div>
                 <div class="flex-none w-20">{{ $ipd->an }}</div>
                 <div class="flex-none w-20">{{ $ipd->hn }}</div>
-                <div class="grow text-left">{{ $ipd->pname . $ipd->fname . ' ' . $ipd->lname }}</div>
-                <div class="flex-none w-40">{{ $ipd->ward }}</div>
+                <div class="grow text-left min-w-[160px]">{{ $ipd->pname . $ipd->fname . ' ' . $ipd->lname }}</div>
+                <div class="flex-none w-56 text-left">{{ $ipd->ward_name }}</div>
             </div>
         @endforeach
     </div>
@@ -113,8 +113,15 @@
                 </div>
                 <div data-te-stepper-content-ref
                     class="absolute left-0 w-full translate-x-[150%] p-4 transition-all duration-500 ease-in-out">
-                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                    nisi ut aliquip ex ea commodo consequat.
+                    <div class="flex justify-center max-w-xl">
+                        <div class="grid grid-cols-2 gap-4">
+                            <x-input.date wire:model.defer="editing.date_for_editing" />
+                            <x-input.tw-time
+                                id="time_edit"
+                                wire:model.defer="editing.time_for_editing"
+                            />
+                        </div>
+                    </div>
                 </div>
             </li>
 

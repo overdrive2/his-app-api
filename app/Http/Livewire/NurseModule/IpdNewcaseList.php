@@ -5,6 +5,7 @@ namespace App\Http\Livewire\NurseModule;
 use App\Http\Livewire\DataTable\WithCachedRows;
 use App\Http\Livewire\DataTable\WithPerPagePagination;
 use App\Models\His\HisIpdNewcase;
+use App\Models\IpdBedmove;
 use App\Models\Ward;
 use App\Services\IpdService;
 use Livewire\Component;
@@ -28,8 +29,45 @@ class IpdNewcaseList extends Component
 
     public $listeners = [
         'load:data' => 'loadData',
-        'set:an' => 'setAn'
+        'set:an' => 'setAn',
+        'set:filter' => 'setFilter'
     ];
+
+    public IpdBedmove $editing;
+
+    public function rules()
+    {
+        return [
+            'editing.ipd_id' => 'required',
+            'editing.movedate' => 'required',
+            'editing.movetime' => 'required',
+            'editing.ward_id' => 'required',
+            'editing.bed_id' => 'required|exists:beds,id',
+            'editing.bedmove_type_id' => 'required',
+            'editing.updated_by' => 'required',
+            'editing.created_by' => 'required',
+            'editing.time_for_editing' => '',
+            'editing.date_for_editing' => '',
+        ];
+    }
+
+    public function makeBlank()
+    {
+        $uid = auth()->user()->id;
+
+        return IpdBedmove::make([
+            'bed_id' => 0,
+            'updated_by' => $uid,
+            'created_by' => $uid,
+            'movetime' => $this->getCurrentTime(),
+            'bedmove_type_id' => config('ipd.newcase')
+           ]);
+    }
+
+    public function setFilter($name, $value)
+    {
+        $this->filters[$name] = $value;
+    }
 
     public function setAn($an)
     {
@@ -50,6 +88,7 @@ class IpdNewcaseList extends Component
     public function mount()
     {
        $this->user = auth()->user();
+       $this->editing = IpdBedmove::make();
     }
 
     public function getRowsQueryProperty()

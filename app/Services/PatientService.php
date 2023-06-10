@@ -16,6 +16,7 @@
                 'fname' => $row->fname,
                 'lname' => $row->lname,
                 'cid' => $row->cid,
+                'sex' => $row->sex,
                 'birthday' => $row->birthday,
                 'mobile_phone_number' => $row->mobile,
                 'is_death' => false,

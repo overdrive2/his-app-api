@@ -33,6 +33,11 @@ class NurseIpdList extends Component
         $this->editing = $this->makeBlank();
     }
 
+    public function updatedFilterWardId($val)
+    {
+        $this->emit('set:filter', 'ward_id', $val);
+    }
+
     public function updatedWardId($value)
     {
         $rooms = Room::where('ward_id', $value)
