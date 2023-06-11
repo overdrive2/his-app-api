@@ -4,7 +4,9 @@ namespace App\Http\Livewire\NurseModule;
 
 use App\Http\Livewire\DataTable\WithCachedRows;
 use App\Http\Livewire\DataTable\WithPerPagePagination;
+use App\Http\Livewire\Traits\DateTimeHelpers;
 use App\Models\His\HisIpdNewcase;
+use App\Models\Ipd;
 use App\Models\IpdBedmove;
 use App\Models\Ward;
 use App\Services\IpdService;
@@ -12,13 +14,13 @@ use Livewire\Component;
 
 class IpdNewcaseList extends Component
 {
-    use WithCachedRows, WithPerPagePagination;
+    use WithCachedRows, WithPerPagePagination, DateTimeHelpers;
 
     public $open = false;
-    public $user;
+    public $user, $ipd;
     public $ward = [
         'id' => '',
-        'name' => 'ทดสอบ'
+        'name' => ''
     ];
 
     public $filters = [
@@ -30,7 +32,8 @@ class IpdNewcaseList extends Component
     public $listeners = [
         'load:data' => 'loadData',
         'set:an' => 'setAn',
-        'set:filter' => 'setFilter'
+        'set:filter' => 'setFilter',
+        'new:bedmove' => 'newBedmove'
     ];
 
     public IpdBedmove $editing;
@@ -62,6 +65,12 @@ class IpdNewcaseList extends Component
             'movetime' => $this->getCurrentTime(),
             'bedmove_type_id' => config('ipd.newcase')
            ]);
+    }
+
+    public function newBedmove($an)
+    {
+        $this->editing = $this->makeBlank();
+        $this->editing->ipd_id = Ipd::where('an', $an)->value('id');
     }
 
     public function setFilter($name, $value)

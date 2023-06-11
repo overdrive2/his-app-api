@@ -21,6 +21,7 @@
         }
 
         recpAn = async (val) => {
+            await $wire.newBedmove(val);
             stepper.changeStep(1)
             console.log(val)
         }
@@ -120,6 +121,7 @@
                                 id="time_edit"
                                 wire:model.defer="editing.time_for_editing"
                             />
+                            <x-input.tw-text label="AN" />
                         </div>
                     </div>
                 </div>
