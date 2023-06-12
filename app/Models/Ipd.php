@@ -52,7 +52,7 @@ class Ipd extends Model
         'patient_id',
     ];
 
-    protected $appends = ['hn', 'regdate_for_thai', 'ward_name'];
+    protected $appends = ['hn', 'regdate_for_thai', 'ward_name', 'patient_name'];
 
     public function getWardNameAttribute()
     {

@@ -9,6 +9,7 @@ use App\Models\Bed;
 use App\Models\Ipd;
 use App\Models\IpdBedmove;
 use App\Models\Room;
+use App\Services\IpdService;
 use Illuminate\Validation\Validator;
 use Livewire\Component;
 
@@ -24,18 +25,39 @@ class NurseIpdList extends Component
     public $filter_ward_id;
     public $wards = [];
     public $rooms = [];
+    public $page = 1;
+
+    public $listeners = [
+        'new:case' => 'newCase'
+    ];
+
+    public function newCase($an)
+    {
+        $this->ipd = (new IpdService)->create($an);
+
+        $rooms = Room::where('ward_id', $this->filter_ward_id)
+            ->where('room_type_id', '<>', config('ipd.waitroom'))
+            ->get();
+        $beds = Bed::where('room_id', $rooms[0]->id)->get();
+
+        $this->dispatchBrowserEvent('ncmodel-show', [
+            'ipd' => $this->ipd,
+            'rooms' => $rooms,
+            'beds' => $beds
+        ]);
+    }
 
     public function mount()
     {
         $this->user = auth()->user();
         $this->wards = $this->user->wards();
-       // dd($this->wards);
+        $this->filter_ward_id = $this->wards[0]->id;
         $this->editing = $this->makeBlank();
     }
 
-    public function updatedFilterWardId($val)
+    public function updatedFilterWardId($value)
     {
-        $this->emit('set:filter', 'ward_id', $val);
+
     }
 
     public function updatedWardId($value)
@@ -143,6 +165,7 @@ class NurseIpdList extends Component
             ->orderBy('movedate', 'asc')
             ->orderBy('movetime', 'asc')
             ->get();
+
         $this->dispatchBrowserEvent('lgmodal-show',[
             'rows' => $bedmoves
         ]);

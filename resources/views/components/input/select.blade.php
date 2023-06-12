@@ -4,7 +4,10 @@
         model: @entangle($attributes->wire('model')),
     }"
 >
-    <select data-te-select-init
+    <div x-text="model"></div>
+    <select
+        x-bind:value="model"
+        data-te-select-init
         {{ $attributes->merge(['class' => 'focus:rign-0 focus:ring-green-500']) }}
     >
         {{ $slot }}
