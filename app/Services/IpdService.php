@@ -2,7 +2,8 @@
     namespace App\Services;
 
     use App\Models\His\HisIpd;
-    use App\Models\Ipd;
+use App\Models\his\HisTransferData;
+use App\Models\Ipd;
 
     class IpdService
     {
@@ -48,5 +49,17 @@
 
             return Ipd::select('id', 'an', 'admit_for', 'regdate', 'regtime', 'pttype_id', 'patient_id')
                 ->where('an', $an)->first();
+        }
+
+        public function tranfered($id)
+        {
+            $row = [
+                'code' => 'ipt',
+                'pk_fieldname' => 'an',
+                'value' => Ipd::where('id', $id)->value('an'),
+                'created_by' => auth()->user()->id
+            ];
+
+            HisTransferData::create($row);
         }
     }

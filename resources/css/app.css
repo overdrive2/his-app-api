@@ -10,3 +10,13 @@ h6 {
     font-size: medium;
     font-weight: bold;
 }
+
+.animate-progress {
+    -webkit-mask-image: linear-gradient(130deg, #000 55%, rgba(0, 0, 0, 0.8) 75%, #000 95%);
+    mask-image: linear-gradient(130deg, #000 55%, rgba(0, 0, 0, 0.8) 75%, #000 95%);
+}
+
+[x-cloak] {
+    display: none !important;
+ }
+

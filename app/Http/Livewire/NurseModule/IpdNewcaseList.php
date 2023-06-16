@@ -22,8 +22,31 @@ class IpdNewcaseList extends Component
     ];
 
     public $listeners = [
-        'load:newcase' => 'loadData'
+        'load:newcase' => 'loadData',
+        'set:ward' => 'setWard',
+        'refresh:newcase' => 'refreshNewcase',
+        'self:refresh' => '$refresh'
     ];
+
+    public function refreshNewcase()
+    {
+       $this->dispatchBrowserEvent('update-newcase-count', [
+            'count' => $this->rowsQuery->count()
+       ]);
+
+       $this->emit('self:refresh');
+    }
+
+    public function getNewcaseCount()
+    {
+        return $this->rowsQuery->count();
+    }
+
+    public function setWard($id)
+    {
+        $this->ward_id = $id;
+        //dd($this->ward_id);
+    }
 
     public function getRowsQueryProperty()
     {
@@ -41,7 +64,7 @@ class IpdNewcaseList extends Component
 
     public function mount()
     {
-     //   dd($this->ward_id);
+
     }
 
     public function getRowsProperty()

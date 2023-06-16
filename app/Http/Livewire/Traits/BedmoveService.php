@@ -33,6 +33,7 @@ trait BedmoveService
             'editing.created_by' => 'required',
             'editing.time_for_editing' => '',
             'editing.date_for_editing' => '',
+            'editing.delflag' => 'required'
         ];
     }
 
@@ -47,7 +48,8 @@ trait BedmoveService
             'updated_by' => $uid,
             'created_by' => $uid,
             'movetime' => $this->getCurrentTime(),
-            'bedmove_type_id' => config('ipd.moveself')
+            'bedmove_type_id' => config('ipd.moveself'),
+            'delflag' => false
            ]);
     }
 
@@ -64,6 +66,7 @@ trait BedmoveService
 
         $this->editing->bedmove_type_id = ($this->ward_id == $this->current_ward_id) ? config('ipd.moveself') : config('ipd.moveout');
         $this->editing->bed_id = ($this->editing->bedmove_type_id == config('ipd.moveout')) ? null : $this->editing->bed_id;
+
         $this->dispatchBrowserEvent('rooms-update', [
             'rooms' => $rooms,
         ]);

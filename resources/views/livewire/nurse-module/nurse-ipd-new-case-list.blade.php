@@ -51,7 +51,7 @@
               <li>
                 <span class="mx-2 text-neutral-500 dark:text-neutral-400">></span>
               </li>
-              <li class="text-neutral-500 dark:text-neutral-400">รับใหม่</li>
+              <li class="text-neutral-500 dark:text-neutral-400">รอรับ</li>
             </ol>
         </nav>
         <div class="lg:max-w-xs flex gap-2 lg:flex-row flex-col" wire:ignore>

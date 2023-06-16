@@ -50,6 +50,7 @@ class Ipd extends Model
         'created_by',
         'updated_by',
         'patient_id',
+        'current_bedmove_id'
     ];
 
     protected $appends = ['hn', 'regdate_for_thai', 'ward_name', 'patient_name'];
