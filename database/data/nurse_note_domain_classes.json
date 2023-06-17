@@ -1,0 +1,331 @@
+[
+  {
+    "id": 1,
+    "domain_id": 1,
+    "class_id": 1,
+    "class_ename": "Health awareness",
+    "class_tname": "ความตระหนักเรื่องสุขภาพ"
+  },
+  {
+    "id": 2,
+    "domain_id": 1,
+    "class_id": 2,
+    "class_ename": "Health management",
+    "class_tname": "การจัดการสุขภาพ"
+  },
+  {
+    "id": 3,
+    "domain_id": 2,
+    "class_id": 1,
+    "class_ename": "Ingestion",
+    "class_tname": "การกิน"
+  },
+  {
+    "id": 4,
+    "domain_id": 2,
+    "class_id": 2,
+    "class_ename": "Digestion",
+    "class_tname": "การย่อยอาหาร"
+  },
+  {
+    "id": 5,
+    "domain_id": 2,
+    "class_id": 3,
+    "class_ename": "Absorption",
+    "class_tname": "การดูดซึม"
+  },
+  {
+    "id": 6,
+    "domain_id": 2,
+    "class_id": 4,
+    "class_ename": "Metabolism",
+    "class_tname": "เมตาบอลิสซึม"
+  },
+  {
+    "id": 7,
+    "domain_id": 2,
+    "class_id": 5,
+    "class_ename": "Hydration",
+    "class_tname": "น้ำ/เกลือแร่"
+  },
+  {
+    "id": 8,
+    "domain_id": 3,
+    "class_id": 1,
+    "class_ename": "Urinary function",
+    "class_tname": "ระบบปัสสาวะ"
+  },
+  {
+    "id": 9,
+    "domain_id": 3,
+    "class_id": 2,
+    "class_ename": "Gastrointestinal function",
+    "class_tname": "ระบบทางเดินอาหาร"
+  },
+  {
+    "id": 10,
+    "domain_id": 3,
+    "class_id": 3,
+    "class_ename": "Integumentary function",
+    "class_tname": "ผิวหนัง"
+  },
+  {
+    "id": 11,
+    "domain_id": 3,
+    "class_id": 4,
+    "class_ename": "Respiratory function",
+    "class_tname": "ทางเดินหายใจ"
+  },
+  {
+    "id": 12,
+    "domain_id": 4,
+    "class_id": 1,
+    "class_ename": "Sleep/rest",
+    "class_tname": "การพักผ่อน นอนหลับ"
+  },
+  {
+    "id": 13,
+    "domain_id": 4,
+    "class_id": 2,
+    "class_ename": "Activity/exercise",
+    "class_tname": "การออกกำลัง การเคลื่อนไหว"
+  },
+  {
+    "id": 14,
+    "domain_id": 4,
+    "class_id": 3,
+    "class_ename": "Energy balance",
+    "class_tname": "สมดุลพลังงานร่างกาย"
+  },
+  {
+    "id": 15,
+    "domain_id": 4,
+    "class_id": 4,
+    "class_ename": "Cardiovascular/pulmonary responses",
+    "class_tname": "การตอบสนองของระบบไหลเวียน ระบบหายใจ"
+  },
+  {
+    "id": 16,
+    "domain_id": 4,
+    "class_id": 5,
+    "class_ename": "Self-care",
+    "class_tname": "การดูแลตนเอง"
+  },
+  {
+    "id": 17,
+    "domain_id": 5,
+    "class_id": 1,
+    "class_ename": "Attention",
+    "class_tname": ""
+  },
+  {
+    "id": 18,
+    "domain_id": 5,
+    "class_id": 2,
+    "class_ename": "Orientation",
+    "class_tname": ""
+  },
+  {
+    "id": 19,
+    "domain_id": 5,
+    "class_id": 3,
+    "class_ename": "Sensation/perception",
+    "class_tname": ""
+  },
+  {
+    "id": 20,
+    "domain_id": 5,
+    "class_id": 4,
+    "class_ename": "Cognition",
+    "class_tname": ""
+  },
+  {
+    "id": 21,
+    "domain_id": 5,
+    "class_id": 5,
+    "class_ename": "Communication",
+    "class_tname": "การสื่อสาร"
+  },
+  {
+    "id": 22,
+    "domain_id": 6,
+    "class_id": 1,
+    "class_ename": "Self-concept",
+    "class_tname": ""
+  },
+  {
+    "id": 23,
+    "domain_id": 6,
+    "class_id": 2,
+    "class_ename": "Self-concept",
+    "class_tname": ""
+  },
+  {
+    "id": 24,
+    "domain_id": 6,
+    "class_id": 3,
+    "class_ename": "Body image",
+    "class_tname": "ภาพลักษณ์"
+  },
+  {
+    "id": 25,
+    "domain_id": 7,
+    "class_id": 1,
+    "class_ename": "Caregiving roles",
+    "class_tname": "บทบาทผู้ดูแล"
+  },
+  {
+    "id": 26,
+    "domain_id": 7,
+    "class_id": 2,
+    "class_ename": "Family relationships",
+    "class_tname": "ความสัมพันธ์ในคอบครัว"
+  },
+  {
+    "id": 27,
+    "domain_id": 7,
+    "class_id": 3,
+    "class_ename": "Role performance",
+    "class_tname": ""
+  },
+  {
+    "id": 28,
+    "domain_id": 8,
+    "class_id": 1,
+    "class_ename": "Sexual identity",
+    "class_tname": ""
+  },
+  {
+    "id": 29,
+    "domain_id": 8,
+    "class_id": 2,
+    "class_ename": "Sexual function",
+    "class_tname": ""
+  },
+  {
+    "id": 30,
+    "domain_id": 8,
+    "class_id": 3,
+    "class_ename": "Reproduction",
+    "class_tname": ""
+  },
+  {
+    "id": 31,
+    "domain_id": 9,
+    "class_id": 1,
+    "class_ename": "Post-trauma responses",
+    "class_tname": ""
+  },
+  {
+    "id": 32,
+    "domain_id": 9,
+    "class_id": 2,
+    "class_ename": "Coping responses",
+    "class_tname": ""
+  },
+  {
+    "id": 33,
+    "domain_id": 9,
+    "class_id": 3,
+    "class_ename": "Neurobehavioral stress",
+    "class_tname": ""
+  },
+  {
+    "id": 34,
+    "domain_id": 10,
+    "class_id": 1,
+    "class_ename": "Values",
+    "class_tname": ""
+  },
+  {
+    "id": 35,
+    "domain_id": 10,
+    "class_id": 2,
+    "class_ename": "Beliefs",
+    "class_tname": ""
+  },
+  {
+    "id": 36,
+    "domain_id": 10,
+    "class_id": 3,
+    "class_ename": "Value/belief/action congruence",
+    "class_tname": ""
+  },
+  {
+    "id": 37,
+    "domain_id": 11,
+    "class_id": 1,
+    "class_ename": "Infection",
+    "class_tname": "การติดเชื้อ"
+  },
+  {
+    "id": 38,
+    "domain_id": 11,
+    "class_id": 2,
+    "class_ename": "Physical injury",
+    "class_tname": "การบาดเจ็บทางกาย"
+  },
+  {
+    "id": 39,
+    "domain_id": 11,
+    "class_id": 3,
+    "class_ename": "Violence",
+    "class_tname": "ความรุนแรง"
+  },
+  {
+    "id": 40,
+    "domain_id": 11,
+    "class_id": 4,
+    "class_ename": "Environmental hazards",
+    "class_tname": "อันตรายจากสิ่งแวดล้อม"
+  },
+  {
+    "id": 41,
+    "domain_id": 11,
+    "class_id": 5,
+    "class_ename": "Defensive processes",
+    "class_tname": "กระบวนการป้องกัน"
+  },
+  {
+    "id": 42,
+    "domain_id": 11,
+    "class_id": 6,
+    "class_ename": "Thermoregulation",
+    "class_tname": "การควบคุมอุณหภูมิกาย"
+  },
+  {
+    "id": 43,
+    "domain_id": 12,
+    "class_id": 1,
+    "class_ename": "Physical comfort",
+    "class_tname": ""
+  },
+  {
+    "id": 44,
+    "domain_id": 12,
+    "class_id": 2,
+    "class_ename": "Environmental comfort",
+    "class_tname": "ความสุขสบายทางสิ่งแวดล้อม"
+  },
+  {
+    "id": 45,
+    "domain_id": 12,
+    "class_id": 3,
+    "class_ename": "Social comfort",
+    "class_tname": "ความสุขสบายทางสังคม"
+  },
+  {
+    "id": 46,
+    "domain_id": 13,
+    "class_id": 1,
+    "class_ename": "Growth",
+    "class_tname": "การเติบโต"
+  },
+  {
+    "id": 47,
+    "domain_id": 13,
+    "class_id": 2,
+    "class_ename": "Development",
+    "class_tname": "พัฒนาการ"
+  }
+]

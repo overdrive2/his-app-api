@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "group_tname": "การคัดกรอง คัดแยกและการประเมินสุขภาพทางการพยาบาล",
+    "group_ename": "Nursing screening & triage assessment"
+  },
+  {
+    "id": 2,
+    "group_tname": "การแปลผลเบื้องต้นจากการตรวจดู ฟัง เคาะ คลำ และการตรวจพิเศษ",
+    "group_ename": "Interpreting preliminary results from inspection, auacultation, & special examiation"
+  },
+  {
+    "id": 3,
+    "group_tname": "การบริหารยา",
+    "group_ename": "Drug administration"
+  },
+  {
+    "id": 4,
+    "group_tname": "การติดตามและเฝ้าระวังอาการเปลี่ยนแปลง",
+    "group_ename": "Monitoring system changes"
+  },
+  {
+    "id": 5,
+    "group_tname": "การเตรียมผู้ป่วยเพื่อทำหัตถการหรือการผ่าตัด",
+    "group_ename": "Patient preparation for procedures OR operation"
+  },
+  {
+    "id": 6,
+    "group_tname": "การพยาบาลผู้ป่วยระหว่างและหลังทำหัตถการหรือทำผ่าตัด",
+    "group_ename": "Nursing care for Peri & Post or Procedures OR operation"
+  },
+  {
+    "id": 7,
+    "group_tname": "การพยาบาล",
+    "group_ename": "Nursing care"
+  },
+  {
+    "id": 8,
+    "group_tname": "การวางแผนจำหน่าย/การพยาบาลเพื่อฟื้นฟู/รักษาสภาพ/ป้องกันกลับเป็นซ้ำ",
+    "group_ename": "Discharge planning/ Rehab nursing/maintain/ present recurrent"
+  }
+]

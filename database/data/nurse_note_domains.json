@@ -1,0 +1,67 @@
+[
+  {
+    "id": 1,
+    "domain_tname": "Health Promotion",
+    "domain_ename": "การส่งเสริมสุขภาพ"
+  },
+  {
+    "id": 2,
+    "domain_tname": "Nutrition",
+    "domain_ename": "โภชนาการ"
+  },
+  {
+    "id": 3,
+    "domain_tname": "Elimination & Exchange",
+    "domain_ename": "การขับถ่าย"
+  },
+  {
+    "id": 4,
+    "domain_tname": "Activity/Rest",
+    "domain_ename": "กิจกรรมและการพักผ่อน"
+  },
+  {
+    "id": 5,
+    "domain_tname": "Perception/Cognition",
+    "domain_ename": "การรับรู้/การคิด"
+  },
+  {
+    "id": 6,
+    "domain_tname": "Self-perception",
+    "domain_ename": "อัตตา/ตัวตน"
+  },
+  {
+    "id": 7,
+    "domain_tname": "Role Relationship",
+    "domain_ename": "บทบาท/ความสัมพันธ์"
+  },
+  {
+    "id": 8,
+    "domain_tname": "Sexuality",
+    "domain_ename": "เรื่องทางเพศ"
+  },
+  {
+    "id": 9,
+    "domain_tname": "Coping/ Stress Tolerance",
+    "domain_ename": "การเผชิญความเครียด"
+  },
+  {
+    "id": 10,
+    "domain_tname": "Life Principles",
+    "domain_ename": "หลักการชีวิต"
+  },
+  {
+    "id": 11,
+    "domain_tname": "Safety/ Protection",
+    "domain_ename": "ความปลอดภัย/การป้องกัน"
+  },
+  {
+    "id": 12,
+    "domain_tname": "Comfort",
+    "domain_ename": "ความสุขสบาย"
+  },
+  {
+    "id": 13,
+    "domain_tname": "Growth/Development",
+    "domain_ename": "การเติบโต/พัฒนาการ"
+  }
+]

@@ -52,6 +52,7 @@ return new class extends Migration
             $table->text('operation')->nullable();
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
+            $table->integer('current_bedmove_id');
             $table->timestamps();
         });
     }
