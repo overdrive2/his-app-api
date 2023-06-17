@@ -2,106 +2,136 @@
     x-data="{
         rooms:[],
         beds:[],
+        errors:[],
+        tab: 0,
+        loading: false,
+        selectedId: 0,
+        badges: {
+            newcase: 0,
+            movein: 0,
+            stay: 0,
+            discharge: 0,
+        },
         ipd: {
             hn: '',
             an: ''
+        },
+        setTab: (idx) => {
+            $dispatch('set-tab', {id: idx});
+            tab = idx
+            console.log(tab)
+           // $wire.set('tab', idx)
         }
     }"
     x-init="
         ncModal = new Modal($refs.newCaseModal);
     "
-    @ncmodel-show.window = "(e) => {
+    @set-tab="(e) =>  {
+        tab = e.detail.id
+        $wire.set('tab', tab)
+    }"
+
+    @ncmodal-show.window = "(e) => {
         ipd = e.detail.ipd;
-        rooms = e.detail.rooms;
-        beds = e.detail.beds;
-        console.log(rooms);
-        ncModal.show();
+        setTimeout(async ()=> {
+            await $dispatch('swal:close')
+            ncModal.show();
+        }, 1000)
+    }"
+
+    @ncmodal-hide.window = "(e) => {
+        $wire.emit('refresh:newcase');
+        ncModal.hide();
+    }"
+
+    @err-message.window = "(e) => {
+        errors = JSON.parse(e.detail.errors);
+        console.log(errors)
+    }"
+
+    @update-newcase-count.window = "(e) => {
+        badges.newcase = e.detail.count
     }"
 >
     <div class="lg:flex">
-        <div wire:ignore class="flex-none lg:max-w-sm w-full dark:text-gray-200 pb-3.5 pt-4">
-            <select wire:model="filter_ward_id" data-te-select-init data-te-select-filter="true" >
-                @foreach ($wards as $ward)
-                <option value="{{ $ward->id }}">{{ $ward->name }}</option>
-                @endforeach
-            </select>
+        <div id="te-search-container" class="relative hidden lg:flex lg:items-center">
+            <div wire:ignore class="relative mb-0 flex flex-wrap items-stretch">
+                <select @valueChange.te.select="(e) => {}" id="wardSelect" wire:model="filter_ward_id" data-te-select-init data-te-select-filter="true" >
+                    @foreach ($wards as $ward)
+                    <option value="{{ $ward->id }}">{{ $ward->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div id="te-search-dropdown" class="lpy-2 absolute top-[36px] z-[999999] hidden w-full overflow-hidden rounded bg-white shadow-md dark:bg-neutral-700">
+              <ul id="te-search-list" class="relative max-h-[265px] w-full overflow-y-scroll pt-0 [&amp;::-webkit-scrollbar]:hidden ps"><div class="ps__rail-x" style="left: 0px; bottom: 0px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__rail-y" style="top: 0px; right: 0px;"><div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div></div></ul>
+              <hr class="my-0 dark:border-neutral-600">
+              <p class="my-4 mr-4 text-end text-xs text-neutral-600 dark:text-neutral-100">
+                search results: <strong id="te-search-count"></strong>
+              </p>
+            </div>
         </div>
-        <div class="flex-grow">
-            <ul wire:ignore
+        <div wire:ignore class="flex-grow">
+            <ul
                 class="mb-4 flex list-none flex-row flex-wrap border-b-0 pl-0 lg:justify-end justify-center"
                 id="tabs-tab3"
                 role="tablist"
                 data-te-nav-ref
             >
                 <li role="presentation">
-                    <a wire:click="$set('page', 1)"
-                        data-te-ripple-color="light"
-                        class="my-2 block border-x-0 border-b-2 border-t-0 border-transparent lg:px-7 px-5 pb-3.5 pt-4 text-md font-medium uppercase leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate focus:border-transparent data-[te-nav-active]:border-primary data-[te-nav-active]:text-primary dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-400 dark:data-[te-nav-active]:text-primary-400"
+                    <x-button.nav
+                        :tabName="__('tabs-newcase')"
+                        x-on:click="$dispatch('set-tab', {id: 1});"
                         id="tabs-home-tab3"
-                        data-te-toggle="pill"
-                        data-te-nav-active
-                        data-te-target="#tabs-newcase"
-                        role="button"
-                        aria-controls="tabs-newcase"
-                        aria-selected="true"
-                    ><i class="fa-solid fa-user-plus text-[16px] mr-2 mt-1"></i> รับใหม่</a>
+                    >
+                        <i class="fa-solid fa-user-plus text-[16px] mr-2 mt-1"></i> รอรับใหม่
+                        <x-badge.red style="display: none" x-show="badges.newcase > 0" x-text="badges.newcase"></x-badge.red>
+                    </x-button.nav>
                 </li>
                 <li role="presentation">
-                    <a
-                        wire:click="$set('page', 2)"
-                        data-te-ripple-color="light"
-                        class="focus:border-transparen my-2 block border-x-0 border-b-2 border-t-0 border-transparent lg:px-7 px-5 pb-3.5 pt-4 text-md font-medium uppercase leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate data-[te-nav-active]:border-primary data-[te-nav-active]:text-primary dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-400 dark:data-[te-nav-active]:text-primary-400"
+                    <x-button.nav
+                        :tabName="__('tabs-recpcase')"
+                        x-on:click="setTab(2)"
                         id="tabs-recpcase-tab3"
-                        data-te-toggle="pill"
-                        data-te-target="#tabs-recpcase"
-                        role="button"
-                        aria-controls="tabs-recpcase"
-                        aria-selected="false"
-                    ><i class="fa-solid fa-user-clock text-[16px] mr-2 mt-1"></i> รับย้าย</a>
+                    >
+                        <i class="fa-solid fa-user-clock text-[16px] mr-2 mt-1"></i> รอรับย้าย
+                    </x-button.nav>
                 </li>
                 <li role="presentation">
-                    <a
-                    href="#tabs-move"
-                    class="focus:border-transparen my-2 block border-x-0 border-b-2 border-t-0 border-transparent lg:px-7 px-5 pb-3.5 pt-4 text-md font-medium uppercase leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate data-[te-nav-active]:border-primary data-[te-nav-active]:text-primary dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-400 dark:data-[te-nav-active]:text-primary-400"
-                    id="tabs-messages-tab3"
-                    data-te-toggle="pill"
-                    data-te-target="#tabs-move"
-                    role="tab"
-                    aria-controls="tabs-move"
-                    aria-selected="false"
-                    ><i class="fa-solid fa-user-shield text-[16px] mr-2 mt-1"></i> กำลังรักษา</a
+                    <x-button.nav
+                        data-te-nav-active
+                        :tabName="__('tabs-stay')"
+                        x-on:click.prevent="setTab(3)"
+                        id="tabs-stay-tab3"
                     >
+                        <i class="fa-solid fa-user-shield text-[16px] mr-2 mt-1"></i> กำลังรักษา
+                    </x-button.nav>
                 </li>
                 <li role="presentation">
-                    <a
-                    href="#tabs-discharge"
-                    class="focus:border-transparen my-2 block border-x-0 border-b-2 border-t-0 border-transparent lg:px-7 px-5 pb-3.5 pt-4 text-md font-medium uppercase leading-tight text-neutral-500 hover:isolate hover:border-transparent hover:bg-neutral-100 focus:isolate data-[te-nav-active]:border-primary data-[te-nav-active]:text-primary dark:text-neutral-400 dark:hover:bg-transparent dark:data-[te-nav-active]:border-primary-400 dark:data-[te-nav-active]:text-primary-400"
-                    id="tabs-messages-tab3"
-                    data-te-toggle="pill"
-                    data-te-target="#tabs-discharge"
-                    role="tab"
-                    aria-controls="tabs-discharge"
-                    aria-selected="false"
-                    ><i class="fa-solid fa-user-check text-[16px] mr-2 mt-1"></i> จำหน่าย</a
+                    <x-button.nav
+                        :tabName="__('tabs-discharge')"
+                        x-on:click="setTab(4)"
+                        id="tabs-discharge-tab3"
                     >
+                        <i class="fa-solid fa-user-check text-[16px] mr-2 mt-1"></i> จำหน่าย
+                    </x-button.nav>
                 </li>
             </ul>
         </div>
     </div>
-    <div>
+    <div wire:ignore class="bg-gray">
         <div
             class="hidden opacity-100 transition-opacity duration-150 ease-linear data-[te-tab-active]:block"
             id="tabs-newcase"
             role="tabpanel"
-            data-te-tab-active
             aria-labelledby="tabs-newcase-tab">
+            <div x-text="tab"></div>
             @livewire(
                 'nurse-module.ipd-newcase-list', [
                     'user' => $user,
                     'ward_id' => $filter_ward_id,
-                    'open' => ($page == 1)
+                    'open' => false
                 ],
-                key('ipd-newcase'.$page.$filter_ward_id)
+                key('ipd-newcase'.$tab.$filter_ward_id)
             )
         </div>
         <div
@@ -112,11 +142,20 @@
             Tab 2 content button version
         </div>
         <div
-            class="hidden opacity-0 transition-opacity duration-150 ease-linear data-[te-tab-active]:block"
-            id="tabs-move"
+            class="transition-opacity duration-150 ease-linear data-[te-tab-active]:block"
+            id="tabs-stay"
             role="tabpanel"
-            aria-labelledby="tabs-move-tab">
-            Tab 3 content button version
+            aria-labelledby="tabs-stay-tab"
+            data-te-tab-active
+        >
+            @livewire(
+            'nurse-module.ipd-stay-list', [
+                'user' => $user,
+                'ward_id' => $filter_ward_id,
+                'open' => false
+            ],
+            key('ipd-stay'.$tab.$filter_ward_id)
+            )
         </div>
         <div
             class="hidden opacity-0 transition-opacity duration-150 ease-linear data-[te-tab-active]:block"
@@ -134,13 +173,13 @@
         tabindex="-1"
         aria-labelledby="newcaseModalLabel"
         aria-modal="true"
-        role="dialog"
+        wire:ignore
     >
         <div
             data-te-modal-dialog-ref
-            class="pointer-events-none relative w-auto translate-y-[-50px] opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:max-w-[500px] min-[992px]:max-w-[800px] min-[1200px]:max-w-[1140px]">
+            class="pointer-events-none relative h-[calc(100%-1rem)] w-full translate-y-[-50px] opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:h-[calc(100%-3.5rem)] min-[576px]:max-w-3xl">
             <div
-                class="pointer-events-auto relative flex w-full flex-col rounded-md border-none bg-white bg-clip-padding text-current shadow-lg outline-none dark:bg-neutral-600">
+                class="pointer-events-auto relative flex max-h-[100%] w-full flex-col overflow-hidden rounded-md border-none bg-white bg-clip-padding text-current shadow-lg outline-none dark:bg-neutral-600">
                 <div
                     class="flex flex-shrink-0 items-center justify-between rounded-t-md border-b-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
                     <!--Modal title-->
@@ -170,27 +209,41 @@
                     </button>
                 </div>
                 <!--Modal body-->
-                <div class="relative p-4">
-                    <div id="ipd-card" class="text-xl font-medium dark:text-gray-200 text-gray-600">
+                <div class="relative overflow-y-auto p-4">
+                    <div id="ipd-card" class="mb-4 font-medium dark:text-gray-200 text-gray-600">
                         <div>
-                            <h6 class="inline-block">AN <span class="font-bold text-gray-700 dark:text-gray-50" x-text="ipd.an"></span></h6>
-                            <h6 class="inline-block">HN <span class="font-bold text-gray-700 dark:text-gray-50" x-text="ipd.hn"></span></h6>
+                            <h6 class="inline-block">AN: <span class="font-bold text-gray-700 dark:text-gray-50" x-text="ipd.an"></span></h6>
+                            <h6 class="inline-block">HN: <span class="font-bold text-gray-700 dark:text-gray-50" x-text="ipd.hn"></span></h6>
                         </div>
                         <div>
-                            <h6>ชื่อ - นามสกุล <span class="font-bold text-gray-700 dark:text-gray-50" x-text="ipd.patient_name"></span></h6>
+                            <h6><span class="text-xl font-bold text-gray-700 dark:text-gray-50" x-text="ipd.patient_name"></span></h6>
                         </div>
                     </div>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <x-input.date wire:model.defer="bm.date_for_editing" />
+                        <x-input.tw-time
+                            id="time_edit"
+                            wire:model.defer="bm.time_for_editing"
+                        />
+                    </div>
+                    <h5 class="text-left text-base font-bold border-b">เลือกห้อง</h5>
+                    <div class="text-left overflow-x-auto mb-4">
+                        <x-room-menu :rows="$rooms" />
+                    </div>
+
+                    <h5 class="text-left text-base font-bold border-b mb-2">เลือกเตียง</h5>
                     <div class="mb-4">
-                        <template x-for="room in rooms">
-                            <div class="max-w-xs px-2 py-2 border rounded-md bg-gray-200 dark:bg-gray-600">ห้อง <span x-text="room.room_name"></span></div>
-                        </template>
-                    </div>
-                    <div class="flex flex-wrap gap-2">
-                        <template x-for="bed in beds">
-                            <div role="button" x-on:click="alert(bed.bed_name)" class="px-4 py-4 border rounded-md w-full max-w-xs"><span x-text="bed.bed_name"></span></div>
-                        </template>
+                        <x-bed-menu wire:model.defer="bm.bed_id" />
+                        <x-error
+                            x-show="errors['bm.bed_id']"
+                            x-text="errors['bm.bed_id']"
+                        />
                     </div>
                 </div>
+                <x-tw-modal.footer>
+                    <x-button.secondary @click="ncModal.hide();">ปิด</x-button.secondary>
+                    <x-button.primary wire:click="postNewBed">บันทึก</x-button.primary>
+                </x-tw-modal.footer>
             </div>
         </div>
     </div>

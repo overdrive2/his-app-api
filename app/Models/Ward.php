@@ -17,4 +17,12 @@ class Ward extends Model
             ->where('room_type_id', config('ipd.waitroom'))
             ->value('id');
     }
+
+    public function rooms()
+    {
+        return Room::where('ward_id', $this->id)
+            ->where('room_type_id', '<>', config('ipd.waitroom'))
+            ->orderBy('display_order', 'asc')
+            ->get();
+    }
 }

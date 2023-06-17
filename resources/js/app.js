@@ -4,7 +4,7 @@ import focus from '@alpinejs/focus';
 import './theme';
 import Swal from 'sweetalert2'
 import 'sweetalert2/src/sweetalert2.scss'
-import bedMoveProps from './bedmove';
+import  bedMoveProps from './bedmove';
 
 import {
     Datepicker,
@@ -24,13 +24,19 @@ import {
 
 initTE({ Datepicker, Select, Input, Ripple, Collapse, Dropdown, Sidenav, Button, Modal, Timepicker, Tab, Stepper});
 
+window.Tab = Tab;
 window.Modal = Modal;
 window.Stepper =Stepper;
 window.Input = Input;
 window.Datepicker = Datepicker;
 window.Timepicker = Timepicker;
 window.Swal = Swal;
+
+/* Load Nurse const for nurse ipd list*/
 window.bedMoveProps = bedMoveProps;
+//window.nurseListProps = nurseListProps;
+//window.newCaseModal = newCaseModal;
+
 window.dateOptions = {
     format: 'dd/mm/yyyy',
     monthsShort: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ษ.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
@@ -102,6 +108,36 @@ window.addEventListener('delete:confirm', event => {
 		){}
     })
 })
+
+window.addEventListener('cat:progress', event => {
+    Swal.fire({
+        imageUrl: '/images/nyan/vday.gif',
+        imageHeight: 84,
+        title: 'อดใจรอหน่อยนะ น้องเหมียวกำลังเตรียมข้อมูล...',
+        width: 480,
+        padding: '1.0em',
+        color: '#db2777',
+        background: '#fff',
+        showConfirmButton: false,
+        allowOutsideClick: false
+        /*backdrop: `
+        rgba(0,0,123,0.4)
+        url("/images/nyan-cat.gif")
+        left top
+        no-repeat
+        `*/
+    })
+})
+
+window.addEventListener('swal:close', event => {
+    Swal.close();
+})
+
+/*const wardSelect = document.getElementById('wardSelect');
+
+wardSelect.addEventListener('valueChange.te.select', (e) => {
+
+});*/
 
 window.Alpine = Alpine;
 

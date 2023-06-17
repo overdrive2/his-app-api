@@ -3,7 +3,7 @@
 namespace App\Http\Livewire\NurseModule;
 
 use App\Http\Livewire\DataTable\WithPerPagePagination;
-use App\Http\Livewire\Traits\BedmoveService;
+use App\Services\BedmoveService;
 use App\Http\Livewire\Traits\DateTimeHelpers;
 use App\Models\Bed;
 use App\Models\Ipd;
@@ -15,36 +15,126 @@ use Livewire\Component;
 
 class NurseIpdList extends Component
 {
-    use WithPerPagePagination, DateTimeHelpers, BedmoveService;
+    use WithPerPagePagination, DateTimeHelpers;
 
+    public $ipd;
     public $wardName = '';
     public $showEditModal = false;
     public $showMoveBedList = false;
     public $user, $ward_id, $current_ward_id, $ipd_id;
-    public $room_id;
+    public $room_id, $bed_id;
     public $filter_ward_id;
     public $wards = [];
     public $rooms = [];
-    public $page = 1;
+    public $tab = 1;
+
+    public IpdBedmove $bm;
 
     public $listeners = [
         'new:case' => 'newCase'
     ];
 
-    public function newCase($an)
+    public function rules()
     {
-        $this->ipd = (new IpdService)->create($an);
+        return [
+            'bm.ipd_id' => 'required',
+            'bm.bed_id' => 'required|exists:beds,id',
+            'bm.ward_id' => 'required',
+            'bm.movedate' => 'required',
+            'bm.movetime' => 'required',
+            'bm.bedmove_type_id' => 'required',
+            'bm.updated_by' => 'required',
+            'bm.created_by' => 'required',
+            'bm.time_for_editing' => '',
+            'bm.date_for_editing' => '',
+            'bm.delflag' => 'required'
+        ];
+    }
 
-        $rooms = Room::where('ward_id', $this->filter_ward_id)
+    public function updatedTab($value)
+    {
+        switch ($value) {
+            case 1:
+                /*$this->dispatchBrowserEvent('update-newcase-count', [
+                    'count' => 8
+                ]);*/
+                $this->emit('open:newcase', true);
+                break;
+            case 3:
+                $this->emit('load:stay', true);
+                break;
+        }
+    }
+
+    public function getRooms()
+    {
+        return Room::where('ward_id', $this->filter_ward_id)
             ->where('room_type_id', '<>', config('ipd.waitroom'))
             ->get();
-        $beds = Bed::where('room_id', $rooms[0]->id)->get();
+    }
 
-        $this->dispatchBrowserEvent('ncmodel-show', [
-            'ipd' => $this->ipd,
-            'rooms' => $rooms,
-            'beds' => $beds
+    public function getBeds($room_id)
+    {
+       // dd($room_id);
+        return Bed::where('room_id', $room_id)->orderBy('display_order', 'asc')->get();
+    }
+
+    public function setBeds($room_id)
+    {
+       $data = $this->getBeds($room_id);
+
+       $this->dispatchBrowserEvent('set-beds',[
+        'beds' => $data
+       ]);
+    }
+
+    public function newCase($an) //make new case record
+    {
+        $this->ipd = (new IpdService)->create($an);
+        $this->rooms = $this->getRooms();
+
+        $this->bm = (new BedmoveService)->create();
+        $this->bm->ipd_id = $this->ipd->id;
+        $this->bm->ward_id = $this->filter_ward_id;
+        $this->bm->bedmove_type_id = config('ipd.newcase');
+
+        $this->dispatchBrowserEvent('set-rooms', [
+            'rooms' => $this->rooms
         ]);
+
+        $this->dispatchBrowserEvent('set-beds', [
+            'beds' => $this->getBeds($this->rooms[0]->id)
+        ]);
+
+        $this->dispatchBrowserEvent('ncmodal-show', [
+            'ipd' => $this->ipd,
+          //  'rooms' => $this->rooms,
+          //  'beds' => $this->getBeds($this->rooms[0]->id)
+        ]);
+    }
+
+    public function postNewBed()
+    {
+        $this->withValidator(function (Validator $validator) {
+            $validator->after(function ($validator) {
+                if ($validator->errors()->isNotEmpty()) {
+                    $errorMsg =  $validator->errors()->messages();
+                    $this->dispatchBrowserEvent('err-message', ['errors' => json_encode($errorMsg)]);
+                }
+            });
+        })->validate();
+
+        $ipd_id = $this->bm->ipd_id;
+
+        $saved = $this->bm->save();
+
+        if($saved) {
+            (new IpdService)->tranfered($ipd_id);
+            $this->dispatchBrowserEvent('ncmodal-hide');
+            $this->dispatchBrowserEvent('toastify', [
+                'text' => 'ดำเนินการสำเร็จ'
+            ]);
+        }
     }
 
     public function mount()
@@ -52,12 +142,13 @@ class NurseIpdList extends Component
         $this->user = auth()->user();
         $this->wards = $this->user->wards();
         $this->filter_ward_id = $this->wards[0]->id;
-        $this->editing = $this->makeBlank();
+        $this->bm = (new BedmoveService)->create();
+        $this->rooms = $this->getRooms();
     }
 
     public function updatedFilterWardId($value)
     {
-
+        $this->emit('set:ward', $value);
     }
 
     public function updatedWardId($value)
@@ -66,8 +157,8 @@ class NurseIpdList extends Component
             ->where('room_type_id', '<>', config('ipd.waitroom'))
             ->get();
 
-        $this->editing->bedmove_type_id = ($this->ward_id == $this->current_ward_id) ? config('ipd.moveself') : config('ipd.moveout');
-        $this->editing->bed_id = ($this->editing->bedmove_type_id == config('ipd.moveout')) ? null : $this->editing->bed_id;
+        $this->bm->bedmove_type_id = ($this->ward_id == $this->current_ward_id) ? config('ipd.moveself') : config('ipd.moveout');
+        $this->bm->bed_id = ($this->bm->bedmove_type_id == config('ipd.moveout')) ? null : $this->bm->bed_id;
         $this->dispatchBrowserEvent('rooms-update', [
             'rooms' => $rooms,
         ]);
@@ -76,13 +167,13 @@ class NurseIpdList extends Component
     public function updatedRoomId($value)
     {
         $beds = Bed::where('room_id', $value)->get();
-        $this->editing->bed_id = 0;
+        $this->bm->bed_id = 0;
         $this->dispatchBrowserEvent('beds-update', ['beds' => $beds]);
     }
 
     public function newMove($id)
     {
-        $this->editing = $this->makeBlank();
+        $this->bm = $this->makeBlank();
 
         $bedmove = IpdBedmove::where('ipd_id', $id)
             ->orderBy('movedate', 'desc')
@@ -94,9 +185,9 @@ class NurseIpdList extends Component
 
         $ipd = Ipd::find($bedmove->ipd_id);
 
-        $this->editing->an = $ipd->an;
-        $this->editing->ipd_id = $ipd->id;
-        $this->editing->ref_id = $bedmove->id;
+        $this->bm->an = $ipd->an;
+        $this->bm->ipd_id = $ipd->id;
+        $this->bm->ref_id = $bedmove->id;
 
 
         $this->dispatchBrowserEvent('modal-show', [
@@ -112,8 +203,7 @@ class NurseIpdList extends Component
 
     public function save()
     {
-        $this->editing->ward_id = $this->ward_id;
-
+        $this->bm->ward_id = $this->ward_id;
         // Validate check and dispatch to front-end
         $this->withValidator(function (Validator $validator) {
             $validator->after(function ($validator) {
@@ -123,9 +213,10 @@ class NurseIpdList extends Component
                 }
             });
         })->validate();
-        $this->editing->bed_id = $this->editing->bed_id == null ? 0 : $this->editing->bed_id;
 
-        $saved = $this->editing->save();
+        $this->bm->bed_id = $this->bm->bed_id == null ? 0 : $this->bm->bed_id;
+
+        $saved = $this->bm->save();
       //  $saved = true;
         if($saved) {
             $this->dispatchBrowserEvent('toast-event', [

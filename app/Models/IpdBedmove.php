@@ -22,9 +22,27 @@ class IpdBedmove extends Model
         'updated_by',
         'ref_id',
         'ward_id',
+        'delflag'
     ];
 
     protected $appends = ['date_for_editing', 'time_for_editing', 'date_for_thai'];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        self::saved(function($model){
+            Ipd::where('id', $model->ipd_id)
+                ->update([
+                    'current_bedmove_id' => IpdBedmove::where('ipd_id', $model->ipd_id)
+                        ->where('delflag', false)
+                        ->orderBy('movedate', 'desc')
+                        ->orderBy('movetime', 'desc')
+                        ->value('id')
+                ]);
+        });
+
+    }
 
     public function getDateForThaiAttribute()
     {
