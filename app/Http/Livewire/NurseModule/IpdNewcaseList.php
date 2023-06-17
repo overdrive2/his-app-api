@@ -25,8 +25,14 @@ class IpdNewcaseList extends Component
         'load:newcase' => 'loadData',
         'set:ward' => 'setWard',
         'refresh:newcase' => 'refreshNewcase',
-        'self:refresh' => '$refresh'
+        'self:refresh' => '$refresh',
+        'open:newcase' => 'setOpen'
     ];
+
+    public function setOpen($val){
+        $this->open = $val;
+        $this->emit('self:refresh');
+    }
 
     public function refreshNewcase()
     {
@@ -34,7 +40,7 @@ class IpdNewcaseList extends Component
             'count' => $this->rowsQuery->count()
        ]);
 
-       $this->emit('self:refresh');
+      // $this->emit('self:refresh');
     }
 
     public function getNewcaseCount()

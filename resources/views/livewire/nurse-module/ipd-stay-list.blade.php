@@ -8,6 +8,7 @@
         showActionModal: (row) => {
             selectedId = row.id;
             $dispatch('set-ipd', {ipd : row.ipd});
+            $dispatch('initdata',{row: row.ipd});
             acModal.show();
         }
     }"
@@ -18,6 +19,7 @@
     "
 
     @set-staydata.window="(e) => {
+        open = true;
         data = e.detail;
         ward = data.ward;
         rooms = data.rooms;
@@ -29,7 +31,7 @@
 >
     <div x-show="open">
         <div class="flex justify-between">
-            <div>เตียง <span x-text="ward.name"></span></div>
+            <div class="text-lg font-bold text-gray-600"><span x-text="ward.name"></span></div>
             <div class="text-right flex gap-1">
                 <x-button.icon>
                     <i class="fa-solid fa-list text-xl text-neutral-500"></i>
@@ -104,37 +106,7 @@
                 </div>
 
                 <!--Modal body-->
-                <div class="relative p-4">
-                    <h5
-                        class="text-left text-base font-lg leading-normal text-neutral-800 dark:text-neutral-200"
-                    >
-                        <span x-text="'AN '+ ipd.an"></span>
-                        <span x-text="ipd.patient_name"></span>
-                    </h5>
-                    <div class="w-full dark:text-white">
-                        <button
-                          aria-current="true"
-                          type="button"
-                          class="border-b border-sky-800 block w-full cursor-pointer rounded-lg p-4 text-left transition duration-500 hover:bg-neutral-100 hover:text-neutral-500 focus:bg-neutral-100 focus:text-neutral-500 focus:ring-0 dark:hover:bg-neutral-700 dark:hover:text-neutral-200 dark:focus:bg-neutral-600 dark:focus:text-neutral-200">
-                          <i class="fa-solid fa-right-left text-lg mr-2 text-sky-600"></i> ย้ายเตียง
-                        </button>
-                        <button
-                          type="button"
-                          class="border-b border-orange-800 block w-full cursor-pointer rounded-lg p-4 text-left transition duration-500 hover:bg-neutral-100 hover:text-neutral-500 focus:bg-neutral-100 focus:text-neutral-500 focus:ring-0 dark:hover:bg-neutral-700 dark:hover:text-neutral-200 dark:focus:bg-neutral-600 dark:focus:text-neutral-200">
-                          <i class="fa-solid fa-person-walking-dashed-line-arrow-right text-lg mr-2 text-orange-600"></i> ย้ายวอร์ด
-                        </button>
-                        <button
-                          type="button"
-                          class="border-b border-pink-800 block w-full cursor-pointer rounded-lg p-4 text-left transition duration-500 hover:bg-neutral-100 hover:text-neutral-500 focus:bg-neutral-100 focus:text-neutral-500 focus:ring-0 dark:hover:bg-neutral-700 dark:hover:text-neutral-200 dark:focus:bg-neutral-600 dark:focus:text-neutral-200">
-                          <i class="fa-solid fa-file-waveform text-lg mr-2 text-pink-600 dark:text-pink-400"></i> ASM
-                        </button>
-                        <button
-                          type="button"
-                          class="border-b border-green-800 block w-full cursor-pointer rounded-lg p-4 text-left transition duration-500 hover:bg-neutral-100 hover:text-neutral-500 focus:bg-neutral-100 focus:text-neutral-500 focus:ring-0 dark:hover:bg-neutral-700 dark:hover:text-neutral-200 dark:focus:bg-neutral-600 dark:focus:text-neutral-200">
-                          <i class="fa-solid fa-house-chimney-user text-lg mr-2 text-green-600"></i> จำหน่าย
-                        </button>
-                      </div>
-                </div>
+                <x-nurse.ipd-action />
 
                 <!--Modal footer-->
                 <div

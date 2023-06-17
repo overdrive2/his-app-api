@@ -26,7 +26,7 @@ class NurseIpdList extends Component
     public $filter_ward_id;
     public $wards = [];
     public $rooms = [];
-    public $tab = 3;
+    public $tab = 1;
 
     public IpdBedmove $bm;
 
@@ -58,9 +58,10 @@ class NurseIpdList extends Component
                 /*$this->dispatchBrowserEvent('update-newcase-count', [
                     'count' => 8
                 ]);*/
+                $this->emit('open:newcase', true);
                 break;
             case 3:
-                $this->emit('load:stay');
+                $this->emit('load:stay', true);
                 break;
         }
     }

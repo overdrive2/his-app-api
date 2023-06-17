@@ -18,9 +18,9 @@ class IpdStayList extends Component
         'load:stay' => 'loadStay'
     ];
 
-    public function loadStay()
+    public function loadStay($val)
     {
-        $this->open = true;
+        $this->open = $val;
         $this->loadData();
     }
 

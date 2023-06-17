@@ -3,7 +3,7 @@
         rooms:[],
         beds:[],
         errors:[],
-        tab: $wire.tab,
+        tab: 0,
         loading: false,
         selectedId: 0,
         badges: {
@@ -17,13 +17,20 @@
             an: ''
         },
         setTab: (idx) => {
+            $dispatch('set-tab', {id: idx});
             tab = idx
-            $wire.set('tab', idx)
+            console.log(tab)
+           // $wire.set('tab', idx)
         }
     }"
     x-init="
         ncModal = new Modal($refs.newCaseModal);
     "
+    @set-tab="(e) =>  {
+        tab = e.detail.id
+        $wire.set('tab', tab)
+    }"
+
     @ncmodal-show.window = "(e) => {
         ipd = e.detail.ipd;
         setTimeout(async ()=> {
@@ -73,7 +80,7 @@
                 <li role="presentation">
                     <x-button.nav
                         :tabName="__('tabs-newcase')"
-                        x-on:click="setTab(1)"
+                        x-on:click="$dispatch('set-tab', {id: 1});"
                         id="tabs-home-tab3"
                     >
                         <i class="fa-solid fa-user-plus text-[16px] mr-2 mt-1"></i> รอรับใหม่
@@ -93,7 +100,7 @@
                     <x-button.nav
                         data-te-nav-active
                         :tabName="__('tabs-stay')"
-                        x-on:click="setTab(3)"
+                        x-on:click.prevent="setTab(3)"
                         id="tabs-stay-tab3"
                     >
                         <i class="fa-solid fa-user-shield text-[16px] mr-2 mt-1"></i> กำลังรักษา
@@ -117,11 +124,12 @@
             id="tabs-newcase"
             role="tabpanel"
             aria-labelledby="tabs-newcase-tab">
+            <div x-text="tab"></div>
             @livewire(
                 'nurse-module.ipd-newcase-list', [
                     'user' => $user,
                     'ward_id' => $filter_ward_id,
-                    'open' => ($tab == 1)
+                    'open' => false
                 ],
                 key('ipd-newcase'.$tab.$filter_ward_id)
             )
@@ -140,13 +148,13 @@
             aria-labelledby="tabs-stay-tab"
             data-te-tab-active
         >
-                @livewire(
-                'nurse-module.ipd-stay-list', [
-                    'user' => $user,
-                    'ward_id' => $filter_ward_id,
-                    'open' => ($tab == 3)
-                ],
-                key('ipd-stay'.$tab.$filter_ward_id)
+            @livewire(
+            'nurse-module.ipd-stay-list', [
+                'user' => $user,
+                'ward_id' => $filter_ward_id,
+                'open' => false
+            ],
+            key('ipd-stay'.$tab.$filter_ward_id)
             )
         </div>
         <div
