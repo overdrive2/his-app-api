@@ -1,8 +1,8 @@
 <div class="relative p-4" @initdata.window="(e) => row = e.detail.row"  x-data="{row:[]}">
-    <x-header.h5>
+    <x-header.h6>
         <span x-text="'AN '+ row.an"></span>
         <span x-text="row.patient_name"></span>
-    </x-header.h5>
+    </x-header.h6>
     <div class="w-full dark:text-white">
         <x-button.border-b
             color="sky"

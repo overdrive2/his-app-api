@@ -5,6 +5,7 @@ import './theme';
 import Swal from 'sweetalert2'
 import 'sweetalert2/src/sweetalert2.scss'
 import  bedMoveProps from './bedmove';
+import './window-options'
 
 import {
     Datepicker,
@@ -36,15 +37,6 @@ window.Swal = Swal;
 window.bedMoveProps = bedMoveProps;
 //window.nurseListProps = nurseListProps;
 //window.newCaseModal = newCaseModal;
-
-window.dateOptions = {
-    format: 'dd/mm/yyyy',
-    monthsShort: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ษ.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
-    monthsFull: ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'],
-    weekdaysShort: ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'],
-    weekdaysNarrow: ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'],
-    confirmDateOnSelect: true,
-};
 
 const sidenav = document.getElementById("sidenav-main");
 const sidenavInstance = Sidenav.getInstance(sidenav);
@@ -111,9 +103,9 @@ window.addEventListener('delete:confirm', event => {
 
 window.addEventListener('cat:progress', event => {
     Swal.fire({
-        imageUrl: '/images/nyan/vday.gif',
+        imageUrl: '/images/nyan/technyancolor.gif',
         imageHeight: 84,
-        title: 'อดใจรอหน่อยนะ น้องเหมียวกำลังเตรียมข้อมูล...',
+        title: window.dialogTitle.progress,
         width: 480,
         padding: '1.0em',
         color: '#db2777',

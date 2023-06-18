@@ -1,5 +1,5 @@
 <h5
-class="text-left text-base font-lg leading-normal text-neutral-800 dark:text-neutral-200"
+    class="text-xl font-bold dark:text-white"
 >
     {{ $slot }}
 </h5>

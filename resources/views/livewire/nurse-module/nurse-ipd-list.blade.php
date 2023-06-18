@@ -124,7 +124,6 @@
             id="tabs-newcase"
             role="tabpanel"
             aria-labelledby="tabs-newcase-tab">
-            <div x-text="tab"></div>
             @livewire(
                 'nurse-module.ipd-newcase-list', [
                     'user' => $user,

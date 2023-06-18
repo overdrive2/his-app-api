@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Bed extends Model
 {
     use HasFactory;
-
+    protected $fillable = ['bed_name', 'bed_code', 'room_id', 'bed_status_id', 'display_order'];
     protected $appends = ['ipd'];
 
     public function getLastBedmoveIdAttribute()

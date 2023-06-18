@@ -27,12 +27,14 @@ class DatabaseSeeder extends Seeder
             DchStatusSeeder::class,
             IpdDoctorTypeSeeder::class,
             IpdSevereSeeder::class,
-            HisIpdNewcaseSeeder::class,
+          //  HisIpdNewcaseSeeder::class,
             IpdAdmitTypeSeeder::class,
-            HisIpdSeeder::class,
+          //  HisIpdSeeder::class,
             IpdFormAsmSeeder::class,
             IpdFormAsmDetailSeeder::class,
-            WardSeeder::class
+            WardSeeder::class,
+            RoomSeeder::class,
+            BedSeeder::class
         ]);
     }
 }

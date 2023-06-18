@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('ward_id');
             $table->integer('updated_by');
             $table->integer('created_by');
+            $table->boolean('delflag');
             $table->timestamps();
         });
     }
