@@ -42,6 +42,7 @@ class IpdStayList extends Component
     {
         $ipd = Ipd::find($this->ipd_id);
         $bedmove = (new BedmoveService)->create();
+        $bedmove->ward_id = $this->ward_id;
         $bedmove->ipd_id = $ipd->id;
         $bedmove->from_ref_id = $ipd->current_bedmove_id;
         $bedmove->bedmove_type_id = config('ipd.moveself');
