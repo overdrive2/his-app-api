@@ -23,7 +23,7 @@ class Bed extends Model
     public function getIpdAttribute()
     {
         return
-            $this->last_bedmove_id ? Ipd::select('an', 'patient_id', 'current_bedmove_id')
+            $this->last_bedmove_id ? Ipd::select('id', 'an', 'patient_id', 'current_bedmove_id')
             ->where('current_bedmove_id', $this->last_bedmove_id)
             ->first() : [];
     }

@@ -20,7 +20,8 @@ class IpdBedmove extends Model
         'bedmove_type_id',
         'created_by',
         'updated_by',
-        'ref_id',
+        'from_ref_id',
+        'to_ref_id',
         'ward_id',
         'delflag'
     ];

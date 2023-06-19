@@ -2,6 +2,9 @@
     x-data = "{
         ward : [],
         rooms : [],
+        errors:{
+            bedmove:''
+        },
         beds :$wire.beds,
         open :$wire.open,
         ipd:[],
@@ -10,11 +13,18 @@
             $dispatch('set-ipd', {ipd : row.ipd});
             $dispatch('initdata',{row: row.ipd});
             acModal.show();
+        },
+        showMovebedModal: (id) => {
+            acModal.hide();
+            $wire.moveBedModal(id);
+            //mbModal.show();
         }
     }"
 
     x-init = "
         acModal = new Modal($refs.actionModal)
+        mbModal = new Modal($refs.mbModal)
+        mwModal = new Modal($refs.mwModal)
         $wire.loadData()
     "
 
@@ -27,6 +37,31 @@
     }"
 
     @set-ipd.window="(e) => ipd = e.detail.ipd"
+
+    @open-mb-modal.window="(e) => { // const listeners movebed modal
+        $dispatch('set-beds', {'beds': e.detail.beds})
+        mbModal.show()
+    }"
+
+    @close-mb-modal.window="() => {
+        selectedId = 0
+        mbModal.hide()
+        $dispatch('toastify');
+    }"
+
+    @open-mw-modal.window="(e) => { // const listeners moveward modal
+        $dispatch('set-wards', {'wards': e.detail.wards})
+        mwModal.show()
+    }"
+
+    @close-mw-modal.window="() => {
+        mwModal.hide()
+        $dispatch('toastify');
+    }"
+
+    @bd-err-message.window="(e) => {
+        errors = e.detail.errors;
+    }"
 >
     <div x-show="open">
         <div class="flex justify-between">
@@ -59,19 +94,74 @@
                 </div>
             </template>
         </div>
+        <button x-on:click="()=> showMovebedModal()">Modal</button>
     </div>
-    <!--Verically centered modal-->
+    <!-- Action Menu modal-->
     <x-tw-modal.dialog
         x-ref="actionModal"
     >
-        <x-slot name="title">IPD Actions Menu</x-slot>
-        <x-slot name="content">
-            <x-nurse.ipd-action />
-        </x-slot>
-        <x-slot name="footer">
-            <x-button.secondary data-te-modal-dismiss>
-                Close
-            </x-button.secondary>
-        </x-slot>
+    <x-slot name="title">IPD Actions Menu</x-slot>
+    <x-slot name="content">
+        <x-nurse.ipd-action />
+    </x-slot>
+    <x-slot name="footer">
+        <x-button.secondary data-te-modal-dismiss>
+            Close
+        </x-button.secondary>
+    </x-slot>
+    </x-tw-modal.dialog>
+
+    <!-- Bedmove Modal -->
+    <x-tw-modal.dialog
+        x-ref="mbModal"
+        maxWidth="2xl"
+        wire:ignore
+    >
+    <x-slot name="title">Move Bed</x-slot>
+    <x-slot name="content">
+        <h5 class="text-left text-base font-bold border-b mb-2">{{ __('เลือกเตียง') }}</h5>
+        <div class="mb-4">
+            <x-bed-menu wire:model.defer="bm.bed_id" />
+            <x-error
+                x-show="errors.bedmove"
+                x-text="errors.bedmove"
+            />
+        </div>
+    </x-slot>
+    <x-slot name="footer">
+        <x-button.secondary data-te-modal-dismiss>
+            Close
+        </x-button.secondary>
+        <x-button.primary wire:click="postBebmove">
+            Save
+        </x-button.primary>
+    </x-slot>
+    </x-tw-modal.dialog>
+
+    <!-- Wardmove Modal -->
+    <x-tw-modal.dialog
+        x-ref="mwModal"
+        maxWidth="2xl"
+        wire:ignore
+    >
+    <x-slot name="title">Move Ward</x-slot>
+    <x-slot name="content">
+        <h5 class="text-left text-base font-bold border-b mb-2">{{ __('เลือกหอผู้ป่วย') }}</h5>
+        <div class="mb-4">
+            <x-ward-menu wire:model.defer="wm_id" />
+            <x-error
+                x-show="errors.bedmove"
+                x-text="errors.bedmove"
+            />
+        </div>
+    </x-slot>
+    <x-slot name="footer">
+        <x-button.secondary data-te-modal-dismiss>
+            Close
+        </x-button.secondary>
+        <x-button.primary wire:click="postBebmove">
+            Save
+        </x-button.primary>
+    </x-slot>
     </x-tw-modal.dialog>
 </div>

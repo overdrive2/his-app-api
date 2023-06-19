@@ -5,6 +5,7 @@
     </x-header.h6>
     <div class="w-full dark:text-white">
         <x-button.border-b
+            x-on:click="()=> showMovebedModal(row.id)"
             color="sky"
             icon="right-left"
             label="ย้ายเตียง"

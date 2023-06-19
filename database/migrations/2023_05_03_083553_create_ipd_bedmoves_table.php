@@ -18,7 +18,8 @@ return new class extends Migration
             $table->time('movetime');
             $table->integer('bed_id');
             $table->integer('bedmove_type_id');
-            $table->integer('ref_id');
+            $table->integer('from_ref_id');
+            $table->integer('to_ref_id');
             $table->integer('ward_id');
             $table->integer('updated_by');
             $table->integer('created_by');

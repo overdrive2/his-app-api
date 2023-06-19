@@ -23,7 +23,8 @@ trait BedmoveService
     {
         return [
             'editing.ipd_id' => 'required',
-            'editing.ref_id' => '',
+            'editing.from_ref_id' => '',
+            'editing.to_ref_id' => '',
             'editing.ward_id' => 'required',
             'editing.movedate' => 'required',
             'editing.movetime' => 'required',
@@ -43,7 +44,8 @@ trait BedmoveService
 
         return IpdBedmove::make([
             'bed_id' => 0,
-            'ref_id' => 0,
+            'from_ref_id' => 0,
+            'to_ref_id' => 0,
             'ward_id' => $this->ward_id,
             'updated_by' => $uid,
             'created_by' => $uid,
