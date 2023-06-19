@@ -20,7 +20,8 @@ class NurseNoteGroupIcd10Seeder extends Seeder
         foreach ($json as $key => $value) {
             NurseNoteGroupIcd10::create([
                 'id'   => $value['id'],
-                'name' => $value['name'],
+                'group_tname' => $value['group_tname'],
+                'group_ename' => $value['group_ename'],
             ]);
         }
     }

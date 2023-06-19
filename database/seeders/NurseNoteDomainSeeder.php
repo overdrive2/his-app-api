@@ -20,7 +20,8 @@ class NurseNoteDomainSeeder extends Seeder
         foreach ($json as $key => $value) {
             NurseNoteDomain::create([
                 'id'   => $value['id'],
-                'name' => $value['name'],
+                'domain_tname' => $value['domain_tname'],
+                'domain_ename' => $value['domain_ename'],
             ]);
         }
     }

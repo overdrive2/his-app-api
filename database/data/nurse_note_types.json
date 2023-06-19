@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "note_type_name": "รับใหม่",
+    "display_order": 1
+  },
+  {
+    "id": 2,
+    "note_type_name": "รับย้าย",
+    "display_order": 2
+  },
+  {
+    "id": 3,
+    "note_type_name": "รับย้ายจาก OR",
+    "display_order": 3
+  },
+  {
+    "id": 4,
+    "note_type_name": "สรุปอาการผู้ป่วย",
+    "display_order": 4
+  }
+]
