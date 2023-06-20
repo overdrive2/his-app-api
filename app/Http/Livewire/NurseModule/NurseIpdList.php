@@ -26,7 +26,7 @@ class NurseIpdList extends Component
     public $filter_ward_id;
     public $wards = [];
     public $rooms = [];
-    public $tab = 1;
+    public $tab = 3;
 
     public IpdBedmove $bm;
 
@@ -148,7 +148,18 @@ class NurseIpdList extends Component
 
     public function updatedFilterWardId($value)
     {
-        $this->emit('set:ward', $value);
+        switch($this->tab) {
+            case 1:
+                $this->emit('set:ward', $value);
+                break;
+            case 2:
+                break;
+            case 3:
+                $this->emit('stay:set:ward', $value);
+                break;
+            default:
+            // Nothing
+        }
     }
 
     public function updatedWardId($value)

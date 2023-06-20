@@ -103,8 +103,8 @@ window.addEventListener('delete:confirm', event => {
 
 window.addEventListener('cat:progress', event => {
     Swal.fire({
-        imageUrl: '/images/nyan/technyancolor.gif',
-        imageHeight: 84,
+        imageUrl: '/images/nyan/nyan-cat.gif',
+        imageHeight: 250,
         title: window.dialogTitle.progress,
         width: 480,
         padding: '1.0em',

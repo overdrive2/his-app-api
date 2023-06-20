@@ -20,6 +20,7 @@ class IpdStayList extends Component
 
     protected $listeners = [
         'load:stay' => 'loadStay',
+        'stay:set:ward' => 'setWard',
         'move:bed:modal' => 'moveBedModal'
     ];
 
@@ -40,6 +41,13 @@ class IpdStayList extends Component
             'wm.to_ref_id' => '',
             'wm.delflag' => ''
         ];
+    }
+
+    public function setWard($id)
+    {
+        $this->ward_id = $id;
+        $this->loadData();
+
     }
 
     public function moveBedModal($id)
@@ -94,7 +102,6 @@ class IpdStayList extends Component
         $this->ward = Ward::find($this->ward_id);
         $this->rooms = $this->ward ? $this->ward->rooms() : [];
         $this->beds = count($this->rooms) > 0 ? $this->rooms[0]->beds() : [];
-
         $this->dispatchBrowserEvent('set-staydata', [
             'ward' => $this->ward,
             'rooms' => $this->rooms,

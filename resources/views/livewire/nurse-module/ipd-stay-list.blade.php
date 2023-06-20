@@ -31,12 +31,13 @@
         $wire.loadData()
     "
 
-    @set-staydata.window="(e) => {
+    @set-staydata.window="async (e) => {
         open = true;
         data = e.detail;
         ward = data.ward;
-        rooms = data.rooms;
+        rooms = await data.rooms;
         beds = data.beds;
+        setTimeout(()=> $dispatch('swal:close'), 1000);
     }"
 
     @set-ipd.window="(e) => ipd = e.detail.ipd"

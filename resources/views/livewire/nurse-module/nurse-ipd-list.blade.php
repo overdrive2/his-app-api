@@ -27,8 +27,9 @@
         ncModal = new Modal($refs.newCaseModal);
     "
     @set-tab="(e) =>  {
-        tab = e.detail.id
-        $wire.set('tab', tab)
+        tab = e.detail.id;
+        $wire.set('tab', tab);
+        setTimeout(()=> $dispatch('swal:close'), 1000);
     }"
 
     @ncmodal-show.window = "(e) => {
@@ -54,20 +55,16 @@
     }"
 >
     <div class="lg:flex">
-        <div id="te-search-container" class="relative hidden lg:flex lg:items-center">
-            <div wire:ignore class="relative mb-0 flex flex-wrap items-stretch">
-                <select @valueChange.te.select="(e) => {}" id="wardSelect" wire:model="filter_ward_id" data-te-select-init data-te-select-filter="true" >
+        <div id="te-search-container" class="lg:flex lg:items-center max-w-lg w-full">
+            <div wire:ignore class="relative mb-0 lg:flex flex-wrap items-stretch w-full">
+                <select
+                    x-on:change="() => { $dispatch('cat:progress') }"
+                    id="wardSelect"
+                    wire:model="filter_ward_id" data-te-select-init data-te-select-filter="true" >
                     @foreach ($wards as $ward)
                     <option value="{{ $ward->id }}">{{ $ward->name }}</option>
                     @endforeach
                 </select>
-            </div>
-            <div id="te-search-dropdown" class="lpy-2 absolute top-[36px] z-[999999] hidden w-full overflow-hidden rounded bg-white shadow-md dark:bg-neutral-700">
-              <ul id="te-search-list" class="relative max-h-[265px] w-full overflow-y-scroll pt-0 [&amp;::-webkit-scrollbar]:hidden ps"><div class="ps__rail-x" style="left: 0px; bottom: 0px;"><div class="ps__thumb-x" tabindex="0" style="left: 0px; width: 0px;"></div></div><div class="ps__rail-y" style="top: 0px; right: 0px;"><div class="ps__thumb-y" tabindex="0" style="top: 0px; height: 0px;"></div></div></ul>
-              <hr class="my-0 dark:border-neutral-600">
-              <p class="my-4 mr-4 text-end text-xs text-neutral-600 dark:text-neutral-100">
-                search results: <strong id="te-search-count"></strong>
-              </p>
             </div>
         </div>
         <div wire:ignore class="flex-grow">
@@ -80,7 +77,10 @@
                 <li role="presentation">
                     <x-button.nav
                         :tabName="__('tabs-newcase')"
-                        x-on:click="$dispatch('set-tab', {id: 1});"
+                        x-on:click="() => {
+                            $dispatch('cat:progress');
+                            $dispatch('set-tab', {id: 1});
+                        }"
                         id="tabs-home-tab3"
                     >
                         <i class="fa-solid fa-user-plus text-[16px] mr-2 mt-1"></i> รอรับใหม่
@@ -138,7 +138,13 @@
             id="tabs-recpcase"
             role="tabpanel"
             aria-labelledby="tabs-recpcase-tab">
-            Tab 2 content button version
+            @livewire(
+                'nurse-module.ipd-wait-list', [
+                    'user' => $user,
+                    'ward_id' => $filter_ward_id,
+                    'open' => false
+                ]
+            )
         </div>
         <div
             class="transition-opacity duration-150 ease-linear data-[te-tab-active]:block"
