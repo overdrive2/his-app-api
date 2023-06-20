@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class DchType extends Model
 {
     use HasFactory;
+    
+    protected $fillable = ['name',	'code'];
 }

@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class NurseNoteGroupIcd10 extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'group_tname',
+        'group_ename'                     
+    ];
 }

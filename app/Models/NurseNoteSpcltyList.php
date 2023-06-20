@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class NurseNoteSpcltyList extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'diag_id',
+        'spclty_id'                    
+    ];
 }

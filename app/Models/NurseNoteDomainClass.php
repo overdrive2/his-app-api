@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class NurseNoteDomainClass extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'domain_tname',
+        'domain_ename'                     
+    ];
 }

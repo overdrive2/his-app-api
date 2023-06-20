@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('lookup_sql',100)->nullable();
             $table->integer('group_display')->nullable();
             $table->integer('sub_group_display')->nullable();
-            $table->integer('display')->nullable();
+            $table->integer('display_order')->nullable();
             $table->integer('updated_by')->nullable();
             $table->integer('created_by')->nullable();
             $table->timestamps();

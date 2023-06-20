@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class IpdAsmDetailText extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'ipd_asm_id',
+        'ipd_form_asm_id',
+        'value'];
 }

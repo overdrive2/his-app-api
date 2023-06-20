@@ -20,9 +20,7 @@ return new class extends Migration
             $table->integer('dch_type_id')->nullable();
             $table->integer('ipd_severe_type_id');
             $table->integer('ipd_admit_type_id');
-            $table->string('bedno',6);
-            $table->date('move_date');
-            $table->time('move_time');
+            $table->integer('ipd_bedmove_id');
             $table->integer('updated_by');
             $table->integer('created_by');   
             $table->timestamps();
