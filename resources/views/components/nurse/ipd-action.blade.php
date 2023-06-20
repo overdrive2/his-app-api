@@ -1,4 +1,4 @@
-<div class="relative p-4"
+<div class="relative"
     @initdata.window="(e) => {
         row = e.detail.row;
         console.log(row)
@@ -24,6 +24,7 @@
             label="ย้ายเตียง"
         />
         <x-button.border-b
+            x-on:click="() => showMovewardModal(row.id)"
             color="orange"
             icon="person-walking-dashed-line-arrow-right"
             label="ย้ายวอร์ด"

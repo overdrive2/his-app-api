@@ -26,7 +26,7 @@ class IpdBedmove extends Model
         'delflag'
     ];
 
-    protected $appends = ['date_for_editing', 'time_for_editing', 'date_for_thai'];
+    protected $appends = ['date_for_editing', 'time_for_editing', 'date_for_thai', 'ward_name', 'ipd'];
 
     protected static function boot()
     {
@@ -96,6 +96,11 @@ class IpdBedmove extends Model
     public function getMovetypeNameAttribute()
     {
         return IpdBedmoveType::find($this->bedmove_type_id)->bedmove_type_name;
+    }
+
+    public function getIpdAttribute()
+    {
+        return Ipd::find($this->ipd_id);
     }
 
     public function ipd()

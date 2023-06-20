@@ -11,6 +11,18 @@ class Ward extends Model
 
     protected $fillable = ['name', 'ward_code', 'active'];
 
+    protected $appends = ['wait_bed_id'];
+
+    public function getWaitBedIdAttribute()
+    {
+        return
+            Bed::where('room_id',
+                    Room::where('room_type_id', config('ipd.waitroom'))
+                        ->where('ward_id', $this->id)
+                        ->value('id')
+                )->value('id');
+    }
+
     public function getWaitRoomIdAttribute()
     {
         return Room::where('ward_id', $this->id)

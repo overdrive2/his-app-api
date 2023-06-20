@@ -3,7 +3,8 @@
         ward : [],
         rooms : [],
         errors:{
-            bedmove:''
+            bedmove:'',
+            wardmove:''
         },
         beds :$wire.beds,
         open :$wire.open,
@@ -17,14 +18,16 @@
         showMovebedModal: (id) => {
             acModal.hide();
             $wire.moveBedModal(id);
-            //mbModal.show();
+        },
+        showMovewardModal: (id) => {
+            $wire.moveWardModal(id);
         }
     }"
 
     x-init = "
         acModal = new Modal($refs.actionModal)
         mbModal = new Modal($refs.mbModal)
-        mwModal = new Modal($refs.mwModal)
+        mwModal = new Modal($refs.mwModal) /*Move ward modal*/
         $wire.loadData()
     "
 
@@ -51,6 +54,7 @@
 
     @open-mw-modal.window="(e) => { // const listeners moveward modal
         $dispatch('set-wards', {'wards': e.detail.wards})
+        acModal.hide();
         mwModal.show()
     }"
 
@@ -62,6 +66,7 @@
     @bd-err-message.window="(e) => {
         errors = e.detail.errors;
     }"
+
 >
     <div x-show="open">
         <div class="flex justify-between">
@@ -141,25 +146,21 @@
     <!-- Wardmove Modal -->
     <x-tw-modal.dialog
         x-ref="mwModal"
-        maxWidth="2xl"
-        wire:ignore
+        maxWidth="xl"
     >
     <x-slot name="title">Move Ward</x-slot>
     <x-slot name="content">
-        <h5 class="text-left text-base font-bold border-b mb-2">{{ __('เลือกหอผู้ป่วย') }}</h5>
-        <div class="mb-4">
-            <x-ward-menu wire:model.defer="wm_id" />
-            <x-error
-                x-show="errors.bedmove"
-                x-text="errors.bedmove"
-            />
-        </div>
+        <x-header.h6>
+            <span x-text="'AN '+ ipd.an ?? ''"></span>
+            <span x-text="ipd.patient_name ?? ''"></span>
+        </x-header.h6>
+        @livewire('nurse-module.wardmove-entry', ['ipdId' => $ipd_id], key('ipd'.$ipd_id))
     </x-slot>
     <x-slot name="footer">
         <x-button.secondary data-te-modal-dismiss>
             Close
         </x-button.secondary>
-        <x-button.primary wire:click="postBebmove">
+        <x-button.primary @click="$dispatch('save-wardmove')">
             Save
         </x-button.primary>
     </x-slot>

@@ -16,12 +16,31 @@ class IpdStayList extends Component
     public $beds = [];
     public $ipd_id;
     public $bm = ['bed_id' => 0];
-    public $wm_id;
+    public $wm;
 
     protected $listeners = [
         'load:stay' => 'loadStay',
         'move:bed:modal' => 'moveBedModal'
     ];
+
+    public function rules()
+    {
+        return [
+            'wm.ipd_id' => 'required',
+            'wm.movedate' => 'required',
+            'wm.movetime' => 'required',
+            'wm.created_by' => 'required',
+            'wm.updated_by' => 'required',
+            'wm.date_for_editing' => '',
+            'wm.time_for_editing' => '',
+            'wm.ward_id' => 'required',
+            'wm.bed_id' => '',
+            'wm.bedmove_type_id' => 'required',
+            'wm.from_ref_id' => '',
+            'wm.to_ref_id' => '',
+            'wm.delflag' => ''
+        ];
+    }
 
     public function moveBedModal($id)
     {
@@ -30,6 +49,11 @@ class IpdStayList extends Component
         $this->dispatchBrowserEvent('open-mb-modal', [
             'beds' => $this->beds
         ]);
+    }
+
+    public function moveWardModal($id)
+    {
+        $this->emit('move:ward', $id);
     }
 
     public function loadStay($val)
@@ -62,6 +86,7 @@ class IpdStayList extends Component
     public function mount()
     {
         $this->loadData();
+        $this->wm = (new BedmoveService)->create();
     }
 
     public function loadData()

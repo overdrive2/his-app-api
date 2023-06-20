@@ -36,7 +36,7 @@ $maxWidth = [
             </x-tw-modal.header>
 
             <!--Modal body-->
-            <div class="p-2">
+            <div class="p-4">
                 {{ $content }}
             </div>
             <!--Modal footer-->

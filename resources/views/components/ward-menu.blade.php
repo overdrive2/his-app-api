@@ -12,12 +12,17 @@
     }"
     style="display: none;"
     x-show="open"
+    class='w-full'
+    wire:ignore
 >
-    <div class="grid lg:grid-cols-1 grid-cols-1 gap-2">
-        <template x-for="ward in wards">
-            <div role="button" @click="value = ward.id" :class="(value === ward.id) ? 'bg-sky-300 dark:bg-sky-600' : 'bg-gray-200 dark:bg-gray-600'"
-            class="w-full lg:max-w-sm font-bold border rounded-md shadow-md py-2  dark:text-white">
-                <div x-text="ward.name">
+    <div class="flex flex-col gap2">
+        <template x-for="item in wards">
+            <div x-show="item.id != ward.id"
+                role="button"
+                class="border-b py-2 hover:bg-sky-200 dark:hover:bg-gray-200 border-gray-500 dark:border-gray-200"
+                @click="value = item.id" :class="(value === item.id) ? 'bg-sky-200 dark:bg-sky-600' : 'border-gray-500 dark:border-gray-200'"
+                class="w-full font-bold py-2 dark:text-white">
+                <div x-text="item.name">
                 </div>
             </div>
         </template>

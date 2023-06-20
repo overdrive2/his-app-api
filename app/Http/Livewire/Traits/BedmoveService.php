@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Traits;
 
 use App\Models\IpdBedmove;
 use App\Models\Room;
+use Illuminate\Validation\Validator;
 
 trait BedmoveService
 {
@@ -12,6 +13,8 @@ trait BedmoveService
     public IpdBedmove $editing;
 
     public $selectedId;
+
+    public $dispatchError = '';
 
     public $ipd = [
         'an' => '',
@@ -42,17 +45,17 @@ trait BedmoveService
     {
         $uid = auth()->user()->id;
 
-        return IpdBedmove::make([
-            'bed_id' => 0,
-            'from_ref_id' => 0,
-            'to_ref_id' => 0,
-            'ward_id' => $this->ward_id,
-            'updated_by' => $uid,
-            'created_by' => $uid,
-            'movetime' => $this->getCurrentTime(),
-            'bedmove_type_id' => config('ipd.moveself'),
-            'delflag' => false
-           ]);
+        return
+            IpdBedmove::make([
+                'bed_id' => 0,
+                'from_ref_id' => 0,
+                'to_ref_id' => 0,
+                'updated_by' => $uid,
+                'created_by' => $uid,
+                'delflag' => false,
+                'movedate' => $this->getCurrentDate(),
+                'movetime' => $this->getCurrentTime()
+            ]);
     }
 
     public function mountBedmoveService()
@@ -98,6 +101,21 @@ trait BedmoveService
     {
         $bedmove = IpdBedmove::find($this->selectedId);
         return $bedmove->delete();
+    }
+
+    public function bedMoveValidate($dist)
+    {
+        $this->dispatchError = $dist;
+        $this->withValidator(function (Validator $validator) {
+            $validator->after(function ($validator) {
+                if ($validator->errors()->isNotEmpty()) {
+                    $errorMsg =  $validator->errors()->messages();
+                    $this->dispatchBrowserEvent($this->dispatchError, [
+                        'errors' => json_encode($errorMsg)
+                    ]);
+                }
+            });
+        })->validate();
     }
 
 }
