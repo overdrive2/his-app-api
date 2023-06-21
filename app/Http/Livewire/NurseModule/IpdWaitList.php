@@ -38,12 +38,7 @@ class IpdWaitList extends Component
 
     public function getRowsQueryProperty()
     {
-        return
-            Ipd::whereIn('id',
-                IpdBedmove::where('ward_id', $this->ward_id)
-                    ->where('bedmove_type_id', config('ipd.moveout'))
-                    ->pluck('ipd_id')
-                );
+        return IpdBedmove::where('ward_id', $this->ward_id)->where('bedmove_type_id', config('ipd.moveout'));
     }
 
     public function getRowsProperty()

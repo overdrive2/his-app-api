@@ -3,7 +3,7 @@
         rooms:[],
         beds:[],
         errors:[],
-        tab: 0,
+        tab: @entangle('tab'),
         loading: false,
         selectedId: 0,
         badges: {
@@ -63,6 +63,21 @@
                 @endforeach
             </select>
         </div>
+        Tab <span x-text="tab"></span> {{ $tab }}
+            <ul class="mb-4 flex list-none flex-row flex-wrap border-b-0 pl-0 lg:justify-end justify-center">
+                <li role="presentation">
+                    <button @click="tab=1" type="button" class="px-2.5" :class="tab == 1 ? 'border-primary-600 border-b' : ''">รอรับใหม่</button>
+                </li>
+                <li>
+                    <button @click="tab=2" type="button" class="px-2.5" :class="tab == 2 ? 'border-primary-600 border-b' : ''">รอรับย้าย</button>
+                </li>
+                <li>
+                    <button @click="tab=3" type="button" class="px-2.5" :class="tab == 3 ? 'border-primary-600 border-b' : ''">กำลังรักษา</button>
+                </li>
+                <li>
+                    <button @click="tab=4" type="button" class="px-2.5" :class="tab == 4 ? 'border-primary-600 border-b' : ''">จำหน่าย</button>
+                </li>
+            </ul>
         <div wire:ignore class="grow">
             <ul
                 class="mb-4 flex list-none flex-row flex-wrap border-b-0 pl-0 lg:justify-end justify-center"
