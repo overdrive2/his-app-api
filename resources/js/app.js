@@ -122,7 +122,7 @@ window.addEventListener('cat:progress', event => {
 })
 
 window.addEventListener('swal:close', event => {
-    Swal.close();
+    Swal.close()
 })
 
 /*const wardSelect = document.getElementById('wardSelect');

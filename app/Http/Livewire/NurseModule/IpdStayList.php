@@ -21,7 +21,8 @@ class IpdStayList extends Component
     protected $listeners = [
         'load:stay' => 'loadStay',
         'stay:set:ward' => 'setWard',
-        'move:bed:modal' => 'moveBedModal'
+        'move:bed:modal' => 'moveBedModal',
+        'stay:refresh' => '$refresh'
     ];
 
     public function rules()

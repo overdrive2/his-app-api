@@ -55,12 +55,14 @@ class NurseIpdList extends Component
     {
         switch ($value) {
             case 1:
-                /*$this->dispatchBrowserEvent('update-newcase-count', [
-                    'count' => 8
-                ]);*/
+                //$this->dispatchBrowserEvent('cat:progress');
                 $this->emit('open:newcase', true);
                 break;
+            case 2:
+                $this->emit('load:wait', true, $this->filter_ward_id);
+                break;
             case 3:
+               // $this->dispatchBrowserEvent('cat:progress');
                 $this->emit('load:stay', true);
                 break;
         }
@@ -153,6 +155,7 @@ class NurseIpdList extends Component
                 $this->emit('set:ward', $value);
                 break;
             case 2:
+                $this->emit('wait:set:ward', $value);
                 break;
             case 3:
                 $this->emit('stay:set:ward', $value);

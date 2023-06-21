@@ -61,7 +61,7 @@ class WardmoveEntry extends Component
         $this->wm->bed_id = Ward::find($this->wm->ward_id)->wait_bed_id;
 
         $this->wm->save();
-
+        $this->emit('load:stay', true);
         $this->dispatchBrowserEvent('close-mw-modal');
     }
 

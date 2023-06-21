@@ -19,8 +19,6 @@
         setTab: (idx) => {
             $dispatch('set-tab', {id: idx});
             tab = idx
-            console.log(tab)
-           // $wire.set('tab', idx)
         }
     }"
     x-init="
@@ -54,20 +52,18 @@
         badges.newcase = e.detail.count
     }"
 >
-    <div class="lg:flex">
-        <div id="te-search-container" class="lg:flex lg:items-center max-w-lg w-full">
-            <div wire:ignore class="relative mb-0 lg:flex flex-wrap items-stretch w-full">
-                <select
-                    x-on:change="() => { $dispatch('cat:progress') }"
-                    id="wardSelect"
-                    wire:model="filter_ward_id" data-te-select-init data-te-select-filter="true" >
-                    @foreach ($wards as $ward)
-                    <option value="{{ $ward->id }}">{{ $ward->name }}</option>
-                    @endforeach
-                </select>
-            </div>
+    <div class="lg:flex justify-between">
+        <div wire:ignore class="w-full lg:max-w-sm">
+            <select
+                x-on:change="() => { /* $dispatch('cat:progress') */ }"
+                id="wardSelect"
+                wire:model="filter_ward_id" data-te-select-init data-te-select-filter="true" >
+                @foreach ($wards as $ward)
+                <option value="{{ $ward->id }}">{{ $ward->name }}</option>
+                @endforeach
+            </select>
         </div>
-        <div wire:ignore class="flex-grow">
+        <div wire:ignore class="grow">
             <ul
                 class="mb-4 flex list-none flex-row flex-wrap border-b-0 pl-0 lg:justify-end justify-center"
                 id="tabs-tab3"
@@ -78,7 +74,6 @@
                     <x-button.nav
                         :tabName="__('tabs-newcase')"
                         x-on:click="() => {
-                            $dispatch('cat:progress');
                             $dispatch('set-tab', {id: 1});
                         }"
                         id="tabs-home-tab3"
@@ -143,7 +138,8 @@
                     'user' => $user,
                     'ward_id' => $filter_ward_id,
                     'open' => false
-                ]
+                ],
+                key('ipd-wait'.$tab.$filter_ward_id)
             )
         </div>
         <div

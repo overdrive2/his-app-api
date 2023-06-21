@@ -51,6 +51,7 @@ class IpdNewcaseList extends Component
     public function setWard($id)
     {
         $this->ward_id = $id;
+        $this->dispatchBrowserEvent('swal:close');
         //dd($this->ward_id);
     }
 
