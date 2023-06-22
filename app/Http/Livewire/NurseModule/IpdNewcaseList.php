@@ -4,7 +4,9 @@ namespace App\Http\Livewire\NurseModule;
 use App\Http\Livewire\DataTable\WithCachedRows;
 use App\Http\Livewire\DataTable\WithPerPagePagination;
 use App\Models\His\HisIpdNewcase;
+use App\Models\IpdBedmove;
 use App\Models\Ward;
+use App\Services\IpdService;
 use Livewire\Component;
 
 class IpdNewcaseList extends Component
@@ -13,7 +15,8 @@ class IpdNewcaseList extends Component
 
     public $open = false;
     public $ward_id;
-    public $user;
+    public $user, $ipd = [];
+    public IpdBedmove $edititng;
 
     public $filters = [
         'hn' => '',
@@ -67,6 +70,14 @@ class IpdNewcaseList extends Component
             ->when($this->filters['an'], function($query, $val) {
                 return $query->where('an', str_pad($val, 9, '0', STR_PAD_LEFT));
             });
+    }
+
+    public function new($an)
+    {
+        $this->ipd = (new IpdService)->create($an);
+        $this->dispatchBrowserEvent('newcase-modal-show', [
+            'ipd' => $this->ipd
+        ]);
     }
 
     public function mount()

@@ -1,28 +1,36 @@
 <div
     x-data="{
         buttonDisabled: false,
+        newCase:(an)=>{
+            console.log(an)
+        }
     }"
 >
-    {{ $ward_id }}
-        <div id="list" class="overflow-x-auto grid grid-flow-row dark:text-white">
-        <div class="flex gap-2">
-            <div class="flex-none w-24">Date</div>
-            <div class="flex-none w-20">Time</div>
-            <div class="flex-none w-20">AN</div>
-            <div class="flex-none w-20">HN</div>
-            <div class="grow">ชื่อ - นามสกุล</div>
-        </div>
-        @foreach ($rows as $row)
-            <div id="row{{$row->an}}" x-on:click="newCase({{$row->an}})"
-                class="flex border-b gap-2 dark:border-gray-500 dark:hover:bg-gray-700 hover:bg-gray-100 py-2" role="button" x-bind:disabled="buttonDisabled" >
-                <div class="flex-none w-24">{{ $row->movedate }}</div>
-                <div class="flex-none w-20">{{ $row->movetime }}</div>
-                <div class="flex-none w-20">{{ $row->an }}</div>
-                <div class="flex-none w-20">{{ $row->hn }}</div>
-                <div class="grow text-left min-w-[160px]">{{ $row->pname . $row->fname . ' ' . $row->lname }}</div>
-            </div>
+    <x-table>
+        <x-slot name="header">
+            <tr>
+                <th scope="col" class="px-2 flex-none w-[100px]">Date</th>
+                <th scope="col" class="px-2 flex-none w-20">Time</th>
+                <th scope="col" class="px-2 flex-none w-20">AN</th>
+                <th scope="col" class="px-2 flex-none w-20">HN</th>
+                <th scope="col" class="px-2 grow text-left">ชื่อ - นามสกุล</th>
+            </tr>
+        </x-slot>
+        <x-slot name="content">
+        @foreach ($rows as $key => $row)
+            @php
+                $ipd = $row->ipd ?? '';
+            @endphp
+            <x-table.row role="button" :key="$key" id="row{{$row->an}}" x-on:click="newCase('{{$ipd->id}}')" role="button" x-bind:disabled="buttonDisabled" >
+                <x-table.cell class="px-2 flex-none w-[100px]">{{ $row->movedate }}</x-table.cell>
+                <x-table.cell class="px-2 flex-none w-20">{{ $row->movetime }}</x-table.cell>
+                <x-table.cell class="px-2 flex-none w-20">{{ $ipd->an }}</x-table.cell>
+                <x-table.cell class="px-2 flex-none w-20">{{ $ipd->hn }}</x-table.cell>
+                <x-table.cell class="px-2 grow text-left min-w-[160px]">{{ $ipd->patient_name }}</x-table.cell>
+            </x-table.row>
         @endforeach
-    </div>
+        </x-slot>
+    </x-table>
     <div>
         {{ $rows ? $rows->links() : ''}}
     </div>

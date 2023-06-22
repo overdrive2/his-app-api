@@ -26,7 +26,7 @@ class NurseIpdList extends Component
     public $filter_ward_id;
     public $wards = [];
     public $rooms = [];
-    public $tab = 3;
+    public $tab = 1;
 
     public IpdBedmove $bm;
 
