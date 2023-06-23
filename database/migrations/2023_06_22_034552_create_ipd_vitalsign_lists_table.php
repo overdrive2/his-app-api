@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('ipd_vitalsign_lists', function (Blueprint $table) {
             $table->id();
+            $table->integer('ipd_vitalsign_id');
+            $table->integer('vitalsign_id');
+            $table->string('result',100);
+            $table->integer('updated_by')->nullable();
+            $table->integer('created_by')->nullable();
             $table->timestamps();
         });
     }

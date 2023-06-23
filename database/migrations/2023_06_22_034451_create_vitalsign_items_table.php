@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('vitalsign_items', function (Blueprint $table) {
             $table->id();
+            $table->string('item_ename',100);  
+            $table->string('item_tname',100);  
+            $table->string('item_display',100);  
+            $table->string('type_result',100);  
+            $table->boolean('show_graph');  
+            $table->boolean('active');        
+            $table->integer('updated_by')->nullable();
+            $table->integer('created_by')->nullable();
             $table->timestamps();
         });
     }

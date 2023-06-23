@@ -13,6 +13,16 @@ return new class extends Migration
     {
         Schema::create('ipd_vitalsign_masters', function (Blueprint $table) {
             $table->id();
+            $table->date('vitalsign_date');
+            $table->time('vitalsign_time');
+            $table->integer('ipd_nurse_shift_id');
+            $table->integer('ward_id');
+            $table->integer('qty');
+            $table->boolean('saved');
+            $table->boolean('active');
+            $table->integer('vitalsign_type_id');
+            $table->integer('updated_by')->nullable();
+            $table->integer('created_by')->nullable();
             $table->timestamps();
         });
     }
