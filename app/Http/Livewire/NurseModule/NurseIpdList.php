@@ -53,7 +53,8 @@ class NurseIpdList extends Component
 
     public function updatedTab($value)
     {
-        switch ($value) {
+        $this->childRefresh($value, $this->filter_ward_id);
+       /* switch ($value) {
             case 1:
                 //$this->dispatchBrowserEvent('cat:progress');
                 $this->emit('open:newcase', true);
@@ -65,7 +66,7 @@ class NurseIpdList extends Component
                // $this->dispatchBrowserEvent('cat:progress');
                 $this->emit('load:stay', true);
                 break;
-        }
+        }*/
     }
 
     public function getRooms()
@@ -148,21 +149,26 @@ class NurseIpdList extends Component
         $this->rooms = $this->getRooms();
     }
 
-    public function updatedFilterWardId($value)
+    public function childRefresh($tabId, $wardId)
     {
-        switch($this->tab) {
+        switch($tabId) {
             case 1:
-                $this->emit('set:ward', $value);
+                $this->emit('set:ward', $wardId);
                 break;
             case 2:
-                $this->emit('wait:set:ward', $value);
+                $this->emit('wait:set:ward', $wardId);
                 break;
             case 3:
-                $this->emit('stay:set:ward', $value);
+                $this->emit('stay:set:ward', $wardId);
                 break;
             default:
             // Nothing
         }
+    }
+
+    public function updatedFilterWardId($value)
+    {
+        $this->childRefresh($this->tab, $value);
     }
 
     public function updatedWardId($value)

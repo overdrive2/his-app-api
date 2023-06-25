@@ -1,4 +1,5 @@
 <button
+  wire:ignore
   type="button"
   data-te-ripple-init
   data-te-ripple-color="light"

@@ -41,6 +41,11 @@ class IpdBedmove extends Model
                         ->orderBy('movetime', 'desc')
                         ->value('id')
                 ]);
+            if($model->bedmove_type_id == config('ipd.moverecp')) {
+                IpdBedmove::where('id', $model->from_ref_id)->update([
+                    'to_ref_id' => $model->id
+                ]);
+            }
         });
 
     }

@@ -6,6 +6,7 @@ use App\Models\Ipd;
 use App\Models\Ward;
 use App\Services\BedmoveService;
 use Livewire\Component;
+use Illuminate\Validation\Validator;
 
 class IpdStayList extends Component
 {

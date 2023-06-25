@@ -2,6 +2,7 @@
     x-data = "{
         ward : [],
         rooms : [],
+        selectedId: [],
         errors:{
             bedmove:'',
             wardmove:''
