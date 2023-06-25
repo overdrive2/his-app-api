@@ -11,15 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ipd_vitalsigns', function (Blueprint $table) {
+        Schema::create('ins_occu_details', function (Blueprint $table) {
             $table->id();
-            $table->date('vitalsign_date');
-            $table->time('vitalsign_time');
-            $table->integer('ipd_nurse_shift_id');
-            $table->integer('ipd_id');
-            $table->integer('ward_id');
-            $table->integer('bed_id');
-            $table->integer('vitalsign_type_id');
+            $table->date('ins_occu_id');
+            $table->text('ins_occu_event');
+            $table->text('ins_occu_solve');
             $table->integer('updated_by')->nullable();
             $table->integer('created_by')->nullable();
             $table->timestamps();
@@ -31,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ipd_vitalsigns');
+        Schema::dropIfExists('ins_occu_details');
     }
 };

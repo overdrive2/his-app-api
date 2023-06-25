@@ -11,13 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ipd_vitalsign_item_lists', function (Blueprint $table) {
+        Schema::create('ins_occu_branches', function (Blueprint $table) {
             $table->id();
-            $table->integer('ipd_vitalsign_item_id');
-            $table->integer('vitalsign_item_id');
-            $table->integer('display_order');
-            $table->integer('updated_by')->nullable();
-            $table->integer('created_by')->nullable();
+            $table->string('branch_name',100);
             $table->timestamps();
         });
     }
@@ -27,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ipd_vitalsign_item_lists');
+        Schema::dropIfExists('ins_occu_branches');
     }
 };

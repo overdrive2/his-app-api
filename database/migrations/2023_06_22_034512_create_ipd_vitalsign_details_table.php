@@ -12,7 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('ipd_vitalsign_details', function (Blueprint $table) {
-            $table->id();
+            $table->id();   
+            $table->integer('ipd_id');
+            $table->integer('master_id');
+            $table->integer('ipd_vitalsign_id');
+            $table->integer('updated_by')->nullable();
+            $table->integer('created_by')->nullable();
             $table->timestamps();
         });
     }
