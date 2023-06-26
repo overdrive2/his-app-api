@@ -13,6 +13,10 @@
         getNewcaseCount: async () => {
             let cnt = await $wire.getNewcaseCount();
             $dispatch('update-newcase-count', {'count':cnt})
+        },
+        save: () => {
+            $dispatch('cat:progress')
+            $wire.save()
         }
     }"
     x-init="
@@ -25,8 +29,11 @@
     }"
 
     @newcase-modal-hide.window = "(e) => {
-        $wire.emit('refresh:newcase');
-        ncModal.hide();
+        setTimeout(() => {
+            ncModal.hide();
+            $wire.emit('refresh:newcase');
+            $dispatch('swal:close')
+        }, 1000)
     }"
 
     @err-message.window = "(e) => {
@@ -96,7 +103,7 @@
     </x-slot>
     <x-slot name="footer">
         <x-button.secondary @click="() => ncModal.hide()">ยกเลิก</x-button.secondary>
-        <x-button.primary wire:click="save" wire:loading.target="save" wire:loading.attr="disabled">บันทึก</x-button.primary>
+        <x-button.primary x-on:click="save">บันทึก</x-button.primary>
     </x-slot>
     </x-tw-modal.dialog>
 </div>

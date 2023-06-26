@@ -2,6 +2,7 @@
     x-data="{
         errors:[],
         ipd: [],
+        ward_id: @entangle('ward_id'),
         recpCase: async (id) => {
             $dispatch('cat:progress')
             $wire.new(id);
@@ -24,9 +25,9 @@
 
     @waitcase-modal-hide.window = "(e) => {
         setTimeout(() => {
+            $wire.emit('wait:set:ward', ward_id);
             wcModal.hide();
             $dispatch('swal:close')
-            $wire.emit('wait:refresh');
         }, 1000)
     }"
 
@@ -53,7 +54,7 @@
             <x-table.row
                 role="button"
                 :key="$key"
-                id="row{{$row->an}}"
+                id="row{{ $row->an }}"
                 x-on:click="recpCase('{{$row->id}}')"
                 role="button"
                 class="hover:bg-neutral-100 dark:hover:bg-neutral-700"

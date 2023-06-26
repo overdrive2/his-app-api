@@ -16,11 +16,12 @@ return new class extends Migration
             $table->integer('ipd_id');
             $table->date('movedate');
             $table->time('movetime');
+            $table->integer('ward_id');
+            $table->integer('room_id');
             $table->integer('bed_id');
             $table->integer('bedmove_type_id');
             $table->integer('from_ref_id');
             $table->integer('to_ref_id');
-            $table->integer('ward_id');
             $table->integer('updated_by');
             $table->integer('created_by');
             $table->boolean('delflag');

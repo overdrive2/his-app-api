@@ -16,13 +16,14 @@ class IpdBedmove extends Model
         'an',
         'movedate',
         'movetime',
+        'ward_id',
+        'room_id',
         'bed_id',
         'bedmove_type_id',
         'created_by',
         'updated_by',
         'from_ref_id',
         'to_ref_id',
-        'ward_id',
         'delflag'
     ];
 
@@ -85,11 +86,6 @@ class IpdBedmove extends Model
     public function getWardNameAttribute()
     {
         return Ward::where('id', $this->ward_id)->value('name');
-    }
-
-    public function getRoomIdAttribute()
-    {
-        return Bed::where('id', $this->bed_id)->value('room_id');
     }
 
     public function getRoomNameAttribute()

@@ -4,7 +4,6 @@
         model: @entangle($attributes->wire('model')),
     }"
 >
-    <div x-text="model"></div>
     <select
         x-bind:value="model"
         data-te-select-init
