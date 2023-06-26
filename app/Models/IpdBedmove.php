@@ -27,7 +27,7 @@ class IpdBedmove extends Model
         'delflag'
     ];
 
-    protected $appends = ['date_for_editing', 'time_for_editing', 'date_for_thai', 'ward_name', 'ipd'];
+    protected $appends = ['date_for_editing', 'time_for_editing', 'date_for_thai', 'ward_name', 'room_name', 'ipd'];
 
     protected static function boot()
     {
@@ -90,8 +90,7 @@ class IpdBedmove extends Model
 
     public function getRoomNameAttribute()
     {
-        $room_id = $this->room_id;
-        return $room_id ? 'true' : 'false';
+        return Room::where('id', $this->room_id)->value('room_name');
     }
 
     public function getMovetypeNameAttribute()

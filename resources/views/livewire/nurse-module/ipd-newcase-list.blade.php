@@ -88,7 +88,7 @@
             </div>
             <h5 class="text-left text-base font-bold border-b">เลือกห้อง</h5>
             <div class="text-left overflow-x-auto mb-4">
-                <x-room-menu :rows="$rooms" />
+                <x-room-menu wire:model="editing.room_id" :rows="$rooms" />
             </div>
 
             <h5 class="text-left text-base font-bold border-b mb-2">เลือกเตียง</h5>

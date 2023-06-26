@@ -114,7 +114,10 @@ class IpdBedMoveList extends Component
 
     public function deleteBedMove()
     {
-        if($this->delete()) $this->dispatchBrowserEvent('swal:success');
+        $bm = IpdBedmove::where('id', $this->selectedId)->first();
+        $deleted = $bm->delete();
+
+        if($deleted) $this->dispatchBrowserEvent('toastify', ['text' => 'ลบข้อมูลสำเร็จ...']);
     }
 
     public function mount()

@@ -43,6 +43,7 @@ class IpdNewcaseList extends Component
             'editing.ipd_id' => 'required',
             'editing.bed_id' => 'required|exists:beds,id',
             'editing.ward_id' => 'required',
+            'editing.room_id' => 'required',
             'editing.movedate' => 'required',
             'editing.movetime' => 'required',
             'editing.bedmove_type_id' => 'required',
@@ -61,6 +62,7 @@ class IpdNewcaseList extends Component
         return IpdBedmove::make([
             'ipd_id' => $this->ipd ? ($this->ipd->id ?? 0) : null,
             'ward_id' => $this->ward_id,
+            'room_id' => 0,
             'movedate' => $this->getCurrentDate(),
             'movetime' => $this->getCurrentTime(),
             'bedmove_type_id' => config('ipd.newcase'),
@@ -114,16 +116,19 @@ class IpdNewcaseList extends Component
     {
         $this->ipd = (new IpdService)->create($an);
         $this->rooms = $this->getRooms();
-        $this->dispatchBrowserEvent('set-rooms', [
-            'rooms' => $this->rooms
-        ]);
+
+
+        $this->editing = $this->makeBlank();
 
         $this->dispatchBrowserEvent('set-beds', [
             'beds' => $this->getBeds($this->rooms[0]->id)
         ]);
 
-        $this->editing = $this->makeBlank();
+        $this->editing->room_id = $this->rooms[0]->id;
 
+        $this->dispatchBrowserEvent('set-rooms', [
+            'rooms' => $this->rooms
+        ]);
         $this->dispatchBrowserEvent('newcase-modal-show', [
             'ipd' => $this->ipd
         ]);

@@ -19,9 +19,10 @@ class NurseIpdAsmEntry extends Component
 
     public function getGroupsProperty()
     {
-        return IpdFormAsmDetail::select('group_display', 'web_label')
+        return IpdFormAsmDetail::select('group_display')
             ->where('ipd_form_asm_id', $this->form_id)
-            ->where('input_type', 'GROUPBOX')
+            //->where('input_type', 'GROUPBOX')
+            ->groupBy('group_display')
             ->orderBy('group_display', 'asc')
             ->get();
     }
