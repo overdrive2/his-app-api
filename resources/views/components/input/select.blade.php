@@ -11,5 +11,7 @@
     >
         {{ $slot }}
     </select>
+    @if($label)
     <label data-te-select-label-ref class="z-20 bg-white dark:bg-opacity-0">{{ $label ?? '' }}</label>
+    @endif
 </div>

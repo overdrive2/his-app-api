@@ -18,10 +18,10 @@ return new class extends Migration
             $table->string('report_label',100);
             $table->string('input_type',100);
             $table->jsonb('lookup_json')->nullable();
+            $table->string('default_value');
             $table->boolean('have_other');
             $table->string('lookup_sql',100)->nullable();
-            $table->integer('group_display')->nullable();
-            $table->integer('sub_group_display')->nullable();
+            $table->integer('parent_id')->nullable();
             $table->integer('display_order')->nullable();
             $table->integer('updated_by')->nullable();
             $table->integer('created_by')->nullable();

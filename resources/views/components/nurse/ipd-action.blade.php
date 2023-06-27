@@ -30,6 +30,7 @@
             label="ย้ายวอร์ด"
         />
         <x-button.border-b
+            x-on:click="() => location.assign('{{ route('nurse.asm.list') }}?id='+row.id)"
             color="pink"
             icon="file-waveform"
             label="ASM"

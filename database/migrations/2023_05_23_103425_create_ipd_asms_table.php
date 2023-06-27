@@ -19,7 +19,8 @@ return new class extends Migration
             $table->integer('ipd_asm_form_id');
             $table->integer('ipd_nurse_shift_id');
             $table->integer('updated_by')->nullable();
-            $table->integer('created_by')->nullable();  
+            $table->integer('created_by')->nullable();
+            $table->boolean('saved');
             $table->timestamps();
         });
     }
