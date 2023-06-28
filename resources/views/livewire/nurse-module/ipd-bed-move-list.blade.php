@@ -100,6 +100,7 @@
                     </option>
                 </template>
             </x-input.select>
+            <select wire:model="editing.room_id">
         </div>
 
         <div
