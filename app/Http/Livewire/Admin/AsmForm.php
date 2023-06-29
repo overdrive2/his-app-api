@@ -7,7 +7,7 @@ use App\Http\Livewire\DataTable\WithPerPagePagination;
 use App\Models\IpdFormAsm;
 use Livewire\Component;
 
-class AsmList extends Component
+class AsmForm extends Component
 {
     use WithCachedRows, WithPerPagePagination;
 

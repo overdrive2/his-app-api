@@ -13,7 +13,7 @@
         setTimeout(() => {
             $dispatch('swal:close')
             edModal.show()
-        }, 1000)
+        }, 600)
     }"
 
     @edmodal-close.window="() => edModal.hide()"
