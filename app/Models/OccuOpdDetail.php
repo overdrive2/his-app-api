@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class OccuOpdDetail extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'occu_id',
+        'occu_opd_type_id',
+        'value',
+    ];
 }

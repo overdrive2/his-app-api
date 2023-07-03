@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class OccuInsBranch extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'branch_name'                
+    ];
 }

@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class OccuStatus extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'status_name',
+    ];
 }

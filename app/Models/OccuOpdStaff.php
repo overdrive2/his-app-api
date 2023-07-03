@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class OccuOpdStaff extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'occu_staff_name',
+        'display_order',
+    ];
 }

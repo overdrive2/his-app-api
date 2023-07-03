@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class OccuOpdDepGroup extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'occu_dep_group_name',
+        'sql_command',
+    ];
 }

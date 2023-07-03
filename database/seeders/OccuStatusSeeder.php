@@ -22,7 +22,7 @@ class OccuStatusSeeder extends Seeder
             if (!$firstline) {
                 OccuStatus::create([
                     "id"               => $data['0'],
-                    "occu_status_name" => $data['1']
+                    "status_name" => $data['1']
                 ]);    
             }
             $firstline = false;

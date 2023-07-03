@@ -1,0 +1,52 @@
+[
+  {
+    "id": 1,
+    "occu_staff_name": "HN",
+    "display_order": 1
+  },
+  {
+    "id": 2,
+    "occu_staff_name": "RN",
+    "display_order": 2
+  },
+  {
+    "id": 3,
+    "occu_staff_name": "RN ขึ้น OT",
+    "display_order": 3
+  },
+  {
+    "id": 4,
+    "occu_staff_name": "TN",
+    "display_order": 4
+  },
+  {
+    "id": 5,
+    "occu_staff_name": "PN",
+    "display_order": 5
+  },
+  {
+    "id": 6,
+    "occu_staff_name": "AID ปชส.",
+    "display_order": 6
+  },
+  {
+    "id": 7,
+    "occu_staff_name": "AID ไม่ปชส.",
+    "display_order": 7
+  },
+  {
+    "id": 8,
+    "occu_staff_name": "คนงาน",
+    "display_order": 8
+  },
+  {
+    "id": 9,
+    "occu_staff_name": "พนักงานพิมพ์",
+    "display_order": 9
+  },
+  {
+    "id": 10,
+    "occu_staff_name": "ผู้ฝึกงาน",
+    "display_order": 10
+  }
+]
