@@ -11,14 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('vitalsign_items', function (Blueprint $table) {
+        Schema::create('occu_ins_details', function (Blueprint $table) {
             $table->id();
-            $table->string('item_ename',100)->nullable();  
-            $table->string('item_tname',100)->nullable();  
-            $table->string('item_display',100)->nullable();  
-            $table->string('type_result',100)->nullable(); 
-            $table->boolean('show_graph');  
-            $table->boolean('active');        
+            $table->date('occu_ins_id');
+            $table->text('occu_ins_event')->nullable(); 
+            $table->text('occu_ins_solve')->nullable(); 
             $table->integer('updated_by')->nullable();
             $table->integer('created_by')->nullable();
             $table->timestamps();
@@ -30,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('vitalsign_items');
+        Schema::dropIfExists('occu_ins_details');
     }
 };
