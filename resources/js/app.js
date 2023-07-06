@@ -79,6 +79,15 @@ window.addEventListener('toastify', event => {
     })
 })
 
+window.addEventListener('swal:error', event => {
+    Swal.fire({
+        icon: 'error',
+        title: event.detail.title ?? 'Oops...',
+        text: event.detail.text ?? 'Something went wrong!'
+      })
+
+})
+
 window.addEventListener('delete:confirm', event => {
     Swal.fire({
         title: 'คุณแน่ใจไหม?',

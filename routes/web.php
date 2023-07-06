@@ -49,4 +49,5 @@ Route::get('test', [App\Http\Livewire\Test::class, '__invoke']);
 
 Route::middleware(['auth:sanctum'])->prefix('nurseinspector')->group(function () {
     Route::get('/home', [App\Http\Livewire\NurseInspector\Home::class, '__invoke'])->name('nurse.inspector');
+    Route::get('/detail', [App\Http\Livewire\NurseInspector\Detail::class, '__invoke'])->name('nurse.inspector.detail');
 });
