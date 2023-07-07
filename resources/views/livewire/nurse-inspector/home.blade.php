@@ -4,8 +4,6 @@
         nurseshifts: @js($nurseshifts),
         branchs: @js($branchs),
         name:'deuce', 
-        i: 0,
-        show: false,
         save: () => {
             $dispatch('cat:progress');
             $wire.save();
@@ -34,23 +32,17 @@
     }"
 >
 
-    <div x-text='i'>
-
-    </div>
-    <div x-show='show'>
-        hello
-    </div>
     <div id="container">
-        sdate: {{ $filters['sdate'] }}
+        <!-- sdate: {{ $filters['sdate'] }}
         edate: {{ $filters['edate'] }}
-        shiftId: {{ $filters['shiftId'] }}
+        shiftId: {{ $filters['shiftId'] }} -->
 
         <div class="mb-4 w-full border-t flex justify-between py-2 px-2" id="header">
             <div class="grid grid-cols-3 gap-4">
                 <x-input.date wire:model="filters.sdate" />
                 <x-input.date wire:model="filters.edate" />
                 <div wire:ignore>
-                <x-input.select :label="__('เลือกเวร')">
+                <x-input.select :label="__('เลือกเวร')" wire:model="filters.shiftId">
                     <option value="0">ทั้งหมด</option>
                     <template x-for="nf in nurseshifts">
                         <option :value='nf.id' x-text='nf.nurse_shift_name'>
@@ -102,9 +94,6 @@
         </div>
         <div>
             {{ $rows->links() }}
-        </div>
-        <div class="w-full border" id="body">
-
         </div>
     </div>
 

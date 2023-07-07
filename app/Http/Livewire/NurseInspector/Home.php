@@ -15,8 +15,6 @@ class Home extends Component
 {
     use WithPerPagePagination, DateTimeHelpers;
 
-    public $ipd_id, $patient_id;
-    public $an = '1234';
     public OccuIns $editing;
     public $filters = [
         'sdate' => '',

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\FunctionDateTimes;
 use App\Http\Livewire\Traits\DateTimeHelpers;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class OccuIns extends Model
 {
-    use HasFactory, DateTimeHelpers;
+    use HasFactory, DateTimeHelpers, FunctionDateTimes;
 
     protected $appends = ['occu_status_name', 'date_for_editing', 'time_for_editing', 'occu_ins_branch_name', 'ipd_nurse_shift_name'];
 
@@ -90,5 +91,10 @@ class OccuIns extends Model
     {
         $time = Carbon::createFromFormat('H:i',  $value);
         $this->nurse_shift_time = $time->format('H:i');
+    }
+
+    public function getDateForThaiAttribute()
+    {
+        return $this->thai_date_short_number2(Carbon::parse($this->nurse_shift_date));
     }
 }
