@@ -34,7 +34,6 @@ class OccuIns extends Model
         'updated_at',
     ];
 
-
     public function getOccuStatusNameAttribute()
     {
         $data = OccuStatus::find($this->occu_status_id);

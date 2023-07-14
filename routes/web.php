@@ -47,7 +47,12 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('test', [App\Http\Livewire\Test::class, '__invoke']);
 
-Route::middleware(['auth:sanctum'])->prefix('nurseinspector')->group(function () {
-    Route::get('/home', [App\Http\Livewire\NurseInspector\Home::class, '__invoke'])->name('nurse.inspector');
-    Route::get('/detail', [App\Http\Livewire\NurseInspector\Detail::class, '__invoke'])->name('nurse.inspector.detail');
+Route::middleware(['auth:sanctum'])->prefix('occuins')->group(function () {
+    Route::get('/home', [App\Http\Livewire\OccuInspector\Home::class, '__invoke'])->name('occu.ins');
+    Route::get('/detail', [App\Http\Livewire\OccuInspector\Detail::class, '__invoke'])->name('occu.ins.detail');
+});
+
+Route::middleware(['auth:sanctum'])->prefix('occuipd')->group(function () {
+    Route::get('/home', [App\Http\Livewire\OccuIpd\Home::class, '__invoke'])->name('occu.ipd');
+    Route::get('/detail', [App\Http\Livewire\OccuIpd\Detail::class, '__invoke'])->name('occu.ipd.detail');
 });

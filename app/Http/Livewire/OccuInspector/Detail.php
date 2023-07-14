@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Livewire\NurseInspector;
+namespace App\Http\Livewire\OccuInspector;
 
 use App\Http\Livewire\DataTable\WithPerPagePagination;
 use App\Http\Livewire\Traits\DateTimeHelpers;
@@ -112,7 +112,7 @@ class Detail extends Component
     public function render()
     {
         return view(
-            'livewire.nurse-inspector.detail',
+            'livewire.occu-ins.detail',
             [
                 'rows' => $this->rows,
             ]

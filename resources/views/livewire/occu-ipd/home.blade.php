@@ -2,8 +2,6 @@
     x-data="{
         errors:[],
         nurseshifts: @js($nurseshifts),
-        branchs: @js($branchs),
-        name:'deuce', 
         save: () => {
             $dispatch('cat:progress');
             $wire.save();
@@ -14,16 +12,16 @@
         }
     }" 
     
-    x-init="insmainModal = new Modal($refs.insmainModal);"
+    x-init="ipdmainModal = new Modal($refs.ipdmainModal);"
     
-    @insmain-modal-show.window="()=>{
-        insmainModal.show();
+    @ipdmain-modal-show.window="()=>{
+        ipdmainModal.show();
         $dispatch('swal:close');
     }"
-    @insmain-modal-close.window="(e)=> {
+    @ipdmain-modal-close.window="(e)=> {
         console.log(e.detail.msgstatus);
         $dispatch('swal:close');
-        insmainModal.hide();
+        ipdmainModal.hide();
     }"
 
     @err-message.window = "(e) => {
@@ -56,50 +54,72 @@
             </div>
         </div>
 
-        <div id="list" class="mt-2 overflow-x-auto grid grid-flow-row dark:text-white">
-            <x-grid.header>
-                <div class="">ลำดับ</div>
-                <div class="">Status</div>
-                <div class="">สาขา</div>
-                <div class="">วันที่เวร</div>
-                <div class="">เวร</div>
-                <div class="">ผู้บันทึก</div>
-                <div class="">วันเวลาบันทึก</div>
-                <div class="text-center">คำสั่ง</div>
-            </x-grid.header>
-            @foreach($rows as $key => $row)
-            <div x-on:click="open = !open" role='button' class="grid grid-cols-8 hover:bg-neutral-100">
-                <div class="">{{$key+1}}</div>
-                <div class="">{{$row->occu_status_name}}</div>
-                <div class="">{{$row->occu_branch_name}}</div>
-                <div class="">{{$row->nurse_shift_date}}</div>
-                <div class="">{{$row->ipd_nurse_shift_id}}</div>
-                <div class="">{{$row->updated_name}}</div>
-                <div class="">{{$row->updated_at}}</div>
-                <div class="py-1">
-                    <div class="flex gap-2">
+        <table class="min-w-full text-left text-sm font-light dark:text-gray-50">
+        <thead class="border-b bg-white font-medium dark:border-gray-500 dark:bg-gray-600">
+            <tr>
+                <th scope="col" class="px-6 py-4">ลำดับ</th>
+                <th scope="col" class="px-6 py-4">Ward</th>
+                <th scope="col" class="px-6 py-4">วันที่เวร</th>
+                <th scope="col" class="px-6 py-4">เวร</th>
+                <th scope="col" class="px-6 py-4">ยกมา</th>
+                <th scope="col" class="px-6 py-4">รับใหม่</th>
+                <th scope="col" class="px-6 py-4">รับย้าย</th>
+                <th scope="col" class="px-6 py-4">ย้าย Ward</th>
+                <th scope="col" class="px-6 py-4">จำหน่าย</th>
+                <th scope="col" class="px-6 py-4">ยกไป</th>
+                <th scope="col" class="px-6 py-4">ผู้บันทึก</th>
+                <th scope="col" class="px-6 py-4">วันเวลาบันทึก</th>
+                <th scope="col" class="px-6 py-4">คำสั่ง</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse ($rows as $key => $row)
+                <tr
+                    class="border-b {{ $key % 2 == 0 ? 'bg-gray-100 dark:border-gray-500 dark:bg-gray-700' : 'bg-white dark:border-gray-500 dark:bg-gray-600' }}">
+                    <td class="whitespace-nowrap px-6 py-4 font-medium">{{ $key + 1 }}</td>
+                    <td class="whitespace-nowrap px-6 py-4">{{ $row->ward_name }}</td>
+                    <td class="whitespace-nowrap px-6 py-4">{{ $row->nurse_shift_date }}</td>
+                    <td class="whitespace-nowrap px-6 py-4">{{ $row->ipd_nurse_shift_name }}</td>
+                    <td class="whitespace-nowrap px-6 py-4">{{ $row->getin }}</td>
+                    <td class="whitespace-nowrap px-6 py-4">{{ $row->getnew }}</td>
+                    <td class="whitespace-nowrap px-6 py-4">{{ $row->getmove }}</td>
+                    <td class="whitespace-nowrap px-6 py-4">{{ $row->moveout }}</td>
+                    <td class="whitespace-nowrap px-6 py-4">{{ $row->discharge }}</td>
+                    <td class="whitespace-nowrap px-6 py-4">{{ $row->getout }}</td>
+                    <td class="whitespace-nowrap px-6 py-4">{{ $row->updated_name }}</td>
+                    <td class="whitespace-nowrap px-6 py-4">{{ $row->updated_at }}</td>
+                    <td class="whitespace-nowrap px-6 py-4">
                         <x-button.secondary x-on:click="edit('{{ $row->id }}')">
                             <x-icon.pencil-square class="w-4 h-4" /> แก้ไข
                         </x-button.secondary>
-                        <x-button.primary x-on:click="()=>{ location.assign('{{ route('nurse.inspector.detail') }}?id={{ $row->id }}') }">
+                        <x-button.primary x-on:click="()=>{ location.assign('{{ route('occu.ipd.detail') }}?id={{ $row->id }}') }">
                             <x-icon.pencil-square class="w-4 h-4" /> เขียนบันทึก
                         </x-button.primary>
-                        <x-button class="bg-red-600 bg-opacity-80" wire:click="deleteConfirm('{{ $row->id }}')">
+                        <x-button.trash wire:click="deleteConfirm('{{ $row->id }}')">
                             <x-icon.trash class="w-4 h-4" /> ลบ
-                        </x-button>
-                    </div> 
-                </div>
-            </div>
-            @endforeach
-        </div>
-        <div>
+                        </x-button.trash>
+                    
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="4" class="whitespace-nowrap px-6 py-4 text-center font-medium">
+                        -- Empty --
+                    </td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
+    @if ($rows)
+        <div class="py-4">
             {{ $rows->links() }}
         </div>
+    @endif
     </div>
 
     <!-- Edit Modal -->
-    <x-tw-modal.dialog x-ref="insmainModal" maxWidth="xl" wire:ignore>
-        <x-slot name="title">การบันทึกเหตุการณ์ทางพยาบาล</x-slot>
+    <x-tw-modal.dialog x-ref="ipdmainModal" maxWidth="xl" wire:ignore>
+        <x-slot name="title">ส่งเวร IPD</x-slot>
         <x-slot name="content">
             <div class="flex justify-between gap-2">
                 <x-input.date wire:model.defer="editing.date_for_editing" />

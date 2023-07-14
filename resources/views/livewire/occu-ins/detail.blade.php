@@ -1,4 +1,33 @@
-<div>
+<div 
+    x-data="{
+        errors:[],
+        save: () => {
+            $dispatch('cat:progress');
+            $wire.save();
+        },
+        edit: (id) => {
+            $dispatch('cat:progress');
+            $wire.edit(id);
+        }
+    }" 
+    
+    x-init="insdetailModal = new Modal($refs.insdetailModal);"
+    
+    @insdetail-modal-show.window="()=>{
+        insdetailModal.show();
+        $dispatch('swal:close');
+    }"
+    @insdetail-modal-close.window="(e)=> {
+        console.log(e.detail.msgstatus);
+        $dispatch('swal:close');
+        insdetailModal.hide();
+    }"
+
+    @err-message.window = "(e) => {
+        errors = JSON.parse(e.detail.errors);
+        $dispatch('swal:close');
+    }"
+>
     <div id="container">
         {{ $occu_ins_id }}
         <div class="mb-4 w-full border-t flex justify-between py-2 px-2" id="header">
@@ -79,4 +108,22 @@
         </div>
         @endforeach
     </div>
+
+     <!-- Edit Modal -->
+     <x-tw-modal.dialog x-ref="insdetailModal" maxWidth="3xl" wire:ignore>
+        <x-slot name="title">รายละเอียดการบันทึก</x-slot>
+        <x-slot name="content" >
+            <div>
+                <x-input.tw-textarea :label="__('เหตุการณ์อื่นๆ')" id="occu_ins_event" rows="6" wire:model.defer="editing.occu_ins_event" />
+            </div>
+            <div>
+                <x-input.tw-textarea :label="__('การดำเนินการแก้ไข/ข้อเสนอแนะ')" id="occu_ins_solve" rows="6" wire:model.defer="editing.occu_ins_solve" />
+            </div>
+        </x-slot>
+        <x-slot name="footer">
+            <x-button.secondary data-te-modal-dismiss>ยกเลิก</x-button.secondary>
+            <x-button.primary x-on:click="save">บันทึก</x-button.primary>
+        </x-slot>
+    </x-tw-modal.dialog>
+    <!-- End Modal -->
 </div>
