@@ -32,6 +32,8 @@ class OccuIpd extends Model
         'severe_4',
         'severe_5',
         'severe_6',
+        'delflag',
+        'saved',
         'updated_by',
         'created_by',
         'created_at',

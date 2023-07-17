@@ -67,6 +67,8 @@ class Home extends Component
         $this->editing = $this->makeBlank();
         $this->nurseshifts = IpdNurseShift::all();
         $this->branchs = OccuInsBranch::all();
+        $this->filters['edate'] = Carbon::parse($this->getCurrentDate())->format('d/m/Y');
+        $this->filters['sdate'] = Carbon::parse($this->getCurrentDate())->format('d/m/Y');
     }
 
     public function edit($id)

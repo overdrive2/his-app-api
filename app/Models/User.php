@@ -61,6 +61,9 @@ class User extends Authenticatable
 
     public function wards()
     {
-        return UserWard::selectRaw('wards.id, wards.name, wards.ward_code')->join('wards', 'wards.id', 'ward_id')->where('user_id', $this->id)->get();
+        return UserWard::selectRaw('wards.id, wards.name, wards.ward_code')
+            ->join('wards', 'wards.id', 'ward_id')
+            ->where('user_id', $this->id)
+            ->orderby('wards.display_order','asc')->get();
     }
 }

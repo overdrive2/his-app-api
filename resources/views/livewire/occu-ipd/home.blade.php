@@ -2,6 +2,7 @@
     x-data="{
         errors:[],
         nurseshifts: @js($nurseshifts),
+        wards: @js($wards),
         save: () => {
             $dispatch('cat:progress');
             $wire.save();
@@ -67,9 +68,9 @@
                 <th scope="col" class="px-6 py-4">ย้าย Ward</th>
                 <th scope="col" class="px-6 py-4">จำหน่าย</th>
                 <th scope="col" class="px-6 py-4">ยกไป</th>
-                <th scope="col" class="px-6 py-4">ผู้บันทึก</th>
-                <th scope="col" class="px-6 py-4">วันเวลาบันทึก</th>
-                <th scope="col" class="px-6 py-4">คำสั่ง</th>
+                <th scope="col" class="px-6 py-4 text-center">ผู้บันทึก</th>
+                <th scope="col" class="px-6 py-4 text-center">วันเวลาบันทึก</th>
+                <th scope="col" class="px-6 py-4 text-center">คำสั่ง</th>
             </tr>
         </thead>
         <tbody>
@@ -125,7 +126,6 @@
                 <x-input.date wire:model.defer="editing.date_for_editing" />
                 <x-input.tw-time id="time_edit" wire:model.defer="editing.time_for_editing" />
             </div>
-
             <div class="flex justify-between gap-2 mb-3">
                 <div class="w-1/2">
                 <x-input.select :label="__('เลือกเวร')" wire:model.defer="editing.ipd_nurse_shift_id">
@@ -141,10 +141,10 @@
                 />
                 </div>
                 <div class="w-1/2">
-                <x-input.select :label="__('เลือกสาขา')" wire:model.defer="editing.occu_ins_branch_id">
-                    <option value="0">-- เลือกสาขา --</option>
-                    <template x-for="branch in branchs">
-                        <option :value='branch.id' x-text='branch.branch_name'>
+                <x-input.select :label="__('เลือกตึก')" wire:model.defer="editing.ward_id">
+                    <option value="0">-- เลือกตึก --</option>
+                    <template x-for="ward in wards">
+                        <option :value='ward.id' x-text='ward.name'>
                         </option>
                     </template>
                 </x-input.select>
