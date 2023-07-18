@@ -16,6 +16,10 @@ class AsmForm extends Component
     public $search;
     public $form_id;
 
+    protected $queryString = [
+        'form_id' => ['except' => '', 'as' => 'id']
+    ];
+
     public function rules()
     {
         return [

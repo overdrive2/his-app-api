@@ -5,6 +5,7 @@
             $wire.edit(id);
         }
     }"
+
     x-init="
         edModal = new Modal($refs.edModal)
     "
@@ -23,7 +24,7 @@
             <x-input.search wire:model="search" :id="__('search')"></x-input.search>
         </div>
         <div class="w-full lg:w-1/2 text-right">
-            <x-button.primary wire:click="new">New</x-button.primary>
+
         </div>
     </div>
     <x-table>
@@ -55,6 +56,7 @@
         @endforeach
     </x-slot>
     </x-table>
+    @livewire('admin.asm-detail', ['form_id' => $form_id], key('form-'.$form_id))
     <!-- Edit Modal -->
     <x-tw-modal.dialog
         x-ref="edModal"
