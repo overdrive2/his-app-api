@@ -25,6 +25,8 @@ return new class extends Migration
             $table->integer('display_order')->nullable();
             $table->integer('updated_by')->nullable();
             $table->integer('created_by')->nullable();
+            $table->smallInteger('colspan');
+            $table->integer('ipd_form_section_id');
             $table->timestamps();
         });
     }

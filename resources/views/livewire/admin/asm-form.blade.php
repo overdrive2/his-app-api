@@ -56,7 +56,7 @@
         @endforeach
     </x-slot>
     </x-table>
-    @livewire('admin.asm-detail', ['form_id' => $form_id], key('form-'.$form_id))
+    @livewire('admin.asm-section', ['form_id' => $form_id], key('form-'.$form_id))
     <!-- Edit Modal -->
     <x-tw-modal.dialog
         x-ref="edModal"

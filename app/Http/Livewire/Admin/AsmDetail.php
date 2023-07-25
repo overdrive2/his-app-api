@@ -2,15 +2,19 @@
 
 namespace App\Http\Livewire\Admin;
 
+use App\Models\IpdAsmDetail;
 use App\Models\IpdFormAsmDetail;
+use App\Models\IpdFormSection;
 use Livewire\Component;
 
 class AsmDetail extends Component
 {
     public $form_id = 1;
+    public $section_id;
+    //public $optValues = [];
     public $uid;
     public IpdFormAsmDetail $editing;
-
+    public IpdFormSection $section;
     public function rules()
     {
         return [
@@ -26,6 +30,9 @@ class AsmDetail extends Component
             'editing.display_order' => 'required',
             'editing.updated_by' => 'required',
             'editing.created_by' => 'required',
+            'editing.colspan' => 'required',
+            'editing.ipd_form_section_id' => 'required',
+            'editing.json_data' => ''
         ];
     }
 
@@ -35,18 +42,31 @@ class AsmDetail extends Component
             'ipd_form_asm_id' => $this->form_id,
             'updated_by' => $this->uid,
             'created_by' => $this->uid,
+            'input_type' => 'text',
+            'colspan' => 1,
+            'ipd_form_section_id' => $this->section_id,
+            'have_other' => false,
+            'lookup_json' => [],
         ]);
     }
 
-    public function new()
+    public function new($id)
     {
+        $this->section_id = $id;
         $this->editing = $this->makeBlank();
-        $this->dispatchBrowserEvent('edmodal-show');
+        $this->dispatchBrowserEvent('edmodal'.$this->section_id.'-show');
+    }
+
+    public function edit($id)
+    {
+        $this->editing = IpdFormAsmDetail::find($id);
+        $this->dispatchBrowserEvent('edmodal'.$this->section_id.'-show');
     }
 
     public function getRowsProperty()
     {
-        return IpdFormAsmDetail::where('ipd_form_asm_id', $this->form_id)->get();
+        return IpdFormAsmDetail::where('ipd_form_asm_id', $this->form_id)
+            ->where('ipd_form_section_id', $this->section_id)->orderBy('display_order', 'asc')->get();
     }
 
     public function mount()
@@ -57,13 +77,18 @@ class AsmDetail extends Component
 
     public function save()
     {
-        dd($this->editing);
+        $this->editing->save();
+        $this->dispatchBrowserEvent('edmodal'.$this->section_id.'-close');
+        $this->dispatchBrowserEvent('toastify', [
+            'text' => 'ดำเนินการสำเร็จ'
+        ]);
     }
 
     public function render()
     {
         return view('livewire.admin.asm-detail', [
-            'rows' => $this->rows
+            'rows' => $this->rows,
+            'inputTypes' => config('input.inputs')
         ]);
     }
 }

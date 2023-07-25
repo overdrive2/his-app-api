@@ -18,10 +18,12 @@ class IpdFormAsmDetail extends Model
         'have_other',
         'lookup_sql',
         'parent_id',
-        'display_order'
+        'display_order',
+        'colspan',
+        'ipd_form_section_id'
     ];
 
-    protected $append = ['asm_detail', 'json_data'];
+    protected $appends = ['asm_detail', 'json_data', 'section_name'];
 
     public function getAsmDetailAttribute()
     {
@@ -31,8 +33,18 @@ class IpdFormAsmDetail extends Model
             ->get();
     }
 
+    public function getSectionNameAttribute()
+    {
+        return IpdFormSection::where('id', $this->ipd_form_section_id)->value('name');
+    }
+
     public function getJsonDataAttribute()
     {
-        return json_decode($this->lookup_json);
+        return $this->lookup_json ? json_decode($this->lookup_json) : [];
+    }
+
+    public function setJsonDataAttribute($value)
+    {
+        $this->lookup_json = json_encode($value);
     }
 }
