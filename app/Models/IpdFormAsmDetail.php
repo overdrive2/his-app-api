@@ -19,6 +19,7 @@ class IpdFormAsmDetail extends Model
         'lookup_sql',
         'parent_id',
         'display_order',
+        'no',
         'colspan',
         'ipd_form_section_id'
     ];

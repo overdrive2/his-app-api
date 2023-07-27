@@ -22,6 +22,7 @@ return new class extends Migration
             $table->boolean('have_other');
             $table->string('lookup_sql',100)->nullable();
             $table->integer('parent_id')->nullable();
+            $table->string('no',5);
             $table->integer('display_order')->nullable();
             $table->integer('updated_by')->nullable();
             $table->integer('created_by')->nullable();

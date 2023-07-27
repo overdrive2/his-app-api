@@ -2,9 +2,12 @@
     return [
         'inputs' => [
             'text' => 'text',
-            'checkbox' => 'checkbox',
-            'datepicker' => 'datepicker',
             'number' => 'number',
             'radio' => 'radio',
+            'select' => 'select',
+            'datepicker' => 'datepicker',
+            'checkbox' => 'checkbox',
+            'textarea' => 'textarea',
+            'editor' => 'editor'
         ],
     ];

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->integer('ipd_asm_id');
             $table->integer('ipd_form_asm_detail_id');
             $table->string('asm_value');
+            $table->string('other');
             $table->timestamps();
         });
     }

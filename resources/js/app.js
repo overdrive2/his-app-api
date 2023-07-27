@@ -4,8 +4,12 @@ import focus from '@alpinejs/focus';
 import './theme';
 import Swal from 'sweetalert2'
 import 'sweetalert2/src/sweetalert2.scss'
+import 'quill/'
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
 import  bedMoveProps from './bedmove';
 import './window-options'
+import Quill from 'quill';
 
 import {
     Datepicker,
@@ -32,7 +36,7 @@ window.Input = Input;
 window.Datepicker = Datepicker;
 window.Timepicker = Timepicker;
 window.Swal = Swal;
-
+window.Quill = Quill;
 /* Load Nurse const for nurse ipd list*/
 window.bedMoveProps = bedMoveProps;
 //window.nurseListProps = nurseListProps;

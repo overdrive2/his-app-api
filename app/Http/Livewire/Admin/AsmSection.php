@@ -11,6 +11,10 @@ class AsmSection extends Component
     public $uid;
     public IpdFormSection $editing;
 
+    protected $listeners = [
+        'edit:section' => 'edit'
+    ];
+
     public function rules()
     {
         return [

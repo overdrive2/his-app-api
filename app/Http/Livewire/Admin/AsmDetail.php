@@ -2,7 +2,6 @@
 
 namespace App\Http\Livewire\Admin;
 
-use App\Models\IpdAsmDetail;
 use App\Models\IpdFormAsmDetail;
 use App\Models\IpdFormSection;
 use Livewire\Component;
@@ -15,6 +14,7 @@ class AsmDetail extends Component
     public $uid;
     public IpdFormAsmDetail $editing;
     public IpdFormSection $section;
+
     public function rules()
     {
         return [
@@ -27,6 +27,7 @@ class AsmDetail extends Component
             'editing.have_other' => 'required',
             'editing.lookup_sql' => 'required',
             'editing.parent_id' => 'required',
+            'editing.no' => 'required',
             'editing.display_order' => 'required',
             'editing.updated_by' => 'required',
             'editing.created_by' => 'required',
@@ -47,6 +48,7 @@ class AsmDetail extends Component
             'ipd_form_section_id' => $this->section_id,
             'have_other' => false,
             'lookup_json' => [],
+            'no' => ''
         ]);
     }
 
