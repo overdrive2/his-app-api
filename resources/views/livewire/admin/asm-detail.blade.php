@@ -127,6 +127,7 @@
                     ref: false
                 },
                 subItem: {
+                    key:'',
                     type:'',
                     label:'',
                     jsonData:'',
@@ -134,6 +135,7 @@
                 itmt: @entangle('editing.input_type'),
                 optValues: @entangle('editing.json_data'),
             }"
+            @delete-item="(idx) => alert(idx)"
             class="flex flex-col gap-2"
         >
             <x-input.tw-text label="Name" wire:model.defer="editing.web_label"/>
@@ -220,6 +222,22 @@
                             </div>
                             <div x-show="refItem == true">
                                 <div class="mt-1 flex gap-1">
+                                    <div class="flex-none w-20">
+                                        <div class="relative mb-3 w-full" data-te-input-wrapper-init>
+                                            <input
+                                                x-model="subItem.key"
+                                                type="text"
+                                                class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.33rem] text-sm leading-[1.5] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
+                                                :id="$id('text-input')"
+                                                placeholder="Key"
+                                            />
+                                            <label
+                                            :for="$id('text-input')"
+                                            class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] text-sm leading-[1.5] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.75rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[0.75rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
+                                            >Key
+                                            </label>
+                                        </div>
+                                    </div>
                                     <div class="flex-none w-40 text-sm">
                                         <select
                                             x-model="subItem.type"
@@ -250,11 +268,12 @@
                                             </label>
                                         </div>
                                     </div>
-                                    <div class="float-none w-28">
+                                    <div class="flex-none w-20">
                                         <button
                                             type="button"
                                             x-on:click="()=> {
                                                 data = {
+                                                    key: subItem.key,
                                                     type: subItem.type,
                                                     label: subItem.label
                                                 }
@@ -310,16 +329,51 @@
                                         >
                                             <x-icon.pencil class="h-5 w-5"/>
                                         </button>
-                                        <button type="button" x-on:click="alert(opt)" class="text-gray-500 hover:text-gray-700 rounded-md font-normal flex-none"><x-icon.x-mark /></button>
+                                        <button
+                                            type="button"
+                                            x-on:click="()=> {
+                                                optValues = optValues.filter(x => x.key !== opt.key)
+                                                console.log(optValues)
+                                            }"
+                                            class="text-gray-500 hover:text-gray-700 rounded-md font-normal flex-none">
+                                            <x-icon.x-mark />
+                                        </button>
                                     </div>
                                     <template x-if="opt.ref === true">
-                                        <div class="mt-4" x-data="{
+                                        <div class="mt-4 ml-8" x-data="{
                                             refOpts: opt.refOpts
                                         }">
-                                            <template x-for="opt in refOpts">
-                                                <div class="relative mb-3 w-full">
-                                                    <x-input.text x-bind:type="opt.type" />
-                                                    <x-input.label x-text="opt.label"></x-input.label>
+                                            <template x-for="(refOpt, idx) in refOpts">
+                                                <div class="flex gap-2">
+                                                    <div class="flex-none w-8">
+                                                        <span x-text="idx + 1"></span>
+                                                    </div>
+                                                    <div class="grow">
+                                                        <div class="relative mb-3 w-full">
+                                                            <x-input.text x-bind:type="refOpt.type" />
+                                                            <x-input.label x-text="refOpt.label"></x-input.label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex-none w-auto text-sm gap-2">
+                                                        <button
+                                                        type="button"
+                                                        class="text-gray-500 hover:text-gray-700 rounded-md font-normal flex-none"
+                                                        x-on:click="alert(idx)"
+                                                    >
+                                                        <x-icon.pencil class="h-5 w-5"/>
+                                                    </button>
+                                                        <button
+                                                            x-on:click="()=>{
+                                                                console.log(refOpt.key)
+                                                                refOpts = refOpts.filter(x => x.key !== refOpt.key)
+                                                                opt.refOpts = refOpts
+                                                            }"
+                                                            type="button"
+                                                            class="text-gray-500 hover:text-gray-700 rounded-md font-normal"
+                                                        >
+                                                            <x-icon.x-mark />
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </template>
                                         </div>
