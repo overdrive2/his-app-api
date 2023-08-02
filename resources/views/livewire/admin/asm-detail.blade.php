@@ -120,6 +120,7 @@
             x-data="{
                 newItem: false,
                 refItem: false,
+                newSubItem: false,
                 refType: '',
                 edItem: {
                     key:'',
@@ -127,15 +128,15 @@
                     ref: false
                 },
                 subItem: {
-                    key:'',
+                    key:' ',
                     type:'',
-                    label:'',
+                    label:' ',
                     jsonData:'',
                 },
+                idx_editing:null,
                 itmt: @entangle('editing.input_type'),
                 optValues: @entangle('editing.json_data'),
             }"
-            @delete-item="(idx) => alert(idx)"
             class="flex flex-col gap-2"
         >
             <x-input.tw-text label="Name" wire:model.defer="editing.web_label"/>
@@ -246,7 +247,7 @@
                                         >
                                             <option value="0">-- ประเภท --</option>
                                             <template x-for="itm in inputs">
-                                                <option :selected="refType === itm"  :value="itm" x-text="itm" />
+                                                <option :selected="subItem.type === itm"  :value="itm" x-text="itm" />
                                             </template>
                                             <label data-te-select-label-ref class="z-50 bg-white">ประเภทข้อมูล</label>
                                         </select>
@@ -272,20 +273,55 @@
                                         <button
                                             type="button"
                                             x-on:click="()=> {
-                                                data = {
-                                                    key: subItem.key,
-                                                    type: subItem.type,
-                                                    label: subItem.label
+                                               if(subItem.key.trim() == '')
+                                                    return Swal.fire({
+                                                        icon: 'error',
+                                                        title: 'Oops...',
+                                                        text: 'Key ต้องไม่เป็นค่าว่าง!',
+                                                    })
+
+                                                idx = optValues.findIndex((obj) => obj.key == edItem.key);
+
+                                                if(idx < 0) return refItem = false;
+
+                                                idx2 = optValues[idx].refOpts.findIndex((obj) => obj.key == subItem.key)
+
+                                                if(newSubItem == false)
+                                                {
+                                                    refOpt = optValues[idx].refOpts[idx_editing];
+                                                    refOpt.key = subItem.key
+                                                    refOpt.type = subItem.type
+                                                    refOpt.label = subItem.label
+                                                    console.log(optValues[idx].refOpts);
+                                                    return refItem = false
                                                 }
 
-                                                idx = optValues.findIndex((obj) => obj.key == edItem.key)
+                                                if((newSubItem == true)&&(idx2 >= 0))
+                                                    return Swal.fire({
+                                                        icon: 'error',
+                                                        title: 'Oops...',
+                                                        text: 'Key ต้องไม่ซ้ำกัน!',
+                                                    })
 
-                                                if(idx >= 0){
-                                                    optValues[idx].refOpts.push(data);
+                                                if(idx2 < 0) {
+                                                    optValues[idx].refOpts.push({
+                                                        key: subItem.key,
+                                                        type: subItem.type,
+                                                        label: subItem.label,
+                                                    })
+                                                    return refItem = false
                                                 }
 
-                                                refItem=false;
-                                                console.log(optValues[idx])
+                                                if(newSubItem == false) {
+
+                                                    optValues[idx].refOpts[idx2] = {
+                                                        key: subItem.key,
+                                                        type: subItem.type,
+                                                        label: subItem.label,
+                                                    }
+                                                    console.log(optValues[idx].refOpts[idx2])
+                                                    return refItem = false
+                                                }
                                             }"
                                             class="text-green-500 inline-block hover:bg-gray-300"
                                         >
@@ -303,6 +339,7 @@
                                 <div class="border-b py-1">
                                     <div class="flex gap-2">
                                         <div class="grow text-left px-4" x-text="opt.key + ' : ' + opt.value"></div>
+                                        <!-- add sub items -->
                                         <template x-if="opt.ref === true">
                                             <button type="button" x-on:click="() => {
                                                 edItem = {
@@ -310,6 +347,13 @@
                                                     value: opt.value,
                                                     ref: (opt.ref === undefined) ? false : opt.ref
                                                 };
+                                                subItem = {
+                                                    key:'',
+                                                    type:'0',
+                                                    label:'',
+                                                    jsonData:'',
+                                                };
+                                                newSubItem = true;
                                                 refItem = true;
                                             }">
                                                 <x-icon.bars-arrow-down />
@@ -318,11 +362,7 @@
                                         <button
                                             type="button"
                                             x-on:click="() => {
-                                                edItem = {
-                                                    key: opt.key,
-                                                    value: opt.value,
-                                                    ref: (opt.ref === undefined) ? false : opt.ref
-                                                };
+                                                edItem = opt
                                                 newItem = true;
                                             }"
                                             class="text-gray-500 hover:text-gray-700 rounded-md font-normal flex-none"
@@ -333,7 +373,6 @@
                                             type="button"
                                             x-on:click="()=> {
                                                 optValues = optValues.filter(x => x.key !== opt.key)
-                                                console.log(optValues)
                                             }"
                                             class="text-gray-500 hover:text-gray-700 rounded-md font-normal flex-none">
                                             <x-icon.x-mark />
@@ -346,7 +385,7 @@
                                             <template x-for="(refOpt, idx) in refOpts">
                                                 <div class="flex gap-2">
                                                     <div class="flex-none w-8">
-                                                        <span x-text="idx + 1"></span>
+                                                        <span x-text="refOpt.key"></span>
                                                     </div>
                                                     <div class="grow">
                                                         <div class="relative mb-3 w-full">
@@ -358,13 +397,18 @@
                                                         <button
                                                         type="button"
                                                         class="text-gray-500 hover:text-gray-700 rounded-md font-normal flex-none"
-                                                        x-on:click="alert(idx)"
+                                                        x-on:click="() => {
+                                                            idx_editing = idx
+                                                            edItem = opt
+                                                            subItem = Object.create(refOpt)
+                                                            newSubItem = false;
+                                                            refItem = true;
+                                                        }"
                                                     >
                                                         <x-icon.pencil class="h-5 w-5"/>
                                                     </button>
                                                         <button
                                                             x-on:click="()=>{
-                                                                console.log(refOpt.key)
                                                                 refOpts = refOpts.filter(x => x.key !== refOpt.key)
                                                                 opt.refOpts = refOpts
                                                             }"
