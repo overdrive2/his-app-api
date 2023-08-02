@@ -36,6 +36,7 @@ Route::middleware(['auth:sanctum'])->prefix('nurse')->group(function () {
 });
 
 Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function () {
+    Route::get('/', [App\Http\Livewire\Admin\Index::class, '__invoke'])->name('admin.index');
     Route::get('user', [App\Http\Livewire\Admin\Users::class, '__invoke'])->name('admin.user');
     Route::get('user-profile', [App\Http\Livewire\Admin\UserProfile::class, '__invoke'])->name('admin.user-profile');
     Route::get('asm-list', [App\Http\Livewire\Admin\AsmList::class, '__invoke'])->name('admin.asm-list');

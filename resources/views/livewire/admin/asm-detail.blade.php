@@ -334,13 +334,26 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="flex flex-col gap-2">
-                            <template x-for="opt in optValues">
+                        <div
+                            x-data="{
+                                current_idx: null
+                            }"
+                            class="flex flex-col gap-2"
+                        >
+                        <div x-text="current_idx"></div>
+                            <template x-for="(opt, idx) in optValues">
                                 <div class="border-b py-1">
+                                    <x-asm.row
+                                        x-data="{
+                                            data: opt,
+                                            idx: idx,
+                                            edit: false
+                                        }"
+                                    />
                                     <div class="flex gap-2">
-                                        <div class="grow text-left px-4" x-text="opt.key + ' : ' + opt.value"></div>
+                                        <div class="grow text-left px-4" x-text="opt ? (opt.key + ' : ' + opt.value) : ''"></div>
                                         <!-- add sub items -->
-                                        <template x-if="opt.ref === true">
+                                        <template x-if="(opt && opt.ref === true)">
                                             <button type="button" x-on:click="() => {
                                                 edItem = {
                                                     key: opt.key,
@@ -362,7 +375,7 @@
                                         <button
                                             type="button"
                                             x-on:click="() => {
-                                                edItem = opt
+                                                edItem = Object.create(opt)
                                                 newItem = true;
                                             }"
                                             class="text-gray-500 hover:text-gray-700 rounded-md font-normal flex-none"

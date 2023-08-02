@@ -24,6 +24,8 @@ return new class extends Migration
             $table->integer('parent_id')->nullable();
             $table->string('no',5);
             $table->integer('display_order')->nullable();
+            $table->integer('width')->nullable();
+            $table->smallInteger('sub_group_display')->nullable();
             $table->integer('updated_by')->nullable();
             $table->integer('created_by')->nullable();
             $table->smallInteger('colspan');
