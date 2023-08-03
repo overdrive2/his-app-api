@@ -38,6 +38,7 @@ class OccuIpd extends Model
         'created_by',
         'created_at',
         'updated_at',
+        'to_ref_id',
     ];
 
     public function getOccuStatusNameAttribute()
@@ -102,5 +103,12 @@ class OccuIpd extends Model
     public function getDateForThaiAttribute()
     {
         return $this->thai_date_short_number2(Carbon::parse($this->nurse_shift_date));
+    }
+
+    public function detail()
+    {
+        return OccuIpdDetail::where('occu_ipd_id',$this->id)
+            ->where('is_getout',true)
+            ->where('saved',true);
     }
 }

@@ -4,9 +4,13 @@ namespace App\Http\Livewire\OccuIpd;
 
 use App\Http\Livewire\DataTable\WithPerPagePagination;
 use App\Http\Livewire\Traits\DateTimeHelpers;
+use App\Models\Ipd;
+use App\Models\IpdBedmove;
 use App\Models\IpdNurseShift;
 use App\Models\OccuIpd;
+use App\Models\OccuIpdDetail;
 use Carbon\Carbon;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
 use Livewire\Component;
 
@@ -22,6 +26,8 @@ class Home extends Component
     ];
     public $nurseshifts = [];
     public $wards = [];
+    public $userId;
+    public $from_ref_id;
 
     public function rules()
     {
@@ -32,22 +38,22 @@ class Home extends Component
             'editing.ipd_nurse_shift_id' => 'required|exists:ipd_nurse_shifts,id',
             'editing.occu_status_id' => '',
             'editing.note' => '',
-            'editing.getin' => 0,
-            'editing.getnew' => 0,
-            'editing.getmove' => 0,
-            'editing.moveout' => 0,
-            'editing.discharge' => 0,
-            'editing.getout' => 0,
-            'editing.severe_1' => 0,
-            'editing.severe_2' => 0,
-            'editing.severe_3' => 0,
-            'editing.severe_4' => 0,
-            'editing.severe_5' => 0,
-            'editing.severe_6' => 0,
+            'editing.getin' => '',
+            'editing.getnew' => '',
+            'editing.getmove' => '',
+            'editing.moveout' => '',
+            'editing.discharge' => '',
+            'editing.getout' => '',
+            'editing.severe_1' => '',
+            'editing.severe_2' => '',
+            'editing.severe_3' => '',
+            'editing.severe_4' => '',
+            'editing.severe_5' => '',
+            'editing.severe_6' => '',
             'editing.created_by' => '',
             'editing.updated_by' => '',
-            'editing.delflag' => false,
-            'editing.saved' => false,
+            'editing.delflag' => '',
+            'editing.saved' => '',
             'editing.time_for_editing' => '',
             'editing.date_for_editing' => '',
         ];
@@ -55,8 +61,6 @@ class Home extends Component
 
     public function makeBlank()
     {
-        $userId = auth()->user()->id;
-
         return OccuIpd::make([
             'nurse_shift_date' => $this->getCurrentDate(),
             'nurse_shift_time' => $this->getCurrentTime(),
@@ -73,8 +77,8 @@ class Home extends Component
             'severe_4' => 0,
             'severe_5' => 0,
             'severe_6' => 0,
-            'created_by' => $userId,
-            'updated_by' => $userId,
+            'created_by' => $this->userId,
+            'updated_by' => $this->userId,
             'delflag' => false,
             'saved' => false,
             'note' => '',
@@ -85,10 +89,11 @@ class Home extends Component
     {
         // $this->perPage = 3;
         $this->editing = $this->makeBlank();
-        $this->nurseshifts = IpdNurseShift::all();
+        $this->nurseshifts = IpdNurseShift::orderBy('display_order', 'asc')->get();
         $this->wards = auth()->user()->wards();
         $this->filters['edate'] = Carbon::parse($this->getCurrentDate())->format('d/m/Y');
         $this->filters['sdate'] = Carbon::parse($this->getCurrentDate())->format('d/m/Y');
+        $this->userId = auth()->user()->id;
     }
 
     public function edit($id)
@@ -116,6 +121,8 @@ class Home extends Component
             });
         })->validate();
 
+        $editmode = $this->editing->id ? true : false;
+        //dd($editmode);
         $saved = $this->editing->save();
 
         if (!$saved)
@@ -123,11 +130,121 @@ class Home extends Component
                 'title' => 'ABC title',
                 'text' => 'ABC text',
             ]);
-        //$saved = false;
+
+        if ($editmode) {
+            //update to_ref_id to last shift
+            $occuipd = OccuIpd::where('ward_id', $this->editing->ward_id)
+                ->whereNull('to_ref_id')
+                ->where('id', '<>', $this->editing->id)
+                ->orderBy('nurse_shift_date', 'desc')
+                ->orderBy('nurse_shift_time', 'desc')->first();
+            dd($occuipd);
+            $i_getin = $occuipd->getout;
+            OccuIpd::where('id', $occuipd->id)->update(['to_ref_id' => $this->editing->id]);
+
+            //get start & end time to make shift
+            $etnf = IpdNurseShift::where('id', $this->editing->ipd_nurse_shift_id)->value('etime');
+            $etime = Carbon::parse($this->editing->nurse_shift_date . ' ' . $etnf);
+            $stime = clone $etime;
+            $stime->addSecond(-28799);
+            //dd($stime,$etime);
+
+            //select bedmove
+            //occu_ipd_type_id = 1	ยกมา
+            $bedmoves_t1 = OccuIpdDetail::where('occu_ipd_id', $occuipd->id)
+                ->where('is_getout',true)
+                ->orderBy('id', 'asc')->get();
+            foreach ($bedmoves_t1 as $bm1) {
+
+                OccuIpdDetail::create([
+                    'occu_ipd_id' => $this->editing->id,
+                    'ipd_id' => $bm1->ipd_id,
+                    'occu_ipd_type_id' => 1,
+                    'is_getout' => true,
+                    'ipd_bedmove_id' => $bm1->ipd_bedmove_id,
+                    'updated_by' => $this->userId,
+                    'created_by' => $this->userId,
+                    'saved' => false,
+                ]);
+            }
+            //occu_ipd_type_id = 2	รับใหม่
+            $bedmoves_t2 = IpdBedmove::wherebetween('moved_at',[$stime,$etime])
+                ->where('bedmove_type_id','1')
+                ->orderBy('moved_at', 'asc')->get();
+            foreach ($bedmoves_t2 as $bm2) {
+
+                OccuIpdDetail::create([
+                    'occu_ipd_id' => $this->editing->id,
+                    'ipd_id' => $bm2->ipd_id,
+                    'occu_ipd_type_id' => 2,
+                    'is_getout' => 'Y',
+                    'ipd_bedmove_id' => $bm2->id,
+                    'updated_by' => $this->userId,
+                    'created_by' => $this->userId,
+                    'saved' => false,
+                ]);
+            }
+            //occu_ipd_type_id = 3	รับย้าย
+            $bedmoves_t3 = IpdBedmove::wherebetween('moved_at',[$stime,$etime])
+                ->where('bedmove_type_id','2')
+                ->orderBy('moved_at', 'asc')->get();
+            foreach ($bedmoves_t3 as $bm3) {
+
+                OccuIpdDetail::create([
+                    'occu_ipd_id' => $this->editing->id,
+                    'ipd_id' => $bm3->ipd_id,
+                    'occu_ipd_type_id' => 3,
+                    'is_getout' => 'Y',
+                    'ipd_bedmove_id' => $bm3->id,
+                    'updated_by' => $this->userId,
+                    'created_by' => $this->userId,
+                    'saved' => false,
+                ]);
+            }
+            //occu_ipd_type_id = 4	ย้าย Ward
+            $bedmoves_t4 = IpdBedmove::wherebetween('moved_at',[$stime,$etime])
+                ->where('bedmove_type_id','3')
+                ->orderBy('moved_at', 'asc')->get();
+            foreach ($bedmoves_t4 as $bm4) {
+
+                OccuIpdDetail::create([
+                    'occu_ipd_id' => $this->editing->id,
+                    'ipd_id' => $bm4->ipd_id,
+                    'occu_ipd_type_id' => 4,
+                    'is_getout' => 'N',
+                    'ipd_bedmove_id' => $bm4->id,
+                    'updated_by' => $this->userId,
+                    'created_by' => $this->userId,
+                    'saved' => false,
+                ]);
+            }
+            //occu_ipd_type_id = 5	จำหน่าย
+            $bedmoves_t5 = Ipd::wherebetween('moved_at',[$stime,$etime])
+            ->where('bedmove_type_id','5')
+            ->orderBy('moved_at', 'asc')->get();
+            foreach ($bedmoves_t5 as $bm5) {
+
+                OccuIpdDetail::create([
+                    'occu_ipd_id' => $this->editing->id,
+                    'ipd_id' => $bm5->ipd_id,
+                    'occu_ipd_type_id' => 5,
+                    'is_getout' => 'N',
+                    'ipd_bedmove_id' => $bm4->id,
+                    'updated_by' => $this->userId,
+                    'created_by' => $this->userId,
+                    'saved' => false,
+                ]);
+            }
+            //occu_ipd_type_id = 6	ยกไป
+        }
 
         $this->dispatchBrowserEvent('ipdmain-modal-close', [
             'msgstatus' => 'done',
         ]);
+    }
+
+    public function saveDetail()
+    {
     }
 
     public function setDate($date)
@@ -148,8 +265,8 @@ class Home extends Component
 
                 return $query->whereBetween('nurse_shift_date', [$sdate, $edate]);
             })
-            ->orderBy('nurse_shift_date','asc')
-            ->orderBy('nurse_shift_time','asc');
+            ->orderBy('nurse_shift_date', 'asc')
+            ->orderBy('nurse_shift_time', 'asc');
         return $query;
     }
 

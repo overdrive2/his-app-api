@@ -33,6 +33,7 @@ class IpdBedMoveList extends Component
             'editing.room_id' => 'required',
             'editing.movedate' => 'required',
             'editing.movetime' => 'required',
+            'editing.moved_at' => 'required',
             'editing.from_ref_id' => 'required',
             'editing.bedmove_type_id' => 'required',
             'editing.updated_by' => 'required',
@@ -55,7 +56,7 @@ class IpdBedMoveList extends Component
     {
         return IpdBedmove::where('ipd_id', $this->ipd_id)
             ->orderBy('movedate', 'asc')
-            ->orderBy('movedate', 'asc')
+            ->orderBy('movetime', 'asc')
             ->get();
     }
 

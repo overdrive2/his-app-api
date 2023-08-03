@@ -24,7 +24,10 @@ class IpdBedmove extends Model
         'updated_by',
         'from_ref_id',
         'to_ref_id',
-        'delflag'
+        'delflag',
+        'to_ref_id',
+        'room_id',
+        'moved_at',
     ];
 
     protected $appends = ['date_for_editing', 'time_for_editing', 'date_for_thai', 'ward_name', 'room_name', 'ipd'];
@@ -106,5 +109,10 @@ class IpdBedmove extends Model
     public function ipd()
     {
         return Ipd::find($this->ipd_id);
+    }
+
+    public function getOccuIpdTypeAttribute()
+    {
+        return IpdBedmoveType::find($this->bedmove_type_id)->occu_ipd_type_id;
     }
 }

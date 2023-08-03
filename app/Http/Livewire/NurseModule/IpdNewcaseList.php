@@ -46,6 +46,7 @@ class IpdNewcaseList extends Component
             'editing.room_id' => 'required',
             'editing.movedate' => 'required',
             'editing.movetime' => 'required',
+            'editing.moved_at' => 'required',
             'editing.bedmove_type_id' => 'required',
             'editing.updated_by' => 'required',
             'editing.created_by' => 'required',
@@ -167,6 +168,8 @@ class IpdNewcaseList extends Component
         })->validate();
 
         $ipd_id = $this->editing->ipd_id;
+        $this->editing->moved_at = $this->editing->movedate+$this->editing->movetime;
+        dd($this->editing);
 
         $saved = $this->editing->save();
 

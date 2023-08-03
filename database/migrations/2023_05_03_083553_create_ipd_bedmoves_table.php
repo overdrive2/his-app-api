@@ -25,6 +25,9 @@ return new class extends Migration
             $table->integer('updated_by');
             $table->integer('created_by');
             $table->boolean('delflag');
+            $table->integer('to_ref_id');
+            $table->integer('room_id');
+            $table->timestamp('moved_at',$precision = 0);
             $table->timestamps();
         });
     }

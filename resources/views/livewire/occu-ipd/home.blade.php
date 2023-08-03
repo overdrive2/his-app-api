@@ -16,6 +16,7 @@
     x-init="ipdmainModal = new Modal($refs.ipdmainModal);"
     
     @ipdmain-modal-show.window="()=>{
+        errors = [];
         ipdmainModal.show();
         $dispatch('swal:close');
     }"
@@ -28,6 +29,7 @@
     @err-message.window = "(e) => {
         errors = JSON.parse(e.detail.errors);
         $dispatch('swal:close');
+        console.log(errors);
     }"
 >
 
@@ -94,7 +96,7 @@
                             <x-icon.pencil-square class="w-4 h-4" /> แก้ไข
                         </x-button.secondary>
                         <x-button.primary x-on:click="()=>{ location.assign('{{ route('occu.ipd.detail') }}?id={{ $row->id }}') }">
-                            <x-icon.pencil-square class="w-4 h-4" /> เขียนบันทึก
+                            <x-icon.pencil-square class="w-4 h-4" /> แสดงรายการ
                         </x-button.primary>
                         <x-button.trash wire:click="deleteConfirm('{{ $row->id }}')">
                             <x-icon.trash class="w-4 h-4" /> ลบ
@@ -148,13 +150,22 @@
                         </option>
                     </template>
                 </x-input.select>
+                <x-error
+                    x-show="errors['editing.ward_id']"
+                    x-text="errors['editing.ward_id']"
+                />
                 </div>
             </div>
 
             <div>
                 <x-input.tw-textarea :label="__('หมายเหตุ')" id="note" wire:model.defer="editing.note" />
             </div>
+            <x-error
+                    x-show="errors['editing.nurse_shift_date']"
+                    x-text="errors['editing.nurse_shift_date']"
+            />
         </x-slot>
+        
         <x-slot name="footer">
             <x-button.secondary data-te-modal-dismiss>ยกเลิก</x-button.secondary>
             <x-button.primary x-on:click="save">บันทึก</x-button.primary>

@@ -6,7 +6,6 @@ use App\Http\Livewire\DataTable\WithPerPagePagination;
 use App\Http\Livewire\Traits\DateTimeHelpers;
 use App\Models\OccuIns;
 use App\Models\OccuInsDetail;
-use Carbon\Carbon;
 use Illuminate\Validation\Validator;
 use Livewire\Component;
 
