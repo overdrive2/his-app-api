@@ -37,6 +37,7 @@ window.Datepicker = Datepicker;
 window.Timepicker = Timepicker;
 window.Swal = Swal;
 window.Quill = Quill;
+window.Select = Select;
 /* Load Nurse const for nurse ipd list*/
 window.bedMoveProps = bedMoveProps;
 //window.nurseListProps = nurseListProps;

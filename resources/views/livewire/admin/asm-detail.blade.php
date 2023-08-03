@@ -51,27 +51,41 @@
                     <x-icon.pencil-square class="w-5 h-5 inline-block text-gray-600 mb-1" /></button>
                     {{ $row->no ? $row->no : $row->display_order }} {{ $row->web_label }}
             </div>
-            <div class="p-4 border">
+            <div
+                x-data="{
+                    editing_value: '',
+                    row: @js($row->json_data),
+                    curRow: {}
+                }"
+                x-init="$watch('curRow', value => { console.log(value) })"
+                class="p-4 border"
+            >
                 @switch($row->input_type)
                     @case('radio')
-                        <div class="flex justify-start" x-id="['radio-input']">
+                        <div class="flex justify-start" :id="$id['radio-group']">
                             <!--First radio-->
                             @foreach($row->json_data as $item)
-                                <div class="mb-[0.125rem] mr-4 inline-block min-h-[1.5rem] pl-[1.5rem]">
-                                <input
-                                    class="relative float-left -ml-[1.5rem] mr-1 mt-0.5 h-5 w-5 appearance-none rounded-full border-2 border-solid border-neutral-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:shadow-[0px_0px_0px_13px_transparent] before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04] hover:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:shadow-none focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] checked:focus:border-primary checked:focus:before:scale-100 checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:border-neutral-600 dark:checked:border-primary dark:checked:after:border-primary dark:checked:after:bg-primary dark:focus:before:shadow-[0px_0px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:border-primary dark:checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca]"
-                                    type="radio"
-                                    name="inlineRadioOptions"
-                                    :id="$id('radio-input')"
-                                    value="{{ $item->key }}" />
-                                <label
-                                    class="mt-px inline-block pl-[0.15rem] hover:cursor-pointer"
-                                    :for="$id('text-input')"
-                                    >{{ $item->value }}</label
-                                >
+                                <div x-id="['radio-input']" class="mb-[0.125rem] mr-4 inline-block min-h-[1.5rem] pl-[1.5rem]">
+                                    <input
+                                        class="relative float-left -ml-[1.5rem] mr-1 mt-0.5 h-5 w-5 appearance-none rounded-full border-2 border-solid border-neutral-300 before:pointer-events-none before:absolute before:h-4 before:w-4 before:scale-0 before:rounded-full before:bg-transparent before:opacity-0 before:shadow-[0px_0px_0px_13px_transparent] before:content-[''] after:absolute after:z-[1] after:block after:h-4 after:w-4 after:rounded-full after:content-[''] checked:border-primary checked:before:opacity-[0.16] checked:after:absolute checked:after:left-1/2 checked:after:top-1/2 checked:after:h-[0.625rem] checked:after:w-[0.625rem] checked:after:rounded-full checked:after:border-primary checked:after:bg-primary checked:after:content-[''] checked:after:[transform:translate(-50%,-50%)] hover:cursor-pointer hover:before:opacity-[0.04] hover:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:shadow-none focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[0px_0px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] checked:focus:border-primary checked:focus:before:scale-100 checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:border-neutral-600 dark:checked:border-primary dark:checked:after:border-primary dark:checked:after:bg-primary dark:focus:before:shadow-[0px_0px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:border-primary dark:checked:focus:before:shadow-[0px_0px_0px_13px_#3b71ca]"
+                                        type="radio"
+                                        :id="$id('radio-input')"
+                                        x-model="editing_value"
+                                        x-on:change="()=>{
+                                            idx = row.findIndex((obj) => obj.key == editing_value)
+                                            curRow = {}
+                                            if(idx >= 0) curRow = row[idx]
+                                        }"
+                                        name="radio-input-{{ $key }}"
+                                        value="{{ $item->key }}"
+                                    />
+                                    <label
+                                        :for="$id('radio-input')"
+                                        class="mt-px inline-block pl-[0.15rem] hover:cursor-pointer"
+                                        >{{ $item->value }}</label>
                                 </div>
-                            @endforeach
-                        </div>
+                                @endforeach
+                            </div>
                         @break
                     @case('select')
                         <div wire:ignore>
@@ -85,18 +99,44 @@
                     @case('textarea')
                         <div wire:ignore class="relative mb-3" data-te-input-wrapper-init>
                             <textarea
-                            class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
-                            :id="$id('textarea-input')"
-                            rows="3"
-                            placeholder="..."></textarea>
+                                class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
+                                :id="$id('textarea-input')"
+                                rows="3"
+                                placeholder="..."></textarea>
                             <label
-                            for="$id('textarea-input')"
-                            class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
+                                :for="$id('textarea-input')"
+                                class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[0.9rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-200 dark:peer-focus:text-primary"
                             >{{ $row->web_label }}</label
                             >
                         </div>
                         @break
                 @endswitch
+                <template x-if="curRow.ref === true">
+                    <div class="mt-2 flex flex-col">
+                        <template x-for="refOpt in curRow.refOpts">
+                            <template x-if="refOpt.type == 'text'">
+                                <div
+                                    x-data
+                                    x-init="
+                                        new Input($refs.textInput)
+                                    "
+                                >
+                                <div x-ref="textInput" class="relative mb-3 xl:w-96" data-te-input-wrapper-init>
+                                    <x-input.text
+                                        x-bind:id="'text-input'+curRow.key+refOpt.key"
+                                        type="text"
+                                    />
+                                    <x-input.label
+                                      x-bind:for="'text-input'+curRow.key+refOpt.key"
+                                      x-text="refOpt.label"
+                                    >
+                                    </x-input.label>
+                                  </div>
+                                </div>
+                            </template>
+                        </template>
+                    </div>
+                </template>
                 @if($row->have_other)
                 <div class="w-full text-left mt-2">
                     <label :for="$id('text-input')">Other</label>
@@ -107,6 +147,7 @@
         </x-asm.item>
         @endforeach
     </x-asm.parent>
+
     <!-- Edit Modal -->
     <x-tw-modal.dialog
         x-ref="edModal{{ $section_id }}"
@@ -334,63 +375,16 @@
                                 </div>
                             </div>
                         </div>
-                        <div
-                            x-data="{
-                                current_idx: null
-                            }"
-                            class="flex flex-col gap-2"
-                        >
-                        <div x-text="current_idx"></div>
+                        <div class="flex flex-col gap-2">
+                            <div class="flex font-bold border-b" id="header-detail">
+                                <div class="flex-none w-12">Key</div>
+                                <div class="grow text-center">Value</div>
+                                <div class="text-gray-500 w-auto flex gap-1"></div>
+                            </div>
                             <template x-for="(opt, idx) in optValues">
-                                <div class="border-b py-1">
-                                    <x-asm.row
-                                        x-data="{
-                                            data: opt,
-                                            idx: idx,
-                                            edit: false
-                                        }"
-                                    />
-                                    <div class="flex gap-2">
-                                        <div class="grow text-left px-4" x-text="opt ? (opt.key + ' : ' + opt.value) : ''"></div>
-                                        <!-- add sub items -->
-                                        <template x-if="(opt && opt.ref === true)">
-                                            <button type="button" x-on:click="() => {
-                                                edItem = {
-                                                    key: opt.key,
-                                                    value: opt.value,
-                                                    ref: (opt.ref === undefined) ? false : opt.ref
-                                                };
-                                                subItem = {
-                                                    key:'',
-                                                    type:'0',
-                                                    label:'',
-                                                    jsonData:'',
-                                                };
-                                                newSubItem = true;
-                                                refItem = true;
-                                            }">
-                                                <x-icon.bars-arrow-down />
-                                            </button>
-                                        </template>
-                                        <button
-                                            type="button"
-                                            x-on:click="() => {
-                                                edItem = Object.create(opt)
-                                                newItem = true;
-                                            }"
-                                            class="text-gray-500 hover:text-gray-700 rounded-md font-normal flex-none"
-                                        >
-                                            <x-icon.pencil class="h-5 w-5"/>
-                                        </button>
-                                        <button
-                                            type="button"
-                                            x-on:click="()=> {
-                                                optValues = optValues.filter(x => x.key !== opt.key)
-                                            }"
-                                            class="text-gray-500 hover:text-gray-700 rounded-md font-normal flex-none">
-                                            <x-icon.x-mark />
-                                        </button>
-                                    </div>
+                                <!-- component main item -->
+                                <x-asm.row />
+                                <div class="">
                                     <template x-if="opt.ref === true">
                                         <div class="mt-4 ml-8" x-data="{
                                             refOpts: opt.refOpts

@@ -10,6 +10,7 @@ use App\Models\IpdBedmove;
 use App\Models\Room;
 use App\Models\Ward;
 use App\Services\IpdService;
+use Carbon\Carbon;
 use Illuminate\Validation\Validator;
 use Livewire\Component;
 
@@ -158,6 +159,8 @@ class IpdNewcaseList extends Component
 
     public function save()
     {
+       $this->editing->moved_at = Carbon::parse($this->editing->movedate.' '.$this->editing->movetime);
+
        $this->withValidator(function (Validator $validator) {
             $validator->after(function ($validator) {
                 if ($validator->errors()->isNotEmpty()) {
@@ -168,8 +171,6 @@ class IpdNewcaseList extends Component
         })->validate();
 
         $ipd_id = $this->editing->ipd_id;
-        $this->editing->moved_at = $this->editing->movedate+$this->editing->movetime;
-        dd($this->editing);
 
         $saved = $this->editing->save();
 
