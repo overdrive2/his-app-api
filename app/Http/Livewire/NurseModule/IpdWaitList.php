@@ -7,6 +7,7 @@ use App\Http\Livewire\Traits\DateTimeHelpers;
 use App\Models\Bed;
 use App\Models\IpdBedmove;
 use App\Models\Room;
+use Carbon\Carbon;
 use Livewire\Component;
 use Illuminate\Validation\Validator;
 
@@ -34,6 +35,7 @@ class IpdWaitList extends Component
             'editing.ward_id' => 'required',
             'editing.movedate' => 'required',
             'editing.movetime' => 'required',
+            'editing.moved_at' => 'required',
             'editing.from_ref_id' => 'required',
             'editing.bedmove_type_id' => 'required',
             'editing.updated_by' => 'required',
@@ -135,6 +137,7 @@ class IpdWaitList extends Component
 
     public function save()
     {
+        $this->editing->moved_at = Carbon::parse($this->editing->movedate.' '.$this->editing->movetime);
         $this->withValidator(function (Validator $validator) {
             $validator->after(function ($validator) {
                 if ($validator->errors()->isNotEmpty()) {

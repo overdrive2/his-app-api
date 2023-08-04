@@ -131,45 +131,53 @@ class Home extends Component
                 'text' => 'ABC text',
             ]);
 
-        if ($editmode) {
+        if (!$editmode) {
             //update to_ref_id to last shift
             $occuipd = OccuIpd::where('ward_id', $this->editing->ward_id)
                 ->whereNull('to_ref_id')
                 ->where('id', '<>', $this->editing->id)
                 ->orderBy('nurse_shift_date', 'desc')
                 ->orderBy('nurse_shift_time', 'desc')->first();
-            dd($occuipd);
-            $i_getin = $occuipd->getout;
-            OccuIpd::where('id', $occuipd->id)->update(['to_ref_id' => $this->editing->id]);
 
+            //dd($occuipd);
             //get start & end time to make shift
             $etnf = IpdNurseShift::where('id', $this->editing->ipd_nurse_shift_id)->value('etime');
             $etime = Carbon::parse($this->editing->nurse_shift_date . ' ' . $etnf);
             $stime = clone $etime;
-            $stime->addSecond(-28799);
+            $stime->addSecond(-28801);
             //dd($stime,$etime);
 
+            //dd($occuipd);
             //select bedmove
             //occu_ipd_type_id = 1	ยกมา
-            $bedmoves_t1 = OccuIpdDetail::where('occu_ipd_id', $occuipd->id)
-                ->where('is_getout',true)
-                ->orderBy('id', 'asc')->get();
-            foreach ($bedmoves_t1 as $bm1) {
+            if ($occuipd != null) {
 
-                OccuIpdDetail::create([
-                    'occu_ipd_id' => $this->editing->id,
-                    'ipd_id' => $bm1->ipd_id,
-                    'occu_ipd_type_id' => 1,
-                    'is_getout' => true,
-                    'ipd_bedmove_id' => $bm1->ipd_bedmove_id,
-                    'updated_by' => $this->userId,
-                    'created_by' => $this->userId,
-                    'saved' => false,
-                ]);
+                OccuIpd::where('id', $occuipd->id)->update(['to_ref_id' => $this->editing->id]);
+                $i_getin = $occuipd->getout;
+                OccuIpd::where('id', $this->editing->id)->update(['getout' => $i_getin]);
+
+                $bedmoves_t1 = OccuIpdDetail::where('occu_ipd_id', $occuipd->id)
+                    ->where('is_getout', true)
+                    ->orderBy('id', 'asc')->get();
+                foreach ($bedmoves_t1 as $bm1) {
+
+                    OccuIpdDetail::create([
+                        'occu_ipd_id' => $this->editing->id,
+                        'ipd_id' => $bm1->ipd_id,
+                        'occu_ipd_type_id' => 1,
+                        'is_getout' => true,
+                        'ipd_bedmove_id' => $bm1->ipd_bedmove_id,
+                        'updated_by' => $this->userId,
+                        'created_by' => $this->userId,
+                        'saved' => false,
+                    ]);
+                }
             }
+
             //occu_ipd_type_id = 2	รับใหม่
-            $bedmoves_t2 = IpdBedmove::wherebetween('moved_at',[$stime,$etime])
-                ->where('bedmove_type_id','1')
+            $bedmoves_t2 = IpdBedmove::wherebetween('moved_at', [$stime, $etime])
+            ->where('bedmove_type_id', '1')
+            ->where('ward_id', $this->editing->ward_id)
                 ->orderBy('moved_at', 'asc')->get();
             foreach ($bedmoves_t2 as $bm2) {
 
@@ -184,9 +192,11 @@ class Home extends Component
                     'saved' => false,
                 ]);
             }
+            
             //occu_ipd_type_id = 3	รับย้าย
-            $bedmoves_t3 = IpdBedmove::wherebetween('moved_at',[$stime,$etime])
-                ->where('bedmove_type_id','2')
+            $bedmoves_t3 = IpdBedmove::wherebetween('moved_at', [$stime, $etime])
+                ->where('bedmove_type_id', '2')
+                ->where('ward_id', $this->editing->ward_id)
                 ->orderBy('moved_at', 'asc')->get();
             foreach ($bedmoves_t3 as $bm3) {
 
@@ -202,8 +212,9 @@ class Home extends Component
                 ]);
             }
             //occu_ipd_type_id = 4	ย้าย Ward
-            $bedmoves_t4 = IpdBedmove::wherebetween('moved_at',[$stime,$etime])
-                ->where('bedmove_type_id','3')
+            $bedmoves_t4 = IpdBedmove::wherebetween('moved_at', [$stime, $etime])
+                ->where('bedmove_type_id', '3')
+                ->where('ward_id', $this->editing->ward_id)
                 ->orderBy('moved_at', 'asc')->get();
             foreach ($bedmoves_t4 as $bm4) {
 
@@ -219,9 +230,10 @@ class Home extends Component
                 ]);
             }
             //occu_ipd_type_id = 5	จำหน่าย
-            $bedmoves_t5 = Ipd::wherebetween('moved_at',[$stime,$etime])
-            ->where('bedmove_type_id','5')
-            ->orderBy('moved_at', 'asc')->get();
+            $bedmoves_t5 = IpdBedmove::wherebetween('moved_at', [$stime, $etime])
+                ->where('bedmove_type_id', '5')
+                ->where('ward_id', $this->editing->ward_id)
+                ->orderBy('moved_at', 'asc')->get();
             foreach ($bedmoves_t5 as $bm5) {
 
                 OccuIpdDetail::create([

@@ -46,6 +46,7 @@ class NurseIpdNewcaseList extends Component
             'editing.ipd_id' => 'required',
             'editing.movedate' => 'required',
             'editing.movetime' => 'required',
+            'editing.moved_at' => 'required',
             'editing.ward_id' => 'required',
             'editing.bed_id' => 'required|exists:beds,id',
             'editing.bedmove_type_id' => 'required',

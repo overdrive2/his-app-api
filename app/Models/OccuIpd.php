@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Helpers\FunctionDateTimes;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class OccuIpd extends Model
 {
-    use HasFactory;
+    use HasFactory, FunctionDateTimes;
 
     protected $appends = ['date_for_editing', 'time_for_editing', 
         'occu_status_name', 'ipd_nurse_shift_name', 'ward_name'];

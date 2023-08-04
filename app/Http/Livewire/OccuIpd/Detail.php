@@ -24,14 +24,11 @@ class Detail extends Component
     public function rules()
     {
         return [
+            'editing.occu_ipd_id' => 'required',
             'editing.ipd_id' => 'required',
             'editing.occu_ipd_type_id' => 'required',
             'editing.is_getout' => '',
-            'editing.dch_type_id' => '',
-            'editing.ipd_severe_type_id' => '',
-            'editing.ipd_admit_type_id' => '',
             'editing.ipd_bedmove_id' => '',
-            'editing.ipd_severe_type_id' => '',
             'editing.updated_by' => '',
             'editing.created_by' => '',
         ];
@@ -52,7 +49,6 @@ class Detail extends Component
     {
         $this->occuIpd = OccuIpd::find($this->occu_ipd_id);
         $this->editing = $this->makeBlank();
-        $this->editing->save();
     }
 
     public function edit($id)
