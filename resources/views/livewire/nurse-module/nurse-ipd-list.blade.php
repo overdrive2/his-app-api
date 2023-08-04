@@ -46,7 +46,7 @@
                         'ward_id' => $filter_ward_id,
                         'open' => ($tab == 1)
                     ],
-                    key('ipd-newcase')
+                    key('ipd-newcase'.$tab.$filter_ward_id)
                 )
             </div>
             <div x-show="tab == 2">
@@ -56,7 +56,7 @@
                         'ward_id' => $filter_ward_id,
                         'open' => ($tab == 2)
                     ],
-                    key('ipd-wait')
+                    key('ipd-wait'.$tab.$filter_ward_id)
                 )
             </div>
             <div x-show="tab == 3">
@@ -66,7 +66,7 @@
                         'ward_id' => $filter_ward_id,
                         'open' => ($tab == 3)
                     ],
-                    key('ipd-stay')
+                    key('ipd-stay'.$tab.$filter_ward_id)
                 )
             </div>
             <div x-show="tab == 4">

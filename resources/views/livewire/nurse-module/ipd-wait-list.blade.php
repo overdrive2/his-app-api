@@ -36,6 +36,7 @@
         setTimeout(() => $dispatch('swal:close'), 1000);
     }"
 >
+    <div class="text-lg font-medium p-2 border-b text-left mb-2">รายชื่อผู้ป่วยรอรับย้าย</div>
     <x-table>
         <x-slot name="header">
             <tr>

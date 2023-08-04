@@ -101,7 +101,6 @@
                 </div>
             </template>
         </div>
-        <button x-on:click="()=> showMovebedModal()">Modal</button>
     </div>
     <!-- Action Menu modal-->
     <x-tw-modal.dialog
