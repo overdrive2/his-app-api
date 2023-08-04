@@ -136,6 +136,20 @@ class IpdNewcaseList extends Component
         ]);
     }
 
+    public function updatedEditing($value, $varName)
+    {
+        switch ($varName) {
+            case 'room_id':
+                $this->dispatchBrowserEvent('set-beds', [
+                    'beds' => $this->getBeds($value)
+                ]);
+                break;
+            default:
+                # code...
+                break;
+        }
+    }
+
     public function getRooms()
     {
         return Room::where('ward_id', $this->ward_id)

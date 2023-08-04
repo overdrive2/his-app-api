@@ -35,6 +35,20 @@
         }, 1000)
     }"
 >
+    <div
+        x-data="{
+            model: 1
+        }"
+        @set-model="(e) => model = e.detail"
+    >
+        <span x-text="model"></span>
+        <x-input.tw-text2
+            x-data="{
+                model:model,
+                label:'test'
+            }"
+        />
+    </div>
     <div class="flex px-2 shadow-sm border py-1">
         <div class="grow text-left w-full text-lg font-normal text-gray-600 dark:text-gray-50">{{ $section->display_order }}. {{ $section->name }}</div>
         <div class="flex-none">
