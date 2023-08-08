@@ -1,4 +1,7 @@
 <nav
+    x-init="
+        $dispatch('resize')
+    "
     id="sidenav-main"
     class="fixed left-0 top-0 z-[1036] h-screen w-60 -translate-x-full overflow-hidden bg-white shadow-[0_4px_12px_0_rgba(0,0,0,0.07),_0_2px_4px_rgba(0,0,0,0.05)] dark:bg-neutral-800 xl:data-[te-sidenav-hidden='false']:translate-x-0 sidenav-primary ps--active-y group/ps [overflow-anchor:none] [overflow-style:none] touch-none"
     data-te-sidenav-init

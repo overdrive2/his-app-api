@@ -13,15 +13,22 @@
     style="display: none;"
     x-show="open"
 >
-    <div class="grid lg:grid-cols-5 grid-cols-1 gap-2">
+    <div class="flex gap-2 flex-col">
         <template x-for="bed in beds">
-            <div role="button" @click="value = bed.id" :class="(value === bed.id) ? 'bg-sky-300 dark:bg-sky-600' : ((bed.ipd ?? []).length == 0 ?'bg-gray-200 dark:bg-gray-600' : 'bg-green-200 dark:bg-green-600')"
-            class="w-full lg:max-w-sm font-bold border rounded-md shadow-md py-2  dark:text-white">
-                <div x-text="bed.ipd ? bed.ipd.an : ''" class="text-xs"></div>
-                <div x-text="bed.ipd ? bed.ipd.patient_name : ''" class="text-xs"></div>
-                <div x-text="bed.bed_name">
-                </div>
-            </div>
+            <button
+                type="button"
+                x-bind:disabled="bed.ipd.length != 0"
+                x-on:click="() => {
+                    value = bed.id
+                    ds_bed = bed.bed_name
+                }"
+                :class="(value === bed.id) ? 'bg-primary-400 dark:bg-primary-600' : ((bed.ipd ?? []).length == 0 ? 'bg-primary-100 dark:bg-primary-600' : 'bg-gray-200 dark:bg-gray-600')"
+                class="flex w-full gap-2 border rounded-md shadow-md py-2  dark:text-white"
+            >
+                <div class="px-2 flex-none w-24 font-bold" x-text="bed.bed_name"></div>
+                <div x-text="bed.ipd ? bed.ipd.an : ''" class="px-2 flex-none w-auto"></div>
+                <div x-text="bed.ipd ? bed.ipd.patient_name : ''" class="text-left px-2 grow"></div>
+            </button>
         </template>
     </div>
 </div>

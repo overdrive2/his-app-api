@@ -23,6 +23,7 @@ return new class extends Migration
             $table->integer('officer_id')->nullable();
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
+            $table->integer('current_ward_id')->nullable();
             $table->boolean('is_admin')->default(false);
             $table->timestamps();
         });

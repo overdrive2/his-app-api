@@ -147,6 +147,16 @@ wardSelect.addEventListener('valueChange.te.select', (e) => {
 
 window.Alpine = Alpine;
 
+document.addEventListener('alpine:init', () => {
+    Alpine.store('ipdViewMode', {
+        value: localStorage.getItem('ipd-view-mode'),
+        toggle() {
+            this.value = this.value == 'grid' ? 'flex' : 'grid'
+            localStorage.setItem('ipd-view-mode', this.value)
+        }
+    });
+})
+
 Alpine.plugin(focus);
 
 Alpine.start();

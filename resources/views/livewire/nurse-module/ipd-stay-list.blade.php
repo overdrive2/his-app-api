@@ -1,169 +1,200 @@
-<div
-    x-data = "{
-        ward : [],
-        rooms : [],
-        selectedId: [],
-        errors:{
-            bedmove:'',
-            wardmove:''
-        },
-        beds :$wire.beds,
-        open :$wire.open,
-        ipd:[],
-        showActionModal: (row) => {
-            selectedId = row.id;
-            $dispatch('set-ipd', {ipd : row.ipd});
-            $dispatch('initdata',{row: row.ipd});
-            acModal.show();
-        },
-        showMovebedModal: (id) => {
-            acModal.hide();
-            $wire.moveBedModal(id);
-        },
-        showMovewardModal: (id) => {
-            $wire.moveWardModal(id);
-        }
-    }"
-
-    x-init = "
+<div x-data="{
+    ward: @js($ward),
+    beds: @js($beds),
+    ipd: [],
+    room_id: @entangle('room_id'),
+    rooms: @js($rooms),
+    filter_room_id: @entangle('filter_room_id'),
+    rbeds: [],
+    srcTxt: '',
+    errors: {},
+    showActionModal: (row) => {
+        $dispatch('set-ipd', { row: row });
+        $dispatch('initdata', { row: row.ipd });
+        acModal.show();
+    },
+    showMovebedModal: async (id) => {
+        $dispatch('cat:progress')
+        await $wire.moveBedModal(id);
+        $dispatch('swal:close')
+    },
+}" x-init="
+        rbeds = {...beds}
         acModal = new Modal($refs.actionModal)
         mbModal = new Modal($refs.mbModal)
-        mwModal = new Modal($refs.mwModal) /*Move ward modal*/
-        $wire.loadData()
-    "
-
-    @set-staydata.window="async (e) => {
-        open = true;
-        data = e.detail;
-        ward = data.ward;
-        rooms = await data.rooms;
-        beds = data.beds;
-        setTimeout(()=> $dispatch('swal:close'), 1000);
+    " @set-rbeds-filter="(e)=>{
+        rbeds = e.detail.beds
     }"
-
-    @set-ipd.window="(e) => ipd = e.detail.ipd"
-
+    @bed-filter="()=> {
+        rbeds = srcTxt != '' ? beds.filter(bed => bed.ipd && bed.ipd.patient_name.includes(srcTxt) == true) : beds
+    }"
     @open-mb-modal.window="(e) => { // const listeners movebed modal
+        rooms = e.detail.rooms
         $dispatch('set-beds', {'beds': e.detail.beds})
+        acModal.hide()
         mbModal.show()
     }"
+    @set-ipd.window="(e) => {
+        ipd = e.detail.row.ipd
+        ipd.bed_name = e.detail.row.bed_name
+        console.log(ipd)
+    }">
+    <div class="flex justify-between">
+        <x-header.h5 class="ml-1 mb-1">
+            <span x-text="ward.name"></span>
+        </x-header.h5>
+        <div class="text-right flex gap-1">
+        </div>
+    </div>
+    <div class="max-w-full overflow-x-auto">
+        <div class="mb-3">
+            <div class="flex justify-between">
+                <div class="w-1/2 flex gap-2">
+                    <div x-init="new Select($refs.roomFilterSelect)" class="flex-none w-auto py-1.5" wire:ignore>
+                        <select x-ref="roomFilterSelect" x-model="filter_room_id">
+                            <option value="0">-- ทั้งหมด --</option>
+                            <template x-for="item in rooms">
+                                <option :selected="item.id == filter_room_id" :value='item.id'
+                                    x-text='item.room_name'></option>
+                            </template>
+                        </select>
+                    </div>
+                    <div class="relative py-1.5 grow flex max-w-xs w-full flex-wrap items-stretch">
+                        <input x-model="srcTxt" x-on:change="$dispatch('bed-filter')" type="search"
+                            class="relative m-0 block w-[1px] min-w-0 flex-auto rounded border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-primary"
+                            placeholder="Search" aria-label="Search" aria-describedby="button-search" />
 
-    @close-mb-modal.window="() => {
-        selectedId = 0
-        mbModal.hide()
-        $dispatch('toastify');
-    }"
-
-    @open-mw-modal.window="(e) => { // const listeners moveward modal
-        $dispatch('set-wards', {'wards': e.detail.wards})
-        acModal.hide();
-        mwModal.show()
-    }"
-
-    @close-mw-modal.window="() => {
-        mwModal.hide()
-        $dispatch('toastify');
-    }"
-
-    @bd-err-message.window="(e) => {
-        errors = e.detail.errors;
-    }"
-
->
-    <div x-show="open">
-        <div class="flex justify-between">
-            <x-header.h5>
-                <span x-text="ward.name"></span>
-            </x-header.h5>
-            <div class="text-right flex gap-1">
-                <x-button.icon class="px-3 py-1.5">
-                    <i class="fa-solid fa-list text-xl text-neutral-500"></i>
-                </x-button.icon>
-                <x-button.icon class="px-3 py-1.5">
-                    <i class="fa-solid fa-bed-pulse text-xl text-neutral-500"></i>
-                </x-button.icon>
+                        <x-icon.search />
+                    </div>
+                </div>
+                <div class="w-1/2 flex justify-end">
+                    <x-button.icon class="px-3 py-1.5" @click="$store.ipdViewMode.toggle()">
+                        <i :class="$store.ipdViewMode.value == 'flex' ? 'text-primary-600 fa-solid fa-list' :
+                            'text-neutral-500 fa-solid fa-table-cells'"
+                            class=" text-xl"></i>
+                    </x-button.icon>
+                </div>
             </div>
         </div>
-        <div class="grid lg:grid-cols-6 grid-cols-1 gap-4 font-mono text-white text-sm text-center font-bold leading-6 bg-stripes-fuchsia rounded-lg">
-            <template x-for="bed in beds">
-                <div class="relative">
-                    <div
-                        x-on:click.prevent="showActionModal(bed)"
-                        data-te-ripple-color="light"
-                        role="button" class="flex p-4 rounded-lg shadow-lg"
-                        :class="(bed.ipd ?? []).length == 0 ? 'bg-gray-600' : (selectedId == bed.id ? 'border-b-4 border-green-800 bg-green-800':'bg-green-600')" >
-                        <div x-text="bed.bed_name" class="text-2xl font-bold flex-none"></div>
-                        <div class="grow">
-                            <div x-text="bed.ipd ? bed.ipd.an : ''" class="w-full text-lg"></div>
-                            <div x-text="bed.ipd ? bed.ipd.patient_name : ''" class="w-full text-base"></div>
+        <div class="gap-2" :class="$store.ipdViewMode.value == 'flex' ? 'flex flex-col' : 'grid grid-cols-4'">
+            <template x-for="bed in rbeds">
+                <div class="flex px-4 py-2 border rounded">
+                    <div class="grow flex gap-2">
+                        <div class="p-2 flex-none w-32 font-medium" x-text="bed.bed_name"></div>
+                        <div class="p-2">
+                            <div x-text="bed.ipd && bed.ipd.patient_name"></div>
                         </div>
+                    </div>
+                    <div class="flex-none w-14 flex flex-col">
+                        <button x-on:click.prevent="showActionModal(bed)" type="button">
+                            <i class="fa-solid fa-ellipsis"></i>
+                        </button>
                     </div>
                 </div>
             </template>
         </div>
     </div>
     <!-- Action Menu modal-->
-    <x-tw-modal.dialog
-        x-ref="actionModal"
-    >
-    <x-slot name="title">IPD Actions Menu</x-slot>
-    <x-slot name="content">
-        <x-nurse.ipd-action />
-    </x-slot>
-    <x-slot name="footer">
-        <x-button.secondary data-te-modal-dismiss>
-            Close
-        </x-button.secondary>
-    </x-slot>
+    <x-tw-modal.dialog x-ref="actionModal">
+        <x-slot name="title">IPD Actions Menu</x-slot>
+        <x-slot name="content">
+            <x-nurse.ipd-action />
+        </x-slot>
+        <x-slot name="footer">
+            <x-button.secondary data-te-modal-dismiss>
+                Close
+            </x-button.secondary>
+        </x-slot>
     </x-tw-modal.dialog>
 
     <!-- Bedmove Modal -->
-    <x-tw-modal.dialog
-        x-ref="mbModal"
-        maxWidth="2xl"
-        wire:ignore
-    >
-    <x-slot name="title">Move Bed</x-slot>
-    <x-slot name="content">
-        <h5 class="text-left text-base font-bold border-b mb-2">{{ __('เลือกเตียง') }}</h5>
-        <div class="mb-4">
-            <x-bed-menu wire:model.defer="bm.bed_id" />
-            <x-error
-                x-show="errors.bedmove"
-                x-text="errors.bedmove"
-            />
+    <x-tw-modal.dialog maxWidth="2xl" wire:ignore>
+        <x-slot name="title">Move Bed</x-slot>
+        <x-slot name="content">
+            <div class="mb-2" x-data x-init="new Select($refs.roomSelect)">
+                <h5 class="text-left text-base font-bold border-b mb-2">เลือกห้อง</h5>
+                <select x-ref="roomSelect" x-model="room_id">
+                    <option value="0">-- ทั้งหมด --</option>
+                    <template x-for="item in rooms">
+                        <option :selected="item.id == room_id" :value='item.id' x-text='item.room_name'></option>
+                    </template>
+                </select>
+            </div>
+            <h5 class="text-left text-base font-bold border-b mb-2">เลือกเตียง</h5>
+            <div class="mb-4">
+                <x-bed-menu wire:model.defer="bm.bed_id" />
+                <x-error x-show="errors.bedmove" x-text="errors.bedmove" />
+            </div>
+        </x-slot>
+        <x-slot name="footer">
+            <x-button.secondary data-te-modal-dismiss>
+                Close
+            </x-button.secondary>
+            <x-button.primary wire:click="postBebmove">
+                Save
+            </x-button.primary>
+        </x-slot>
+    </x-tw-modal.dialog>
+    <div
+        x-ref="mbModal" data-te-modal-init
+        class="fixed left-0 top-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none"
+        id="mbModal" tabindex="-1" aria-labelledby="MoveInLabel" aria-hidden="true">
+        <div data-te-modal-dialog-ref
+            class="pointer-events-none relative h-[calc(100%-1rem)] w-auto translate-y-[-50px] opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:h-[calc(100%-3.5rem)] min-[576px]:max-w-[500px]">
+            <div
+                x-data="{
+                    ds_bed:'-'
+                }"
+                class="pointer-events-auto relative flex max-h-[100%] w-full flex-col overflow-hidden rounded-md border-none bg-white bg-clip-padding text-current shadow-lg outline-none dark:bg-neutral-600">
+                <div
+                    class="flex flex-shrink-0 items-center justify-between rounded-t-md border-b-2 border-neutral-100 border-opacity-100 p-4 dark:border-opacity-50">
+                    <!--Modal title-->
+                    <h5 class="text-xl font-medium leading-normal text-neutral-800 dark:text-neutral-200"
+                        id="MoveInLabel">
+                        ย้ายภายใน Ward
+                    </h5>
+                    <!--Close button-->
+                    <x-button.icon data-te-modal-dismiss aria-label="Close">
+                        <x-icon.close />
+                    </x-button.icon>
+                </div>
+                <div class="p-4">
+                    <div class="flex mb-2 font-bold text-base justify-center py-1 border-b">
+                        <div x-text="'AN ' + ipd.an" class="px-2 w-auto"></div>
+                        <div x-text="'ชื่อ-สกุล '+ ipd.patient_name" class="text-left px-2 w-auto"></div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="grow">
+                            <div class="font-bold text-primary">เตียงปัจจุบัน</div>
+                            <div class="bg-primary-100 text-center w-full gap-2 border rounded-md shadow-md py-2  dark:text-white">
+                                <div class="px-2 font-bold" x-text="ipd.bed_name"></div>
+                            </div>
+                        </div>
+                        <div class="flex-none w-auto">
+                            <div class="mt-8">
+                                <i class="text-primary fa-solid fa-circle-right"
+                                ></i>
+                            </div>
+                        </div>
+                        <div class="grow">
+                            <div class="font-bold text-green-700">เตียงปลายทาง</div>
+                            <div class="bg-green-100 text-center w-full gap-2 border rounded-md shadow-md py-2  dark:text-white">
+                                <div class="px-2 font-bold" x-text="ds_bed"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--Modal body-->
+                <div class="relative overflow-y-auto p-4">
+                    <x-bed-menu wire:model.defer="bm.bed_id" />
+                </div>
+                <!--Modal footer-->
+                <x-tw-modal.footer>
+                    <x-button.secondary data-te-modal-dismiss aria-label="Close">ยกเลิก</x-button.secondary>
+                    <x-button.primary x-on:click="save">บันทึก</x-button.primary>
+                </x-tw-modal.footer>
+            </div>
         </div>
-    </x-slot>
-    <x-slot name="footer">
-        <x-button.secondary data-te-modal-dismiss>
-            Close
-        </x-button.secondary>
-        <x-button.primary wire:click="postBebmove">
-            Save
-        </x-button.primary>
-    </x-slot>
-    </x-tw-modal.dialog>
-
-    <!-- Wardmove Modal -->
-    <x-tw-modal.dialog
-        x-ref="mwModal"
-        maxWidth="xl"
-    >
-    <x-slot name="title">Move Ward</x-slot>
-    <x-slot name="content">
-        <x-header.h6>
-            <span x-text="'AN '+ ipd.an ?? ''"></span>
-            <span x-text="ipd.patient_name ?? ''"></span>
-        </x-header.h6>
-        @livewire('nurse-module.wardmove-entry', ['ipdId' => $ipd_id], key('ipd'.$ipd_id))
-    </x-slot>
-    <x-slot name="footer">
-        <x-button.secondary data-te-modal-dismiss>
-            Close
-        </x-button.secondary>
-        <x-button.primary @click="$dispatch('save-wardmove')">
-            Save
-        </x-button.primary>
-    </x-slot>
-    </x-tw-modal.dialog>
+    </div>
+</div>
 </div>

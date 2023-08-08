@@ -143,10 +143,10 @@ class NurseIpdList extends Component
     public function mount()
     {
         $this->user = auth()->user();
-        $this->wards = $this->user->wards();
-        $this->filter_ward_id = $this->wards[0]->id;
-        $this->bm = (new BedmoveService)->create();
-        $this->rooms = $this->getRooms();
+      //  $this->wards = $this->user->wards();
+      //  $this->filter_ward_id = ($this->wards) ? $this->wards[0]->id : null;
+      //  $this->bm = (new BedmoveService)->create();
+      //  $this->rooms = $this->getRooms();
     }
 
     public function childRefresh($tabId, $wardId)

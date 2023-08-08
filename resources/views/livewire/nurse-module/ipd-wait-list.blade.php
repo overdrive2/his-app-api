@@ -110,9 +110,9 @@
     </x-slot>
     <x-slot name="footer">
         <x-button.secondary @click="() => wcModal.hide()">ยกเลิก</x-button.secondary>
-        <x-button.primary
-            x-on:click="save"
-        >บันทึก</x-button.primary>
+        <x-button.primary x-on:click="save">
+            บันทึก
+        </x-button.primary>
     </x-slot>
     </x-tw-modal.dialog>
 </div>

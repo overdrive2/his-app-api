@@ -13,18 +13,19 @@ class Bed extends Model
 
     public function getLastBedmoveIdAttribute()
     {
-        $val = IpdBedmove::where('bed_id', $this->id)
+        return IpdBedmove::where('bed_id', $this->id)
             ->orderBy('movedate', 'desc')
             ->orderBy('movetime', 'desc')
             ->value('id');
-        return $val ? $val : null;
+       // return $val ? $val : null;
     }
 
     public function getIpdAttribute()
     {
+        $lbmId = $this->last_bedmove_id;
         return
-            $this->last_bedmove_id ? Ipd::select('id', 'an', 'patient_id', 'current_bedmove_id')
-            ->where('current_bedmove_id', $this->last_bedmove_id)
+            $lbmId ? Ipd::select('id', 'an', 'patient_id', 'current_bedmove_id')
+            ->where('current_bedmove_id', $lbmId)
             ->first() : [];
     }
 }

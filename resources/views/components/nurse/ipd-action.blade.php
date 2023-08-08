@@ -12,13 +12,15 @@
         show: false
     }"
 >
-    <x-header.h6>
-        <span x-text="'AN '+ row.an ?? ''"></span>
-        <span x-text="row.patient_name ?? ''"></span>
-    </x-header.h6>
+    <template x-if="row">
+        <x-header.h6>
+            <span x-text="'AN '+ row.an ?? ''"></span>
+            <span x-text="row.patient_name ?? ''"></span>
+        </x-header.h6>
+    </template>
     <div class="w-full dark:text-white" x-show="show">
         <x-button.border-b
-            x-on:click="()=> showMovebedModal(row.id)"
+            x-on:click.prevent="()=> showMovebedModal(row.id)"
             color="sky"
             icon="right-left"
             label="ย้ายเตียง"

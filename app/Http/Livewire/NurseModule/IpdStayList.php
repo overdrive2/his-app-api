@@ -2,21 +2,27 @@
 
 namespace App\Http\Livewire\NurseModule;
 
+use App\Models\Bed;
 use App\Models\Ipd;
+use App\Models\Room;
 use App\Models\Ward;
 use App\Services\BedmoveService;
 use Livewire\Component;
-use Illuminate\Validation\Validator;
 
 class IpdStayList extends Component
 {
-    public $open = false;
-    public $ward_id;
+    public $open = true;
+    public $ward_id, $filter_room_id, $room_id;
     public $ward;
     public $rooms = [];
     public $beds = [];
     public $ipd_id;
-    public $bm = ['bed_id' => 0];
+    public $tab;
+
+    public $bm = [
+        'bed_id' => 0
+    ];
+
     public $wm;
 
     protected $listeners = [
@@ -52,12 +58,34 @@ class IpdStayList extends Component
 
     }
 
+    public function getBeds($room_id)
+    {
+        return Bed::when($room_id, function($query, $value) {
+                return $query->where('room_id', $value);
+            })->when(!$room_id, function($query) {
+                $rmIds = Room::where('ward_id', $this->ward_id)
+                ->where('room_type_id', '<>', config('ipd.waitroom'))
+                ->pluck('id');
+                return $query->whereIn('room_id', $rmIds);
+            })->orderBy('display_order', 'asc')
+            ->get();
+    }
+
+    public function updatedFilterRoomId($value)
+    {
+        $this->dispatchBrowserEvent('set-rbeds-filter', [
+            'beds' => $this->getBeds($value)
+        ]);
+    }
+
     public function moveBedModal($id)
     {
         $this->ipd_id = $id;
         $this->bm['bed_id'] = 0;
+        $this->room_id = 0;
         $this->dispatchBrowserEvent('open-mb-modal', [
-            'beds' => $this->beds
+            'rooms' => $this->rooms,
+            'beds' => $this->getBeds($this->room_id)
         ]);
     }
 
@@ -103,23 +131,18 @@ class IpdStayList extends Component
     {
         $this->ward = Ward::find($this->ward_id);
         $this->rooms = $this->ward ? $this->ward->rooms() : [];
-        $this->beds = count($this->rooms) > 0 ? $this->rooms[0]->beds() : [];
-        $this->dispatchBrowserEvent('set-staydata', [
+        $this->filter_room_id = 0;
+        $this->beds = $this->getBeds($this->filter_room_id);
+        // $this->beds = count($this->rooms) > 0 ? $this->rooms[0]->beds() : [];
+        /*$this->dispatchBrowserEvent('set-staydata', [
             'ward' => $this->ward,
             'rooms' => $this->rooms,
             'beds' => $this->beds
-        ]);
-    }
-
-    public function getRowsProperty()
-    {
-
+        ]);*/
     }
 
     public function render()
     {
-        return view('livewire.nurse-module.ipd-stay-list', [
-            'rows' => $this->rows
-        ]);
+        return view('livewire.nurse-module.ipd-stay-list');
     }
 }
