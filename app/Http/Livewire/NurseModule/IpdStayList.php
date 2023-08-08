@@ -115,7 +115,7 @@ class IpdStayList extends Component
             return $this->dispatchBrowserEvent('bd-err-message', [
                 'errors' => ['bedmove' => 'โปรดระบุเตียง..!']
             ]);
-            
+
         $bedmove->moved_at = Carbon::parse($bedmove->movedate . ' ' . $bedmove->movetime);
         $bedmove->save();
         $this->bm['bed_id'] = 0;
@@ -139,15 +139,11 @@ class IpdStayList extends Component
             'ward' => $this->ward,
             'rooms' => $this->rooms,
             'beds' => $this->beds
-<<<<<<< HEAD
         ]);*/
-=======
-        ]);
     }
 
     public function getRowsProperty()
     {
->>>>>>> 8f365ebf9b206359b4ebbec4acb4e8e6948563f1
     }
 
     public function render()
