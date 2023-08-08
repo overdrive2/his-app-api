@@ -16,6 +16,12 @@ class Detail extends Component
     public $occu_ipd_id;
     public OccuIpdDetail $editing;
     public $occuIpd;
+    public $delId;
+    public $userId;
+
+    protected $listeners = [
+        'delete:occu-ipd-detail'=>'delete',
+        'confirm:commit'=>'commit'];
 
     protected $queryString = [
         'occu_ipd_id' => ['except' => '', 'as'=> 'id']
@@ -36,17 +42,16 @@ class Detail extends Component
 
     public function makeBlank()
     {
-        $userId = auth()->user()->id;
-
         return OccuIpdDetail::make([
             'occu_ipd_id' => $this->occu_ipd_id,
-            'created_by' => $userId,
-            'updated_by' => $userId,
+            'created_by' => $this->userId,
+            'updated_by' => $this->userId,
         ]);
     }
 
     public function mount()
     {
+        $this->userId = auth()->user()->id;
         $this->occuIpd = OccuIpd::find($this->occu_ipd_id);
         $this->editing = $this->makeBlank();
     }
@@ -109,6 +114,71 @@ class Detail extends Component
     {
         return $this->applyPagination($this->rowsQuery);
     }
+
+    public function deleteConfirm($id)
+    {     
+        $this->delId = $id;
+        $this->dispatchBrowserEvent('delete:confirm', [
+            'action' => 'delete:occu-ipd-detail',
+        ]);
+    } 
+
+    public function delete()
+    {        
+        //$this->delId
+        $occu_ipd_detail = OccuIpdDetail::find($this->delId);
+        $occu_ipd_detail->delete();
+        
+        $this->dispatchBrowserEvent('toastify');    
+    } 
+    
+    public function confirmCommit()
+    {
+        $this->dispatchBrowserEvent('delete:confirm', [
+            'title' => 'ยืนยันการส่งเวรใช่หรือไม่?',
+            'text' => '',
+            'confirmButtonText' => 'ยืนยัน',
+            'cancelButtonText' => 'ยกเลิก',
+            'action' => 'confirm:commit',
+        ]);
+    }
+
+    public function commit()
+    {                
+        //update main
+        $i_type1 = 0;
+        $i_type2 = 0;
+        $i_type3 = 0;
+        $i_type4 = 0;
+        $i_type5 = 0;
+        $i_type6 = 0;
+        $occu_ipd_detail = OccuIpdDetail::where('occu_ipd_id', $this->occu_ipd_id)->orderBy('id','asc');
+        $occu = $occu_ipd_detail->get();
+
+        foreach ($occu as $occu_row) {
+            if ($occu_row->occu_ipd_type_id == 1) { $i_type1++; }
+            else if ($occu_row->occu_ipd_type_id == 2) { $i_type2++; }
+            else if ($occu_row->occu_ipd_type_id == 3) { $i_type3++; }
+            else if ($occu_row->occu_ipd_type_id == 4) { $i_type4++; }
+            else if ($occu_row->occu_ipd_type_id == 5) { $i_type5++; }
+            else if ($occu_row->occu_ipd_type_id == 6) { $i_type6++; }
+        }
+
+        OccuIpd::find($this->occu_ipd_id)->orderBy('id','asc')->update([
+            'getin' => $i_type1,
+            'getnew' => $i_type2,
+            'getmove' => $i_type3,
+            'moveout' => $i_type4,
+            'discharge' => $i_type5,
+            'getout' => $i_type6,
+            'updated_by' => $this->userId,
+            'saved' => true,
+        ]);
+
+        //update detail
+        $occu_ipd_detail->update(['saved' => true]);
+        $this->redirect(route('occu.ipd'));
+    } 
 
     public function render()
     {

@@ -176,8 +176,9 @@ class Home extends Component
 
             //occu_ipd_type_id = 2	รับใหม่
             $bedmoves_t2 = IpdBedmove::wherebetween('moved_at', [$stime, $etime])
-            ->where('bedmove_type_id', '1')
-            ->where('ward_id', $this->editing->ward_id)
+                ->where('bedmove_type_id', '1')
+                ->where('ward_id', $this->editing->ward_id)
+                ->where ('delflag',false)
                 ->orderBy('moved_at', 'asc')->get();
             foreach ($bedmoves_t2 as $bm2) {
 
@@ -192,10 +193,11 @@ class Home extends Component
                     'saved' => false,
                 ]);
             }
-            
+
             //occu_ipd_type_id = 3	รับย้าย
             $bedmoves_t3 = IpdBedmove::wherebetween('moved_at', [$stime, $etime])
                 ->where('bedmove_type_id', '2')
+                ->where ('delflag',false)
                 ->where('ward_id', $this->editing->ward_id)
                 ->orderBy('moved_at', 'asc')->get();
             foreach ($bedmoves_t3 as $bm3) {
@@ -214,6 +216,7 @@ class Home extends Component
             //occu_ipd_type_id = 4	ย้าย Ward
             $bedmoves_t4 = IpdBedmove::wherebetween('moved_at', [$stime, $etime])
                 ->where('bedmove_type_id', '3')
+                ->where ('delflag',false)
                 ->where('ward_id', $this->editing->ward_id)
                 ->orderBy('moved_at', 'asc')->get();
             foreach ($bedmoves_t4 as $bm4) {
@@ -232,6 +235,7 @@ class Home extends Component
             //occu_ipd_type_id = 5	จำหน่าย
             $bedmoves_t5 = IpdBedmove::wherebetween('moved_at', [$stime, $etime])
                 ->where('bedmove_type_id', '5')
+                ->where ('delflag',false)
                 ->where('ward_id', $this->editing->ward_id)
                 ->orderBy('moved_at', 'asc')->get();
             foreach ($bedmoves_t5 as $bm5) {
@@ -248,6 +252,40 @@ class Home extends Component
                 ]);
             }
             //occu_ipd_type_id = 6	ยกไป
+            $bedmoves_t6 = OccuIpdDetail::where('occu_ipd_id',$this->editing->id)
+                ->where('is_getout', true)
+                ->orderBy('id', 'asc')->get();
+            foreach ($bedmoves_t6 as $bm6) {
+                $data_row_c = [
+                    'occu_ipd_id' => $this->editing->occu_ipd_id,
+                    'ipd_id' => $bm6->ipd_id,
+                    //'occu_ipd_type_id' => 6,
+                    'is_getout' => 'N',
+                    'ipd_bedmove_id' => $bm6->ipd_bedmove_id,
+                    //'updated_by' => $this->userId,
+                    //'created_by' => $this->userId,
+                    //'saved' => false,
+                ];
+                $data_row = [
+                    'occu_ipd_id' => $this->editing->id,
+                    'ipd_id' => $bm5->ipd_id,
+                    'occu_ipd_type_id' => 6,
+                    'is_getout' => 'N',
+                    'ipd_bedmove_id' => $bm5->id,
+                    'updated_by' => $this->userId,
+                    'created_by' => $this->userId,
+                    'saved' => false,
+                ];
+
+                OccuIpdDetail::upsert($data_row,[],[]);
+                $update_t6 = OccuIpdDetail::updateOrCreate(
+                    $data_row_c,
+                    $data_row
+                );
+                dd($update_t6);
+
+                //OccuIpdDetail::create($data_row);
+            }
         }
 
         $this->dispatchBrowserEvent('ipdmain-modal-close', [
