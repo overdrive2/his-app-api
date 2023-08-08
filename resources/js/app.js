@@ -95,14 +95,14 @@ window.addEventListener('swal:error', event => {
 
 window.addEventListener('delete:confirm', event => {
     Swal.fire({
-        title: 'คุณแน่ใจไหม?',
-        text: "คุณจะไม่สามารถย้อนกลับได้!",
+        title: event.detail.title ?? 'คุณแน่ใจไหม?',
+        text: event.detail.text ?? "คุณจะไม่สามารถย้อนกลับได้!",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#ef4444',
         cancelButtonColor: '#64748b',
-        confirmButtonText: 'ใช่ ลบเลย!',
-        cancelButtonText: 'ไม่, ยกเลิก!',
+        confirmButtonText: event.detail.confirmButtonText ?? 'ใช่ ลบเลย!',
+        cancelButtonText: event.detail.cancelButtonText ?? 'ไม่, ยกเลิก!',
         reverseButtons: true,
         allowOutsideClick: false,
     }).then((result) => {

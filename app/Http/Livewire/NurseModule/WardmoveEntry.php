@@ -6,6 +6,7 @@ use App\Models\IpdBedmove;
 use App\Http\Livewire\Traits\BedmoveService;
 use App\Models\Ipd;
 use App\Models\Ward;
+use Carbon\Carbon;
 use Livewire\Component;
 
 class WardmoveEntry extends Component
@@ -24,6 +25,7 @@ class WardmoveEntry extends Component
             'wm.ipd_id' => 'required',
             'wm.movedate' => 'required',
             'wm.movetime' => 'required',
+            'wm.moved_at' => 'required',
             'wm.created_by' => 'required',
             'wm.updated_by' => 'required',
             'wm.date_for_editing' => '',
@@ -55,6 +57,7 @@ class WardmoveEntry extends Component
 
     public function save()
     {
+        $this->wm->moved_at = Carbon::parse($this->wm->movedate.' '.$this->wm->movetime);
         $this->wm->bedmove_type_id = config('ipd.moveout');
         $this->bedMoveValidate('wardmove-error');
 

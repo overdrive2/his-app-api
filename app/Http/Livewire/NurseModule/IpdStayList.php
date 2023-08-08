@@ -7,6 +7,7 @@ use App\Models\Ipd;
 use App\Models\Room;
 use App\Models\Ward;
 use App\Services\BedmoveService;
+use Carbon\Carbon;
 use Livewire\Component;
 
 class IpdStayList extends Component
@@ -38,6 +39,7 @@ class IpdStayList extends Component
             'wm.ipd_id' => 'required',
             'wm.movedate' => 'required',
             'wm.movetime' => 'required',
+            'wm.moved_at' => 'required',
             'wm.created_by' => 'required',
             'wm.updated_by' => 'required',
             'wm.date_for_editing' => '',
@@ -55,7 +57,6 @@ class IpdStayList extends Component
     {
         $this->ward_id = $id;
         $this->loadData();
-
     }
 
     public function getBeds($room_id)
@@ -110,15 +111,15 @@ class IpdStayList extends Component
         $bedmove->bedmove_type_id = config('ipd.moveself');
         $bedmove->bed_id = $this->bm['bed_id'];
 
-        if($bedmove->bed_id == 0)
+        if ($bedmove->bed_id == 0)
             return $this->dispatchBrowserEvent('bd-err-message', [
                 'errors' => ['bedmove' => 'โปรดระบุเตียง..!']
             ]);
-
+            
+        $bedmove->moved_at = Carbon::parse($bedmove->movedate . ' ' . $bedmove->movetime);
         $bedmove->save();
         $this->bm['bed_id'] = 0;
         $this->dispatchBrowserEvent('close-mb-modal');
-
     }
 
     public function mount()
@@ -138,7 +139,15 @@ class IpdStayList extends Component
             'ward' => $this->ward,
             'rooms' => $this->rooms,
             'beds' => $this->beds
+<<<<<<< HEAD
         ]);*/
+=======
+        ]);
+    }
+
+    public function getRowsProperty()
+    {
+>>>>>>> 8f365ebf9b206359b4ebbec4acb4e8e6948563f1
     }
 
     public function render()

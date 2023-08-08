@@ -10,6 +10,7 @@ use App\Models\Ipd;
 use App\Models\IpdBedmove;
 use App\Models\Room;
 use App\Services\IpdService;
+use Carbon\Carbon;
 use Illuminate\Validation\Validator;
 use Livewire\Component;
 
@@ -42,6 +43,7 @@ class NurseIpdList extends Component
             'bm.ward_id' => 'required',
             'bm.movedate' => 'required',
             'bm.movetime' => 'required',
+            'bm.moved_at' => 'required',
             'bm.bedmove_type_id' => 'required',
             'bm.updated_by' => 'required',
             'bm.created_by' => 'required',
@@ -223,6 +225,7 @@ class NurseIpdList extends Component
 
     public function save()
     {
+        $this->editing->moved_at = Carbon::parse($this->editing->movedate.' '.$this->editing->movetime);
         $this->bm->ward_id = $this->ward_id;
         // Validate check and dispatch to front-end
         $this->withValidator(function (Validator $validator) {
