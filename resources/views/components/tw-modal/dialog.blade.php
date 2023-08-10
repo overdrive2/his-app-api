@@ -1,4 +1,7 @@
-@props(['maxWidth'])
+@props([
+    'maxWidth',
+    'scrollable' => false
+])
 
 @php
 
@@ -13,6 +16,9 @@ $maxWidth = [
     '5xl' => 'sm:max-w-5xl',
     '6xl' => 'sm:max-w-6xl',
 ][$maxWidth ?? 'md'];
+$class = $scrollable ?
+    'pointer-events-none relative h-[calc(100%-1rem)] w-auto translate-y-[-50px] opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:h-[calc(100%-3.5rem)] min-[576px]:max-w-[500px]' :
+    'pointer-events-none relative flex min-h-[calc(100%-1rem)] w-auto translate-y-[-50px] items-center opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:min-h-[calc(100%-3.5rem)]'
 @endphp
 
 <div
@@ -24,9 +30,9 @@ $maxWidth = [
 >
     <div
         data-te-modal-dialog-ref
-        class="pointer-events-none relative flex min-h-[calc(100%-1rem)] w-auto translate-y-[-50px] items-center opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:min-h-[calc(100%-3.5rem)] {{$maxWidth}}"
+        class="{{ $class.' '.$maxWidth }}"
     >
-        <x-tw-modal.content>
+        <x-tw-modal.content :scrollable="$scrollable">
             <x-tw-modal.header>
                 <!--Modal title-->
                 <x-header.h5>
@@ -44,9 +50,11 @@ $maxWidth = [
                 {{ $content }}
             </div>
             <!--Modal footer-->
+            @isset($footer)
             <x-tw-modal.footer>
                 {{ $footer }}
             </x-tw-modal.footer>
+            @endisset
         </x-tw-modal.content>
     </div>
 </div>

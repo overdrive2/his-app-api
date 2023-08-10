@@ -44,6 +44,16 @@
         />
     </div>
     <div x-show="!show">
-        Empty
+        <x-button.border-b
+            color="primary"
+            icon="user-plus"
+            label="รับใหม่"
+        />
+        <x-button.border-b
+            x-on:click="() => showMovewardModal(row.id)"
+            color="amber"
+            icon="user-clock"
+            label="รับย้าย"
+        />
     </div>
 </div>

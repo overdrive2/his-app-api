@@ -4,15 +4,15 @@
         model: @entangle($attributes->wire('model')),
     }"
     x-init="
-        sl = Select.getInstance($refs.twSelect)
-        sl.setValue('183')
+        new Select($refs.twSelect)
     "
 >
     <select
-        data-te-select-init
         x-ref="twSelect"
         x-model="model"
+        x-bind:value="model"
         {{ $attributes->merge(['class' => 'focus:rign-0 focus:ring-green-500']) }}
+        value=" "
     >
         {{ $slot }}
     </select>

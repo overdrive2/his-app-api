@@ -66,8 +66,7 @@ class IpdBedmove extends Model
 
     public function setDateForEditingAttribute($value)
     {
-        $date = Carbon::createFromFormat('d/m/Y',  $value);
-        $this->movedate = $date->format('Y-m-d');
+        $this->movedate = $value ? Carbon::createFromFormat('d/m/Y',  $value)->format('Y-m-d') : null;
     }
 
     public function getTimeForEditingAttribute()
@@ -77,8 +76,7 @@ class IpdBedmove extends Model
 
     public function setTimeForEditingAttribute($value)
     {
-        $time = Carbon::createFromFormat('H:i',  $value);
-        $this->movetime = $time->format('H:i');
+        $this->movetime = $value ? Carbon::createFromFormat('H:i',  $value)->format('H:i') : null;
     }
 
     public function getBedNameAttribute()
@@ -115,4 +113,5 @@ class IpdBedmove extends Model
     {
         return IpdBedmoveType::find($this->bedmove_type_id)->occu_ipd_type_id;
     }
+
 }
