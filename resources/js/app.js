@@ -10,6 +10,10 @@ import 'quill/dist/quill.snow.css'
 import  bedMoveProps from './bedmove';
 import './window-options'
 import Quill from 'quill';
+import flatpckr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.css';
+
+window.flatpckr = flatpckr;
 
 import {
     Datepicker,

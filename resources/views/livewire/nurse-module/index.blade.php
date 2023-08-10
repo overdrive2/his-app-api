@@ -5,7 +5,6 @@
         wards:@js($user->wards())
     }"
 >
-{{ $ward_id }}
     <div class="lg:flex justify-between">
         <div class="grow text-left">
             <x-nurse.top-menu />

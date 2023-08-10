@@ -6,7 +6,7 @@
     }"
     x-init="
         options = window.dateOptions;
-        myDatepicker = new Datepicker(
+        new Datepicker(
             $refs.datepicker,
             options
         );

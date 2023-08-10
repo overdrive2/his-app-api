@@ -128,9 +128,9 @@ class IpdStayList extends Component
         $saved = $this->bedmove->save();
 
         if($saved)
-        return $this->dispatchBrowserEvent('close-mb-modal', [
-            'beds' => $this->getBeds(0)
-        ]);
+            return $this->dispatchBrowserEvent('close-mb-modal', [
+                'beds' => $this->getBeds(0)
+            ]);
         /*$ipd = Ipd::find($this->ipd_id);
         $bedmove = (new BedmoveService)->create();
         $bedmove->ward_id = $this->ward_id;
