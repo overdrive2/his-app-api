@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Doctor\Order\MasterController;
 use App\Http\Controllers\IpdNewCaseController;
@@ -35,6 +36,7 @@ Route::post('login', [App\Http\Controllers\LoginController::class, 'login']);
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('logout', [App\Http\Controllers\LoginController::class, 'logout']);
     Route::post('profile', [App\Http\Controllers\LoginController::class, 'profile']);
+    Route::get('/logged-in-user', [UserController::class, 'loggedInUser']);
 });
 
 Route::post('/ipd/newcase', [IpdNewCaseController::class, 'store']);
