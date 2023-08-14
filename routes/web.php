@@ -57,3 +57,5 @@ Route::middleware(['auth:sanctum'])->prefix('occuipd')->group(function () {
     Route::get('/home', [App\Http\Livewire\OccuIpd\Home::class, '__invoke'])->name('occu.ipd');
     Route::get('/detail', [App\Http\Livewire\OccuIpd\Detail::class, '__invoke'])->name('occu.ipd.detail');
 });
+
+//require __DIR__.'/auth.php';

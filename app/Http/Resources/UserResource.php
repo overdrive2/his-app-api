@@ -20,6 +20,7 @@ class UserResource extends ResourceCollection
                 'name' => $user->name,
                 'email' => $user->email,
                 'wards' => $user->wards(),
+                'current_ward_id' => $user->current_ward_id,
                 'created_at' => $user->created_at,
                 'updated_at' => $user->updated_at,
             ];
