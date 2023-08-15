@@ -46,7 +46,7 @@ Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function ()
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('test', [App\Http\Livewire\Test::class, '__invoke']);
+Route::get('test', [App\Http\Livewire\Test\Test::class, '__invoke']);
 
 Route::middleware(['auth:sanctum'])->prefix('occuins')->group(function () {
     Route::get('/home', [App\Http\Livewire\OccuInspector\Home::class, '__invoke'])->name('occu.ins');

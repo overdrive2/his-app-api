@@ -28,7 +28,7 @@
 
   <!-- Content -->
   <div
-    class="min-h-screen w-full text-center !pl-0 sm:!pl-60"
+    class="w-full text-center !pl-0 sm:!pl-60"
     id="content">
     <div class="py-12 text-center px-4">
       {{ $slot }}
