@@ -60,11 +60,9 @@
     }"
 
     @close-mb-modal.window="(e) => {
-        beds = {...e.detail.beds}
-        rbeds = {...beds}
-        mbModal.hide()
-      //  $dispatch('swal:close')
         $dispatch('toastify');
+        mbModal.hide()
+        $wire.emit('bmidx:refresh');
     }"
 
     @set-ipd.window="(e) => {
@@ -74,7 +72,6 @@
 
     @err-message.window = "(e) => {
         errors = JSON.parse(e.detail.errors);
-        console.log(errors)
     }"
 >
     <div class="flex justify-between">
@@ -266,12 +263,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="grid grid-cols-2 gap-4 mt-4">
-                        <x-input.date wire:model.defer="bedmove.date_for_editing" />
-                        <x-input.tw-time
-                            id="time_edit"
-                            wire:model.defer="bedmove.time_for_editing"
-                        />
+                    <div
+                        class="grid grid-cols-2 gap-4 mt-4"
+                    >
+                        <x-input.date wire:model.defer="bedmove.date_for_editing"/>
                     </div>
                 </div>
                 <!--Modal body-->

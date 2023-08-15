@@ -4,8 +4,6 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-use App\Models\OccuIpdStaff;
-use App\Models\OccuIpdType;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -34,7 +32,7 @@ class DatabaseSeeder extends Seeder
             IpdAdmitTypeSeeder::class,
           //  HisIpdSeeder::class,
             // IpdFormAsmSeeder::class,
-            // IpdFormAsmDetailSeeder::class,
+            DrugItemsSeeder::class,
             WardSeeder::class,
             RoomSeeder::class,
             BedSeeder::class

@@ -11,6 +11,10 @@ class Index extends Component
 
     public $tab = 1;
 
+    protected $listeners = [
+        'bmidx:refresh' => '$refresh',
+    ];
+
     public function updatedTab()
     {
         //dd(config('menu.nurse.1'));

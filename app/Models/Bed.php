@@ -26,6 +26,6 @@ class Bed extends Model
         return
             $lbmId ? Ipd::select('id', 'an', 'patient_id', 'current_bedmove_id')
             ->where('current_bedmove_id', $lbmId)
-            ->first() : [];
+            ->first() : null;
     }
 }

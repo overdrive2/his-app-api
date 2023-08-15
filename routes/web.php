@@ -28,7 +28,7 @@ Route::middleware([
 });
 
 Route::middleware(['auth:sanctum'])->prefix('nurse')->group(function () {
-    Route::get('/', [App\Http\Livewire\NurseModule\Index::class, '__invoke'])->name('nurse.index');
+    Route::get('/', [App\Http\Livewire\NurseModule\IpdList::class, '__invoke'])->name('nurse.index');
     Route::get('newcase', [App\Http\Livewire\NurseModule\NurseIpdNewcaseList::class, '__invoke'])->name('nurse.newcase');
     Route::get('ipd-asm-entry', [App\Http\Livewire\NurseModule\NurseIpdAsmEntry::class, '__invoke'])->name('nurse.asm.entry');
     Route::get('ipd-asm-list', [App\Http\Livewire\NurseModule\IpdAsmList::class, '__invoke'])->name('nurse.asm.list');
@@ -37,6 +37,7 @@ Route::middleware(['auth:sanctum'])->prefix('nurse')->group(function () {
 
 Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function () {
     Route::get('/', [App\Http\Livewire\Admin\Index::class, '__invoke'])->name('admin.index');
+    Route::get('/drug', [App\Http\Livewire\Admin\DrugItems::class, '__invoke'])->name('admin.drugs');
     Route::get('user', [App\Http\Livewire\Admin\Users::class, '__invoke'])->name('admin.user');
     Route::get('user-profile', [App\Http\Livewire\Admin\UserProfile::class, '__invoke'])->name('admin.user-profile');
     Route::get('asm-list', [App\Http\Livewire\Admin\AsmList::class, '__invoke'])->name('admin.asm-list');
@@ -57,3 +58,5 @@ Route::middleware(['auth:sanctum'])->prefix('occuipd')->group(function () {
     Route::get('/home', [App\Http\Livewire\OccuIpd\Home::class, '__invoke'])->name('occu.ipd');
     Route::get('/detail', [App\Http\Livewire\OccuIpd\Detail::class, '__invoke'])->name('occu.ipd.detail');
 });
+
+//require __DIR__.'/auth.php';

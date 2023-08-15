@@ -1,12 +1,11 @@
 <div
     class="flex items-center justify-center w-full"
     x-data="{
-            value: @entangle($attributes->wire('model')),
-
+        value: @entangle($attributes->wire('model')),
     }"
     x-init="
         options = window.dateOptions;
-        myDatepicker = new Datepicker(
+        new Datepicker(
             $refs.datepicker,
             options
         );

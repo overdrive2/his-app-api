@@ -11,7 +11,7 @@
         role="switch"
         :id="$id ?? ''" />
     <label
-    class="inline-block pl-[0.15rem] hover:cursor-pointer"
+    class="inline-block pl-[0.15rem] hover:cursor-pointer dark:text-gray-100"
     :for="$id ?? ''"
     >{{ $label ?? '' }}</label>
 </div>
