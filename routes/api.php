@@ -5,6 +5,7 @@ use App\Http\Controllers\Doctor\Order\MasterController;
 use App\Http\Controllers\IpdNewCaseController;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Models\Ward;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -34,6 +35,8 @@ Route::post('login', [App\Http\Controllers\LoginController::class, 'login']);
 Route::post('logout', [App\Http\Controllers\LoginController::class, 'logout']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('wards', [App\Http\Controllers\Api\WardController::class, 'index']);
+    Route::get('rooms/{id}', [App\Http\Controllers\Api\RoomController::class, 'index']);
     Route::post('profile', [App\Http\Controllers\LoginController::class, 'profile']);
     Route::get('/logged-in-user', [UserController::class, 'loggedInUser']);
 });
