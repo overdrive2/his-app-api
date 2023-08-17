@@ -4,9 +4,10 @@ namespace App\Http\Livewire\Traits;
 
 use App\Models\IpdBedmove;
 use App\Models\Room;
+use Carbon\Carbon;
 use Illuminate\Validation\Validator;
 
-trait BedmoveService
+trait BedmoveHelpers
 {
     use DateTimeHelpers;
 
@@ -28,11 +29,12 @@ trait BedmoveService
             'editing.ipd_id' => 'required',
             'editing.from_ref_id' => '',
             'editing.to_ref_id' => '',
+            'editing.moved_at' => 'required',
             'editing.ward_id' => 'required',
             'editing.movedate' => 'required',
             'editing.movetime' => 'required',
             'editing.bedmove_type_id' => 'required',
-            'editing.bed_id' => 'required_if:editing.bedmove_type_id,=,'.config('ipd.moveself'),
+            'editing.bed_id' => 'required|min:1',
             'editing.updated_by' => 'required',
             'editing.created_by' => 'required',
             'editing.time_for_editing' => '',
@@ -47,7 +49,7 @@ trait BedmoveService
 
         return
             IpdBedmove::make([
-                'bed_id' => 0,
+                'bed_id' => null,
                 'from_ref_id' => 0,
                 'to_ref_id' => 0,
                 'updated_by' => $uid,
@@ -106,6 +108,8 @@ trait BedmoveService
     public function bedMoveValidate($dist)
     {
         $this->dispatchError = $dist;
+        $this->editing->moved_at = Carbon::parse($this->editing->movedate . ' ' . $this->editing->movetime);
+
         $this->withValidator(function (Validator $validator) {
             $validator->after(function ($validator) {
                 if ($validator->errors()->isNotEmpty()) {

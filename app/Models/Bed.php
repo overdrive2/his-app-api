@@ -8,15 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Bed extends Model
 {
     use HasFactory;
-    protected $fillable = ['bed_name', 'bed_code', 'room_id', 'bed_status_id', 'display_order'];
+    protected $fillable = ['bed_name', 'bed_code', 'room_id', 'bed_status_id', 'display_order', 'last_bedmove_id', 'empty_flag'];
     protected $appends = ['ipd'];
 
-    public function getLastBedmoveIdAttribute()
+    public function lastBedmove()
     {
         return IpdBedmove::where('bed_id', $this->id)
+            ->where('delflag', false)
             ->orderBy('movedate', 'desc')
             ->orderBy('movetime', 'desc')
-            ->value('id');
+            ->first();
        // return $val ? $val : null;
     }
 

@@ -2,14 +2,14 @@
 
 @php
 $color = [
-    'primary' => 'border-primary-800 text-primary-600 dark:focus:text-primary-600 dark:hover:text-primary-600',
-    'red' => 'border-red-800 text-red-600 dark:focus:text-red-600 dark:hover:text-red-600',
-    'sky' => 'border-sky-800 text-sky-600 dark:focus:text-sky-600 dark:hover:text-sky-600',
-    'amber' => 'border-amber-800 text-amber-600 dark:focus:text-amber-600 dark:hover:text-amber-600',
-    'orange' => 'border-orange-800 text-orange-600 dark:focus:text-orange-600 dark:hover:text-orange-600',
-    'pink' => 'border-pink-800 text-pink-600 dark:focus:text-pink-600 dark:hover:text-pink-600',
-    'green' => 'border-green-800 text-green-600 dark:focus:text-green-600 dark:hover:text-green-600',
-][$color ?? 'border-gray-800 text-gray-600'];
+    'primary' => 'border-primary-800 hover:text-primary-500 text-primary-600 dark:focus:text-primary-600 dark:hover:text-primary-600',
+    'red' => 'border-red-800 hover:text-red-500 text-red-600 dark:focus:text-red-600 dark:hover:text-red-600',
+    'sky' => 'border-sky-800 hover:text-sky-500 text-sky-600 dark:focus:text-sky-600 dark:hover:text-sky-600',
+    'amber' => 'border-amber-800 hover:text-amber-500 text-amber-600 dark:focus:text-amber-600 dark:hover:text-amber-600',
+    'orange' => 'border-orange-800 hover:text-orange-500 text-orange-600 dark:focus:text-orange-600 dark:hover:text-orange-600',
+    'pink' => 'border-pink-800 hover:text-pink-500 text-pink-600 dark:focus:text-pink-600 dark:hover:text-pink-600',
+    'green' => 'border-green-800 hover:text-green-500 text-green-600 dark:focus:text-green-600 dark:hover:text-green-600',
+][$color ?? 'border-gray-800 text-gray-600 hover:text-gray-500'];
 
 $icon = [
     'right-left' => 'fa-solid fa-right-left',

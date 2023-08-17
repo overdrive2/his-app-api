@@ -19,7 +19,9 @@ return new class extends Migration
             $table->integer('bed_status_id');
             $table->integer('display_order')->nullable();
             $table->integer('updated_by');
-            $table->integer('created_by');  
+            $table->integer('created_by');
+            $table->integer('last_bedmove_id');
+            $table->boolean('empty_flag');
             $table->timestamps();
         });
     }

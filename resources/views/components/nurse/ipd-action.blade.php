@@ -2,25 +2,24 @@
     class="relative"
     @set-acmodal.window="(e) => {
         row = e.detail.row;
-        show = (!row.ipd) ? false : true
+        show = !row.empty_flag
     }"
     x-data="{
         row:[],
         show: false,
         move:async (type, id)=>{
             $dispatch('cat:progress')
-
+            moveType = type
             if(type == 'bed') {
-                moveType = 'ย้ายเตียง'
                 await $wire.bedmove(id)
             }
             else if(type == 'ward') {
-                moveType = 'ย้ายวอร์ด'
                 await $wire.wardmove(id)
             }
             else {
 
             }
+
             $dispatch('swal:close')
             acModal.hide()
             bmModal.show()
@@ -53,22 +52,30 @@
             label="ASM"
         />
         <x-button.border-b
-            color="green"
-            icon="house-chimney-user"
-            label="จำหน่าย"
+        color="green"
+        icon="house-chimney-user"
+        label="จำหน่าย"
         />
     </div>
     <div x-show="!show">
         <x-button.border-b
-            color="primary"
-            icon="user-plus"
-            label="รับใหม่"
+        color="primary"
+        icon="user-plus"
+        label="รับใหม่"
         />
         <x-button.border-b
-            x-on:click="() => showMovewardModal(row.id)"
-            color="amber"
-            icon="user-clock"
-            label="รับย้าย"
+        x-on:click="() => showMovewardModal(row.id)"
+        color="amber"
+        icon="user-clock"
+        label="รับย้าย"
+        />
+    </div>
+    <div>
+        <x-button.border-b
+            x-on:click="() => window.open('{{ route('nurse.bedmove.list') }}?id='+row.id, '_bedmove')"
+            color="pink"
+            icon="file-waveform"
+            label="ประวัติเตียง"
         />
     </div>
 </div>

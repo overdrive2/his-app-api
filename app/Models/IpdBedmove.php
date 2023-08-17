@@ -6,6 +6,7 @@ use App\Helpers\FunctionDateTimes;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class IpdBedmove extends Model
 {
@@ -25,7 +26,6 @@ class IpdBedmove extends Model
         'from_ref_id',
         'to_ref_id',
         'delflag',
-        'to_ref_id',
         'room_id',
         'moved_at',
     ];
@@ -37,19 +37,44 @@ class IpdBedmove extends Model
         parent::boot();
 
         self::saved(function($model){
-            Ipd::where('id', $model->ipd_id)
-                ->update([
-                    'current_bedmove_id' => IpdBedmove::where('ipd_id', $model->ipd_id)
-                        ->where('delflag', false)
-                        ->orderBy('movedate', 'desc')
-                        ->orderBy('movetime', 'desc')
-                        ->value('id')
-                ]);
-            if($model->bedmove_type_id == config('ipd.moverecp')) {
-                IpdBedmove::where('id', $model->from_ref_id)->update([
-                    'to_ref_id' => $model->id
-                ]);
+            if($model->from_ref_id) {
+                $bedmove = IpdBedmove::find($model->from_ref_id);
+                $bedmove->to_ref_id = $model->id;
+                $bedmove->save();
+
+                $lbm =  IpdBedmove::where('bed_id', $bedmove->bed_id)
+                    ->where('delflag', false)
+                    ->orderBy('movedate', 'desc')
+                    ->orderBy('movetime', 'desc')
+                    ->first();
+
+                Bed::where('id', $bedmove->bed_id)
+                    ->update([
+                        'empty_flag' => (
+                                ($lbm->bedmove_type_id == config('ipd.moveout'))
+                                ||($lbm->to_ref_id != '0' && $lbm->to_ref_id != null)
+                        )
+                    ]);
             }
+
+            $ipd = Ipd::find($model->ipd_id);
+            // Update ipd current_bedmove_id
+            $lbm = IpdBedmove::where('ipd_id', $model->ipd_id)
+                ->where('delflag', false)
+                ->where('to_ref_id', '0')
+                ->orderBy('movedate', 'desc')
+                ->orderBy('movetime', 'desc')
+                ->first();
+
+            $ipd->current_bedmove_id = $lbm->id;
+            $ipd->save();
+
+            $bed = Bed::find($model->bed_id);
+            $bed->last_bedmove_id = $model->id;
+            $bed->empty_flag = ($model->bedmove_type_id == config('ipd.moveout'))
+                ||($lbm->to_ref_id != '0' && $lbm->to_ref_id != null);
+            $bed->save();
+
         });
 
     }
@@ -114,4 +139,13 @@ class IpdBedmove extends Model
         return IpdBedmoveType::find($this->bedmove_type_id)->occu_ipd_type_id;
     }
 
+    public function toRef()
+    {
+        return $this->to_ref_id ? IpdBedmove::find($this->to_ref_id) : null;
+    }
+
+    public function fromRef()
+    {
+        return $this->from_ref_id ? IpdBedmove::find($this->from_ref_id) : null;
+    }
 }

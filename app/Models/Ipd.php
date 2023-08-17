@@ -53,7 +53,19 @@ class Ipd extends Model
         'current_bedmove_id'
     ];
 
-    protected $appends = ['hn', 'regdate_for_thai', 'ward_name', 'patient_name'];
+    protected $appends = ['hn', 'regdate_for_thai', 'ward_name', 'patient_name',
+        'current_bedmove_name'
+    ];
+
+    public function getCurrentBedmoveNameAttribute()
+    {
+        $str = '';
+        if($this->current_bedmove_id) {
+            $row = IpdBedmove::find($this->current_bedmove_id);
+            $str = $row->bed_name;
+        }
+        return $str;
+    }
 
     public function getWardNameAttribute()
     {
@@ -67,9 +79,15 @@ class Ipd extends Model
 
     public function getPatientNameAttribute()
     {
-        $row = Patient::select('pname', 'fname', 'lname')
-            ->where('id', $this->patient_id)->first();
-        return $row ? $row->pname.$row->fname.' '.$row->lname : '';
+        $str = '';
+
+        if($this->patient_id) {
+            $row = Patient::select('pname', 'fname', 'lname')
+                ->where('id', $this->patient_id)->first();
+            $str = $row->pname.$row->fname.' '.$row->lname;
+        }
+
+        return $str;
     }
 
     public function getHnAttribute()

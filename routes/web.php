@@ -32,6 +32,7 @@ Route::middleware(['auth:sanctum'])->prefix('nurse')->group(function () {
     Route::get('newcase', [App\Http\Livewire\NurseModule\NurseIpdNewcaseList::class, '__invoke'])->name('nurse.newcase');
     Route::get('ipd-asm-entry', [App\Http\Livewire\NurseModule\NurseIpdAsmEntry::class, '__invoke'])->name('nurse.asm.entry');
     Route::get('ipd-asm-list', [App\Http\Livewire\NurseModule\IpdAsmList::class, '__invoke'])->name('nurse.asm.list');
+    Route::get('bedmove-list', [App\Http\Livewire\NurseModule\BedMoveList::class, '__invoke'])->name('nurse.bedmove.list');
     Route::get('ipd-bedmove', [App\Http\Livewire\NurseModule\IpdBedMoveList::class, '__invoke'])->name('nurse.ipd.bedmove.list');
 });
 
