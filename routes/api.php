@@ -37,6 +37,8 @@ Route::post('logout', [App\Http\Controllers\LoginController::class, 'logout']);
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('wards', [App\Http\Controllers\Api\WardController::class, 'index']);
     Route::get('rooms/{id}', [App\Http\Controllers\Api\RoomController::class, 'index']);
+    Route::get('bed/{id}', [App\Http\Controllers\Api\BedController::class, 'show']);
+    Route::get('ipd/{id}', [App\Http\Controllers\Api\IpdController::class, 'index']);
     Route::post('profile', [App\Http\Controllers\LoginController::class, 'profile']);
     Route::get('/logged-in-user', [UserController::class, 'loggedInUser']);
 });

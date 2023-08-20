@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class RoomsCollection extends ResourceCollection
+class IpdsCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -15,11 +15,12 @@ class RoomsCollection extends ResourceCollection
     public function toArray(Request $request)
     {
         //return parent::toArray($request);
-        return $this->collection->map(function($room) {
+        return $this->collection->map(function($ipd) {
             return [
-                'id' => $room->id,
-                'name' => $room->room_name,
-                'beds' => $room->beds()
+                'id' => $ipd->id,
+                'an' => $ipd->an,
+                'name' => $ipd->patient_name,
+                'bedmoves' => $ipd->bedmoves(),
             ];
         });
     }
