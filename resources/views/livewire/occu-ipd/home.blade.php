@@ -98,6 +98,7 @@
                         <x-button.primary x-on:click="()=>{ location.assign('{{ route('occu.ipd.detail') }}?id={{ $row->id }}') }">
                             <x-icon.pencil-square class="w-4 h-4" /> แสดงรายการ
                         </x-button.primary>
+                        {{ $row->to_ref_id }}
                         <x-button.trash wire:click="deleteConfirm('{{ $row->id }}')">
                             <x-icon.trash class="w-4 h-4" /> ลบ
                         </x-button.trash>

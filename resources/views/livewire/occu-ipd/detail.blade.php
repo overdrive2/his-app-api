@@ -40,9 +40,18 @@
                 <div>Ward : <span class="font-semibold">{{ $occuIpd->ward_name }}</span></div>
             </div>
             <div>
-                <x-button.primary wire:click="new">เพิ่มรายการ</x-button.primary>
+                <!-- <x-button.primary wire:click="new">เพิ่มรายการ</x-button.primary> -->
                 <x-button.success wire:click="confirmCommit">ยืนยันส่งเวร</x-button.success>
             </div>
+        </div>
+
+        <div class="flex justify-start gap-2">
+            <button wire:click="$set('pageId',0)" class="border px-2 py-1 rounded-md shadow-md {{ $pageId == 0 ? 'bg-gray-300':'' }}">ทั้งหมด {{ $this->RowCount }}</button>
+            <button wire:click="$set('pageId',1)" class="border px-2 py-1 rounded-md shadow-md {{ $pageId == 1 ? 'bg-gray-300':'' }}">ยกมา {{ $occuIpd->getin }}</button>
+            <button wire:click="$set('pageId',2)" class="border px-2 py-1 rounded-md shadow-md {{ $pageId == 2 ? 'bg-gray-300':'' }}">รับใหม่ {{ $occuIpd->getnew }}</button>
+            <button wire:click="$set('pageId',3)" class="border px-2 py-1 rounded-md shadow-md {{ $pageId == 3 ? 'bg-gray-300':'' }}">รับย้าย {{ $occuIpd->getmove }}</button>
+            <button wire:click="$set('pageId',4)" class="border px-2 py-1 rounded-md shadow-md {{ $pageId == 4 ? 'bg-gray-300':'' }}">ย้าย Ward {{ $occuIpd->moveout }}</button>
+            <button wire:click="$set('pageId',5)" class="border px-2 py-1 rounded-md shadow-md {{ $pageId == 5 ? 'bg-gray-300':'' }}">จำหน่าย {{ $occuIpd->discharge }}</button>
         </div>
 
         <table class="min-w-full text-left text-sm font-light dark:text-gray-50">
@@ -53,7 +62,7 @@
                     <th scope="col" class="px-6 py-4">เตียง</th>
                     <th scope="col" class="px-6 py-4">ประเภท</th>
                     <th scope="col" class="px-6 py-4">วันเวลาย้ายเตียง</th>
-                    <th scope="col" class="px-6 py-4 text-center">คำสั่ง</th>
+                    <!-- <th scope="col" class="px-6 py-4 text-center">คำสั่ง</th> -->
                 </tr>
             </thead>
             <tbody>
@@ -65,9 +74,9 @@
                     <td class="whitespace-nowrap px-6 py-4">{{ $row->occu_ipd_type_name }}</td>
                     <td class="whitespace-nowrap px-6 py-4">{{ $row->bedmove()->moved_at }}</td>
                     <td class="whitespace-nowrap px-6 py-4">
-                        <x-button.trash wire:click="deleteConfirm('{{ $row->id }}')">
+                        <!-- <x-button.trash wire:click="deleteConfirm('{{ $row->id }}')">
                             <x-icon.trash class="w-4 h-4" /> ลบ
-                        </x-button.trash>
+                        </x-button.trash> -->
 
                     </td>
                 </tr>
