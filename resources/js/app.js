@@ -28,10 +28,11 @@ import {
     Modal,
     Timepicker,
     Tab,
-    Stepper
+    Stepper,
+    Offcanvas
 } from "tw-elements";
 
-initTE({ Datepicker, Select, Input, Ripple, Collapse, Dropdown, Sidenav, Button, Modal, Timepicker, Tab, Stepper});
+initTE({ Datepicker, Offcanvas, Select, Input, Ripple, Collapse, Dropdown, Sidenav, Button, Modal, Timepicker, Tab, Stepper});
 
 window.Tab = Tab;
 window.Modal = Modal;
@@ -42,6 +43,7 @@ window.Timepicker = Timepicker;
 window.Swal = Swal;
 window.Quill = Quill;
 window.Select = Select;
+window.Offcanvas = Offcanvas;
 /* Load Nurse const for nurse ipd list*/
 window.bedMoveProps = bedMoveProps;
 //window.nurseListProps = nurseListProps;
@@ -69,7 +71,7 @@ const setMode = (e) => {
   }
 };
 
-if (window.innerWidth < sidenavInstance.getBreakpoint("sm")) {
+if (sidenavInstance && window.innerWidth < (sidenavInstance.getBreakpoint("sm"))) {
   setMode();
 }
 

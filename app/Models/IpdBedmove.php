@@ -69,11 +69,13 @@ class IpdBedmove extends Model
             $ipd->current_bedmove_id = $lbm->id;
             $ipd->save();
 
-            $bed = Bed::find($model->bed_id);
-            $bed->last_bedmove_id = $model->id;
-            $bed->empty_flag = ($model->bedmove_type_id == config('ipd.moveout'))
-                ||($lbm->to_ref_id != '0' && $lbm->to_ref_id != null);
-            $bed->save();
+            if($model->bed_id > 0) {
+                $bed = Bed::find($model->bed_id);
+                $bed->last_bedmove_id = $model->id;
+                $bed->empty_flag = ($model->bedmove_type_id == config('ipd.moveout'))
+                    ||($lbm->to_ref_id != '0' && $lbm->to_ref_id != null);
+                $bed->save();
+            }
 
         });
 

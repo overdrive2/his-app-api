@@ -4,6 +4,10 @@
         awards:[],
         rooms:@js($rooms),
         beds:[],
+        bed:{
+            id:'',
+            name:'5555',
+        },
         errors:[],
         moveType:'',
         bedEditing:{
@@ -23,6 +27,12 @@
             acModal.show()
             $dispatch('swal:close')
         },
+        selectRow: (val) => {
+            bed = val
+            $wire.selectRow(bed.id)
+            $dispatch('set-bed', bed)
+            offCanvas.show()
+        },
         save: async () => {
             clearError()
             $dispatch('cat:progress')
@@ -33,7 +43,8 @@
     x-init="
         acModal = new Modal($refs.actionModal)
         bmModal = new Modal($refs.bmModal)
-
+        offCanvas = new Offcanvas($refs.offCanvas)
+        bed.name = '6666'
         refreshAward = ()=>{
             $wire.awardRefresh()
         }
@@ -42,6 +53,7 @@
             errors = [];
         }
     "
+    @set-bed="(val) => bed = val.detail"
     @set-rooms.window="(e)=>{ rooms = e.detail.rooms }"
 
     @set-bededit.window="(e)=>{
@@ -109,8 +121,15 @@
     </div>
     <div wire:target="search" wire:loading.class="opacity-25" class="gap-2" :class="$store.ipdViewMode.value == 'flex' ? 'flex flex-col' : 'grid grid-cols-4'">
         @foreach($rows as $key=>$row)
-            <div class="flex px-4 py-2 border rounded {{ $selectedId == $row->id ? 'border-primary' : '' }}" wire:key="row-{{$key}}">
-                <div class="grow flex gap-2">
+            <div
+                wire:target="selectRow('{{ $row->id }}')"
+                wire:loading.class="opacity-50"
+                class="dark:text-gray-100 relative hover:bg-primary-100 flex px-4 py-2 border rounded {{ $selectedId == $row->id ? 'border-primary' : '' }}" wire:key="row-{{$key}}">
+                <div wire:target="selectRow('{{ $row->id }}')" wire:loading wire:loading.delay.longest class="absolute left-1/2 gap-4 flex"><x-spinner /><div class="inline-block">Loading...</div></div>
+                <div
+                    x-on:click.prevent="selectRow(@js(['id'=>$row->id, 'name' => $row->bed_name]))"
+                    role="button"
+                    class="grow flex gap-2">
                     <div class="p-2 flex-none w-28 font-medium">{{ $row->bed_name }}</div>
                     <div class="p-2">
                         @if(!$row->empty_flag)
@@ -251,6 +270,18 @@
                     </x-tw-modal.footer>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="flex space-x-2">
+        <button type="button" wire:click="$set('showOff', true)">Show</button>
+        <div>
+          <x-off-canvas label="ทดสอบ" x-ref="offCanvas">
+            Bed : <span x-text="bed.name"></span>
+            <div class="flex gap-2">
+                <x-button.secondary-small><i class="fa-solid fa-user-plus text-sm mr-2"></i> รับใหม่</x-button.secondary-small>
+                <x-button.secondary-small><i class="fa-solid fa-user-clock text-sm mr-2"></i> รับย้าย</x-button.secondary-small>
+            </div>
+          </x-off-canvas>
         </div>
     </div>
 </div>

@@ -25,7 +25,7 @@ class IpdList extends Component
     public $ward;
     public $selectedId;
     public $search;
-
+    public $showOff = false;
     public function mount()
     {
         $this->wards = auth()->user()->wards();
@@ -46,9 +46,15 @@ class IpdList extends Component
         return $this->editing;
     }
 
+    public function selectRow($id)
+    {
+        $this->selectedId = $id;
+        $this->showOff = true;
+    }
+
     public function save()
     {
-        dd($this->editing);
+        $this->editing->ward_id = $this->to_ward_id;
         $this->bedMoveValidate('err-message');
         $this->editing->save();
         $this->dispatchBrowserEvent('move-success');
@@ -118,11 +124,11 @@ class IpdList extends Component
         $bd = Bed::find($id);
         $this->editing->from_ref_id = $bd->last_bedmove_id;
         $this->editing->bedmove_type_id = config('ipd.moveout');
-
+        $this->editing->bed_id = 0;
         $lbm = IpdBedmove::find($bd->last_bedmove_id);
         $this->editing->ipd_id = $lbm->ipd_id;
         $this->editing->ward_id = $lbm->ward_id;
-
+        $this->to_ward_id = 0;
         $this->dispatchBrowserEvent('set-bededit', [
             'data' => [
                 'from' => $bd->bed_name,

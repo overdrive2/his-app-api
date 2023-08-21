@@ -41,7 +41,7 @@
                 <x-table.cell>{{ $row->time_for_editing }}</x-table.cell>
                 <x-table.cell>{{ $row->movetype_name }}</x-table.cell>
                 <x-table.cell>{{ $from ? $from->bed_name : '-' }}</x-table.cell>
-                <x-table.cell>{{ $to ? $to->bed_name : '-' }}</x-table.cell>
+                <x-table.cell>{{ $to ? ($to->bed_id > 0 ? $to->bed_name : $to->ward_name ) : '-' }}</x-table.cell>
                 <x-table.cell>
                     <div class="flex gap-1">
                         <x-button.small-gray type="button">แก้ไข</x-button.small-gray>
