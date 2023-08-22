@@ -46,12 +46,12 @@
         </div>
 
         <div class="flex justify-start gap-2">
-            <button wire:click="$set('pageId',0)" class="border px-2 py-1 rounded-md shadow-md {{ $pageId == 0 ? 'bg-gray-300':'' }}">ทั้งหมด {{ $this->RowCount }}</button>
-            <button wire:click="$set('pageId',1)" class="border px-2 py-1 rounded-md shadow-md {{ $pageId == 1 ? 'bg-gray-300':'' }}">ยกมา {{ $occuIpd->getin }}</button>
-            <button wire:click="$set('pageId',2)" class="border px-2 py-1 rounded-md shadow-md {{ $pageId == 2 ? 'bg-gray-300':'' }}">รับใหม่ {{ $occuIpd->getnew }}</button>
-            <button wire:click="$set('pageId',3)" class="border px-2 py-1 rounded-md shadow-md {{ $pageId == 3 ? 'bg-gray-300':'' }}">รับย้าย {{ $occuIpd->getmove }}</button>
-            <button wire:click="$set('pageId',4)" class="border px-2 py-1 rounded-md shadow-md {{ $pageId == 4 ? 'bg-gray-300':'' }}">ย้าย Ward {{ $occuIpd->moveout }}</button>
-            <button wire:click="$set('pageId',5)" class="border px-2 py-1 rounded-md shadow-md {{ $pageId == 5 ? 'bg-gray-300':'' }}">จำหน่าย {{ $occuIpd->discharge }}</button>
+            <button wire:click="$set('pageId',0)" class="border px-2 py-1 rounded-md shadow-md {{ $pageId == 0 ? 'bg-gray-300':'' }}"><i class="fa-regular fa-rectangle-list"></i> ทั้งหมด {{ $this->RowCount }}</button>
+            <button wire:click="$set('pageId',1)" class="border px-2 py-1 rounded-md shadow-md {{ $pageId == 1 ? 'bg-gray-300':'' }}"><i class="fa-solid fa-retweet"></i> ยกมา {{ $occuIpd->getin }}</button>
+            <button wire:click="$set('pageId',2)" class="border px-2 py-1 rounded-md shadow-md {{ $pageId == 2 ? 'bg-gray-300':'' }}"><i class="fa-solid fa-user-plus"></i> รับใหม่ {{ $occuIpd->getnew }}</button>
+            <button wire:click="$set('pageId',3)" class="border px-2 py-1 rounded-md shadow-md {{ $pageId == 3 ? 'bg-gray-300':'' }}"><i class="fa-solid fa-user-clock"></i> รับย้าย {{ $occuIpd->getmove }}</button>
+            <button wire:click="$set('pageId',4)" class="border px-2 py-1 rounded-md shadow-md {{ $pageId == 4 ? 'bg-gray-300':'' }}"><i class="fa-solid fa-person-walking-dashed-line-arrow-right"></i> ย้าย Ward {{ $occuIpd->moveout }}</button>
+            <button wire:click="$set('pageId',5)" class="border px-2 py-1 rounded-md shadow-md {{ $pageId == 5 ? 'bg-gray-300':'' }}"><i class="fa-solid fa-house-user"></i> จำหน่าย {{ $occuIpd->discharge }}</button>
         </div>
 
         <table class="min-w-full text-left text-sm font-light dark:text-gray-50">

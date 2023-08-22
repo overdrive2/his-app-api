@@ -8,8 +8,13 @@ use App\Models\Bed;
 use App\Models\Ipd;
 use App\Models\IpdBedmove;
 use App\Models\IpdNurseShift;
+use App\Models\IpdRecord;
+use App\Models\IpdRecordList;
 use App\Models\OccuIpd;
 use App\Models\OccuIpdDetail;
+use App\Models\OccuIpdRecord;
+use App\Models\OccuIpdStaff;
+use App\Models\OccuIpdStaffList;
 use App\Models\Room;
 use Carbon\Carbon;
 use Illuminate\Validation\Rule;
@@ -31,9 +36,12 @@ class Home extends Component
     public $userId;
     public $from_ref_id;
     public $delId;
+    public $occu_stime;
+    public $occu_etime;
 
     protected $listeners = [
-        'delete:occu-ipd'=>'delete'];
+        'delete:occu-ipd' => 'delete'
+    ];
 
     public function rules()
     {
@@ -117,6 +125,53 @@ class Home extends Component
 
     public function saveDraft()
     {
+        //get start & end time to make shift
+        $etnf = IpdNurseShift::where('id', $this->editing->ipd_nurse_shift_id)->value('etime');
+        $this->occu_etime = Carbon::parse($this->editing->nurse_shift_date . ' ' . $etnf);
+        $this->occu_stime = clone $this->occu_etime;
+        $this->occu_stime->addSecond(-28801);
+        //dd($stime,$etime);
+
+        $this->saveOccuDetail();
+        $this->saveSevere();
+        $this->saveStaff();
+        $this->saveIpdRecord();
+    }
+
+    public function saveStaff()
+    {
+        $occustaff = OccuIpdStaff::orderBy('display_order', 'asc')->get();
+        foreach ($occustaff as $os) {
+            OccuIpdStaffList::create([
+                'occu_ipd_id' => $this->editing->id,
+                'staff_id' => $os->id,
+                'value' => 0,
+                'updated_by' => $this->userId,
+                'created_by' => $this->userId,
+            ]);
+        }
+    }
+
+    public function saveIpdRecord()
+    {
+        $cc_record = IpdRecordList::selectRaw('ipd_record_id,count(*)')
+        ->whereIn('ipd_id', OccuIpdDetail::where('occu_ipd_id', $this->editing->id)
+            ->where('is_getout', true)->pluck('ipd_id'))
+        ->whereIn('ipd_bedmove_id', OccuIpdDetail::where('occu_ipd_id', $this->editing->id)
+            ->where('is_getout', true)->pluck('ipd_bedmove_id'))
+        ->groupBy('ipd_record_id')
+        ->orderBy('ipd_record_id')->get();
+        foreach ($cc_record as $cc_rc) {
+            OccuIpdRecord::create([
+                'occu_ipd_id' => $this->editing->id,
+                'ipd_record_id' => $cc_rc->ipd_record_id,
+                'qty' => $cc_rc->count,
+            ]);
+        }
+    }
+
+    public function saveOccuDetail()
+    {
         //update to_ref_id to last shift
         $occuipd = OccuIpd::where('ward_id', $this->editing->ward_id)
             ->whereNull('to_ref_id')
@@ -124,16 +179,6 @@ class Home extends Component
             ->orderBy('nurse_shift_date', 'desc')
             ->orderBy('nurse_shift_time', 'desc')->first();
 
-        //dd($occuipd);
-        //get start & end time to make shift
-        $etnf = IpdNurseShift::where('id', $this->editing->ipd_nurse_shift_id)->value('etime');
-        $etime = Carbon::parse($this->editing->nurse_shift_date . ' ' . $etnf);
-        $stime = clone $etime;
-        $stime->addSecond(-28801);
-        //dd($stime,$etime);
-
-        //dd($occuipd);
-        //select bedmove
         //occu_ipd_type_id = 1	ยกมา
         $i_getin = 0;
         if ($occuipd != null) {
@@ -161,7 +206,7 @@ class Home extends Component
         }
 
         //occu_ipd_type_id = 2	รับใหม่
-        $bedmoves_t2 = IpdBedmove::wherebetween('moved_at', [$stime, $etime])
+        $bedmoves_t2 = IpdBedmove::wherebetween('moved_at', [$this->occu_stime, $this->occu_etime])
             ->where('bedmove_type_id', '1')
             ->where('ward_id', $this->editing->ward_id)
             ->where('delflag', false)
@@ -184,7 +229,7 @@ class Home extends Component
         OccuIpd::where('id', $this->editing->id)->update(['getnew' => $i_getnew]);
 
         //occu_ipd_type_id = 3	รับย้าย
-        $bedmoves_t3 = IpdBedmove::wherebetween('moved_at', [$stime, $etime])
+        $bedmoves_t3 = IpdBedmove::wherebetween('moved_at', [$this->occu_stime, $this->occu_etime])
             ->where('bedmove_type_id', '2')
             ->where('delflag', false)
             ->where('ward_id', $this->editing->ward_id)
@@ -209,7 +254,7 @@ class Home extends Component
         OccuIpd::where('id', $this->editing->id)->update(['getmove' => $i_getmove]);
 
         //occu_ipd_type_id = 4	ย้าย Ward
-        $bedmoves_t4 = IpdBedmove::wherebetween('moved_at', [$stime, $etime])
+        $bedmoves_t4 = IpdBedmove::wherebetween('moved_at', [$this->occu_stime, $this->occu_etime])
             ->where('bedmove_type_id', '3')
             ->where('delflag', false)
             ->where('ward_id', $this->editing->ward_id)
@@ -234,7 +279,7 @@ class Home extends Component
         OccuIpd::where('id', $this->editing->id)->update(['moveout' => $i_moveout]);
 
         //occu_ipd_type_id = 5	Discharge
-        $bedmoves_t5 = IpdBedmove::wherebetween('moved_at', [$stime, $etime])
+        $bedmoves_t5 = IpdBedmove::wherebetween('moved_at', [$this->occu_stime, $this->occu_etime])
             ->where('bedmove_type_id', '5')
             ->where('delflag', false)
             ->where('ward_id', $this->editing->ward_id)
@@ -260,7 +305,10 @@ class Home extends Component
 
         $i_getout = ($i_getin + $i_getnew + $i_getmove) - ($i_moveout - $i_dc);
         OccuIpd::where('id', $this->editing->id)->update(['getout' => $i_getout]);
+    }
 
+    public function saveSevere()
+    {
         //update severe
         $cc_severe = Ipd::selectRaw('severe_type_id,count(*)')
             ->whereIn('id', OccuIpdDetail::where('occu_ipd_id', $this->editing->id)
@@ -271,7 +319,7 @@ class Home extends Component
                 ->update(['severe_' . $cc_sv->severe_type_id => $cc_sv->count]);
         }
     }
-
+    
     public function save()
     {
         //dd($this->editing);
@@ -293,7 +341,9 @@ class Home extends Component
                 'text' => 'ABC text',
             ]);
 
-        if (!$editmode) { $this->saveDraft(); }
+        if (!$editmode) {
+            $this->saveDraft();
+        }
 
         $this->dispatchBrowserEvent('ipdmain-modal-close', [
             'msgstatus' => 'done',
@@ -301,21 +351,20 @@ class Home extends Component
     }
 
     public function deleteConfirm($id)
-    {     
+    {
         $this->delId = $id;
         $this->dispatchBrowserEvent('delete:confirm', [
             'action' => 'delete:occu-ipd',
         ]);
-    } 
+    }
 
     public function delete()
-    {        
-        //$this->delId
-        $occu_ipd = OccuIpd::find($this->delId);
-        $occu_ipd->delete();
-        
-        $this->dispatchBrowserEvent('toastify');    
-    } 
+    {
+        OccuIpd::where('id', $this->delId)->update(['delflag' => true]);
+        OccuIpd::where('to_ref_id', $this->delId)->update(['to_ref_id' => null]);
+
+        $this->dispatchBrowserEvent('toastify');
+    }
 
     public function setDate($date)
     {
@@ -335,6 +384,7 @@ class Home extends Component
 
                 return $query->whereBetween('nurse_shift_date', [$sdate, $edate]);
             })
+            ->where('delflag', false)
             ->orderBy('nurse_shift_date', 'asc')
             ->orderBy('nurse_shift_time', 'asc');
         return $query;

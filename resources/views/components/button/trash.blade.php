@@ -1,5 +1,5 @@
 @props([
-    'disabled',
+    'disabled' => false
 ])
 
 <button

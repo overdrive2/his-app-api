@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('occu_ipd_staff_lists', function (Blueprint $table) {
+        Schema::create('occu_ipd_records', function (Blueprint $table) {
             $table->id();
             $table->integer('occu_ipd_id');
-            $table->integer('staff_id');
-            $table->decimal('value',2)->nullable(); 
-            $table->integer('updated_by')->nullable(); 
-            $table->integer('created_by')->nullable();    
+            $table->integer('ipd_record_id');
+            $table->integer('qty');
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('occu_ipd_staff_lists');
+        Schema::dropIfExists('occu_ipd_records');
     }
 };

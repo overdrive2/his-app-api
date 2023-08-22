@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ipd_form_sections', function (Blueprint $table) {
+        Schema::create('ipd_record_lists', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->integer('ipd_form_asm_id');
-            $table->string('col');
-            $table->integer('parent_id');
-            $table->smallInteger('display_order');
+            $table->integer('ipd_id');
+            $table->integer('ipd_record_id');
+            $table->timestamp('started_at');
+            $table->timestamp('ended_at')->nullable();  
+            $table->integer('ipd_bedmove_id');
+            $table->smallInteger('duration')->nullable();  
+            $table->string('remark', 100)->nullable();  
             $table->integer('created_by')->nullable();  
             $table->integer('updated_by')->nullable();  
             $table->timestamps();
@@ -29,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ipd_form_sections');
+        Schema::dropIfExists('ipd_record_lists');
     }
 };
