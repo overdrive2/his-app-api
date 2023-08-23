@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\His\HisIpdNewcase;
+use App\Models\Ward;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -33,12 +34,12 @@ class IpdNewCaseController extends Controller
         }
     }
 
-    public function index()
+    public function index($id)
     {
         return
             HisIpdNewcase::selectRaw("an, hn, ward, date_part('year', age(birthday::date)) as ay,
                 date_part('month', age(birthday::date)) as am, pname, fname, lname, fullname, regdate, regtime")
-                ->whereIn('ward', auth()->user()->wards()->pluck('ward_code'))
+                ->where('ward', Ward::find($id)->ward_code)
                 ->get();
                     //->where('ward', Ward::find($this->ward_id)->ward_code);
         /*->when($this->filters['hn'], function($query, $val) {

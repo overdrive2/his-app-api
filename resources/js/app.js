@@ -13,7 +13,6 @@ import Quill from 'quill';
 import flatpckr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.css';
 
-window.flatpckr = flatpckr;
 
 import {
     Datepicker,
@@ -32,7 +31,9 @@ import {
     Offcanvas
 } from "tw-elements";
 
-initTE({ Datepicker, Offcanvas, Select, Input, Ripple, Collapse, Dropdown, Sidenav, Button, Modal, Timepicker, Tab, Stepper});
+initTE({ Datepicker, Offcanvas, Select, Input, Ripple, Collapse, Dropdown, Sidenav, Button, Modal, Timepicker, Tab, Stepper });
+
+window.flatpckr = flatpckr;
 
 window.Tab = Tab;
 window.Modal = Modal;
@@ -44,6 +45,7 @@ window.Swal = Swal;
 window.Quill = Quill;
 window.Select = Select;
 window.Offcanvas = Offcanvas;
+window.Button = Button;
 /* Load Nurse const for nurse ipd list*/
 window.bedMoveProps = bedMoveProps;
 //window.nurseListProps = nurseListProps;
@@ -164,5 +166,12 @@ document.addEventListener('alpine:init', () => {
 })
 
 Alpine.plugin(focus);
+
+Alpine.store('bed', {
+    data: {id:'', name:'', wardId:''},
+    set(val) {
+        this.data = val
+    }
+})
 
 Alpine.start();

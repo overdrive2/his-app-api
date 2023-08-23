@@ -5,12 +5,14 @@ namespace App\Http\Livewire\NurseModule;
 use App\Http\Livewire\DataTable\WithCachedRows;
 use App\Http\Livewire\Traits\BedmoveHelpers;
 use App\Models\Bed;
+use App\Models\his\HisTransferData;
 use App\Models\Ipd;
 use App\Models\IpdBedmove;
 use App\Models\Patient;
 use App\Models\Room;
 use App\Models\Ward;
 use App\Services\BedmoveService;
+use App\Services\IpdService;
 use Livewire\Component;
 
 class IpdList extends Component
@@ -26,6 +28,8 @@ class IpdList extends Component
     public $selectedId;
     public $search;
     public $showOff = false;
+
+
     public function mount()
     {
         $this->wards = auth()->user()->wards();
@@ -37,6 +41,19 @@ class IpdList extends Component
         }
 
         $this->editing = (new BedmoveService)->create();
+    }
+
+    public function makeNewcase($an, $bed)
+    {
+        $this->editing = $this->makeBlank();
+        $ipd = (new IpdService)->create($an);
+        $this->editing->bedmove_type_id = config('ipd.newcase');
+        $this->editing->an = $ipd->an;
+        $this->editing->ipd_id = $ipd->id;
+        $this->editing->bed_id = $bed['id'];
+        $this->editing->ward_id = $bed['wardId'];
+        $this->to_ward_id = $bed['wardId'];
+        return;
     }
 
     public function new($typeId)
@@ -52,11 +69,32 @@ class IpdList extends Component
         $this->showOff = true;
     }
 
+    public function tranferCommit($an)
+    {
+        $row = [
+            'code' => 'ipt',
+            'pk_fieldname' => 'an',
+            'value' => $an,
+            'created_by' => auth()->user()->id
+        ];
+
+        HisTransferData::create($row);
+    }
+
     public function save()
     {
         $this->editing->ward_id = $this->to_ward_id;
         $this->bedMoveValidate('err-message');
-        $this->editing->save();
+
+        $an = $this->editing->an;
+        $move_type = $this->editing->bedmove_type_id;
+        $saved = $this->editing->save();
+
+        if($move_type == config('ipd.newcase') && $saved) {
+            $this->tranferCommit($an);
+            return $this->dispatchBrowserEvent('newcase-success');
+        }
+
         $this->dispatchBrowserEvent('move-success');
        // $this->editing->moved_at = Carbon::parse($this->editing->movedate . ' ' . $this->editing->movetime);
 /*

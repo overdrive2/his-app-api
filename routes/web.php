@@ -60,4 +60,8 @@ Route::middleware(['auth:sanctum'])->prefix('occuipd')->group(function () {
     Route::get('/detail', [App\Http\Livewire\OccuIpd\Detail::class, '__invoke'])->name('occu.ipd.detail');
 });
 
+Route::middleware(['auth:sanctum'])->prefix('ipd')->group(function () {
+    Route::get('newcase/{id}', [App\Http\Controllers\IpdNewCaseController::class, 'index']);
+});
+
 //require __DIR__.'/auth.php';

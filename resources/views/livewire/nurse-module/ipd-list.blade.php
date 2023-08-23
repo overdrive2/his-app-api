@@ -4,10 +4,6 @@
         awards:[],
         rooms:@js($rooms),
         beds:[],
-        bed:{
-            id:'',
-            name:'5555',
-        },
         errors:[],
         moveType:'',
         bedEditing:{
@@ -27,10 +23,10 @@
             acModal.show()
             $dispatch('swal:close')
         },
-        selectRow: (val) => {
-            bed = val
-            $wire.selectRow(bed.id)
-            $dispatch('set-bed', bed)
+        selectRow: async (val) => {
+            await $wire.selectRow(val.bed.id)
+            $store.bed.set({id: val.bed.id, name: val.bed.name, wardId: val.wardId})
+            $dispatch('get-newcase');
             offCanvas.show()
         },
         save: async () => {
@@ -44,7 +40,6 @@
         acModal = new Modal($refs.actionModal)
         bmModal = new Modal($refs.bmModal)
         offCanvas = new Offcanvas($refs.offCanvas)
-        bed.name = '6666'
         refreshAward = ()=>{
             $wire.awardRefresh()
         }
@@ -52,8 +47,12 @@
         clearError = () => {
             errors = [];
         }
+
+        getNewCase = ()=> {
+            $dispatch('get-newcase', { ward:ward_id })
+        }
     "
-    @set-bed="(val) => bed = val.detail"
+
     @set-rooms.window="(e)=>{ rooms = e.detail.rooms }"
 
     @set-bededit.window="(e)=>{
@@ -127,7 +126,7 @@
                 class="dark:text-gray-100 relative hover:bg-primary-100 flex px-4 py-2 border rounded {{ $selectedId == $row->id ? 'border-primary' : '' }}" wire:key="row-{{$key}}">
                 <div wire:target="selectRow('{{ $row->id }}')" wire:loading wire:loading.delay.longest class="absolute left-1/2 gap-4 flex"><x-spinner /><div class="inline-block">Loading...</div></div>
                 <div
-                    x-on:click.prevent="selectRow(@js(['id'=>$row->id, 'name' => $row->bed_name]))"
+                    x-on:click.prevent="selectRow({bed: @js(['id'=>$row->id, 'name' => $row->bed_name]), wardId: ward_id})"
                     role="button"
                     class="grow flex gap-2">
                     <div class="p-2 flex-none w-28 font-medium">{{ $row->bed_name }}</div>
@@ -273,14 +272,53 @@
         </div>
     </div>
     <div class="flex space-x-2">
-        <button type="button" wire:click="$set('showOff', true)">Show</button>
         <div>
-          <x-off-canvas label="ทดสอบ" x-ref="offCanvas">
-            Bed : <span x-text="bed.name"></span>
-            <div class="flex gap-2">
-                <x-button.secondary-small><i class="fa-solid fa-user-plus text-sm mr-2"></i> รับใหม่</x-button.secondary-small>
-                <x-button.secondary-small><i class="fa-solid fa-user-clock text-sm mr-2"></i> รับย้าย</x-button.secondary-small>
+          <x-off-canvas x-ref="offCanvas">
+            <div class="border-b-2 border-primary mb-4">
+                <h6 class="ml-2 h-8 text-left mb-2 py-2 mt-0 text-base font-medium leading-tight text-primary">
+                    <i class="fa-solid fa-user-plus text-[24px] mr-2 mt-1"></i> New case
+                </h6>
             </div>
+            <!-- Start Newcase List Component -->
+            <div
+
+                x-data="{
+                    edit:false,
+                    an: '',
+                    newPost:()=>{
+                        $dispatch('cat:progress')
+                        $wire.save()
+                    }
+                }"
+
+                @edit-newcase.window="async (e)=>{
+                    await $wire.makeNewcase(e.detail.an, $store.bed.data)
+                    edit = true
+                    console.log($wire.editing)
+                }"
+
+                @newcase-success.window="()=>{
+                    Swal.close()
+                    $dispatch('toastify');
+                    $dispatch('get-newcase');
+                    edit = false
+                }"
+            >
+                <x-nurse.ipd-newcase-list />
+                <div x-show="edit" class="z-50">
+                    <x-input.date wire:model.defer="editing.date_for_editing" />
+                    <x-input.tw-time
+                        id="time_edit"
+                        wire:model.defer="editing.time_for_editing"
+                    />
+                    <div class="flex gap-2 justify-center py-2">
+                        <x-button.danger-small x-on:click="edit = false"><i class="fa-solid fa-person-circle-check"></i> ยกเลิก</x-button.danger-small>
+                        <x-button.secondary-small x-on:click="newPost()"><i class="fa-solid fa-person-circle-check"></i> รับย้าย</x-button.secondary-small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- End Newcase List Component -->
           </x-off-canvas>
         </div>
     </div>
