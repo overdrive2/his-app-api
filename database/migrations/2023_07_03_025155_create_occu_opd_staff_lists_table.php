@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('occu_id');
             $table->integer('staff_id');
-            $table->decimal('value',2)->nullable(); 
+            $table->integer('qty'); 
             $table->integer('updated_by')->nullable(); 
             $table->integer('created_by')->nullable();    
             $table->timestamps();
