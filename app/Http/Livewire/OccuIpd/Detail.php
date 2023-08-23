@@ -18,6 +18,7 @@ class Detail extends Component
     public $occuIpd;
     public $delId;
     public $userId;
+    public $pageId = 0;
 
     protected $listeners = [
         'delete:occu-ipd-detail'=>'delete',
@@ -98,9 +99,12 @@ class Detail extends Component
     public function getRowsQueryProperty()
     {
         $query =  OccuIpdDetail::query()
-            ->when($this->occu_ipd_id, function ($query, $sid) {
-                return $query->where('occu_ipd_id', $sid);
-            })
+        ->when($this->occu_ipd_id, function ($query, $sid) {
+            return $query->where('occu_ipd_id', $sid);
+        })
+        ->when($this->pageId > 0, function ($query) {
+            return $query->where('occu_ipd_type_id', $this->pageId);
+        })
             ->orderBy('id','asc');
         return $query;
     }

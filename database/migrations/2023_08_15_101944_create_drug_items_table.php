@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('icode', 20);
             $table->string('iname', 255);
             $table->char('medtype', 1);
-            $table->integer('created_by');
-            $table->integer('updated_by');
+            $table->integer('created_by')->nullable();  
+            $table->integer('updated_by')->nullable();  
             $table->string('stg', 50);
             $table->decimal('dispense_dose', 10, 2);
             $table->string('usage_unit_code', 10);

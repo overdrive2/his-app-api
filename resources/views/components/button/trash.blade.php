@@ -1,4 +1,9 @@
+@props([
+    'disabled' => false
+])
+
 <button
+  {{ $disabled ? 'disabled' : '' }}
   type="button"
   data-te-ripple-init
   data-te-ripple-color="light"
