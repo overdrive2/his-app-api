@@ -21,11 +21,12 @@ class Detail extends Component
     public $pageId = 0;
 
     protected $listeners = [
-        'delete:occu-ipd-detail'=>'delete',
-        'confirm:commit'=>'commit'];
+        'delete:occu-ipd-detail' => 'delete',
+        'confirm:commit' => 'commit'
+    ];
 
     protected $queryString = [
-        'occu_ipd_id' => ['except' => '', 'as'=> 'id']
+        'occu_ipd_id' => ['except' => '', 'as' => 'id']
     ];
 
     public function rules()
@@ -99,13 +100,13 @@ class Detail extends Component
     public function getRowsQueryProperty()
     {
         $query =  OccuIpdDetail::query()
-        ->when($this->occu_ipd_id, function ($query, $sid) {
-            return $query->where('occu_ipd_id', $sid);
-        })
-        ->when($this->pageId > 0, function ($query) {
-            return $query->where('occu_ipd_type_id', $this->pageId);
-        })
-            ->orderBy('id','asc');
+            ->when($this->occu_ipd_id, function ($query, $sid) {
+                return $query->where('occu_ipd_id', $sid);
+            })
+            ->when($this->pageId > 0, function ($query) {
+                return $query->where('occu_ipd_type_id', $this->pageId);
+            })
+            ->orderBy('id', 'asc');
         return $query;
     }
 
@@ -120,22 +121,22 @@ class Detail extends Component
     }
 
     public function deleteConfirm($id)
-    {     
+    {
         $this->delId = $id;
         $this->dispatchBrowserEvent('delete:confirm', [
             'action' => 'delete:occu-ipd-detail',
         ]);
-    } 
+    }
 
     public function delete()
-    {        
+    {
         //$this->delId
         $occu_ipd_detail = OccuIpdDetail::find($this->delId);
         $occu_ipd_detail->delete();
-        
-        $this->dispatchBrowserEvent('toastify');    
-    } 
-    
+
+        $this->dispatchBrowserEvent('toastify');
+    }
+
     public function confirmCommit()
     {
         $this->dispatchBrowserEvent('delete:confirm', [
@@ -148,41 +149,15 @@ class Detail extends Component
     }
 
     public function commit()
-    {                
-        //update main
-        $i_type1 = 0;
-        $i_type2 = 0;
-        $i_type3 = 0;
-        $i_type4 = 0;
-        $i_type5 = 0;
-        $i_type6 = 0;
-        $occu_ipd_detail = OccuIpdDetail::where('occu_ipd_id', $this->occu_ipd_id)->orderBy('id','asc');
-        $occu = $occu_ipd_detail->get();
-
-        foreach ($occu as $occu_row) {
-            if ($occu_row->occu_ipd_type_id == 1) { $i_type1++; }
-            else if ($occu_row->occu_ipd_type_id == 2) { $i_type2++; }
-            else if ($occu_row->occu_ipd_type_id == 3) { $i_type3++; }
-            else if ($occu_row->occu_ipd_type_id == 4) { $i_type4++; }
-            else if ($occu_row->occu_ipd_type_id == 5) { $i_type5++; }
-            else if ($occu_row->occu_ipd_type_id == 6) { $i_type6++; }
-        }
-
-        OccuIpd::find($this->occu_ipd_id)->orderBy('id','asc')->update([
-            'getin' => $i_type1,
-            'getnew' => $i_type2,
-            'getmove' => $i_type3,
-            'moveout' => $i_type4,
-            'discharge' => $i_type5,
-            'getout' => $i_type6,
+    {
+        OccuIpd::find($this->occu_ipd_id)->orderBy('id', 'asc')->update([
             'updated_by' => $this->userId,
             'saved' => true,
         ]);
-
         //update detail
-        $occu_ipd_detail->update(['saved' => true]);
+        OccuIpdDetail::where('occu_ipd_id', $this->occu_ipd_id)->update(['saved' => true]);
         $this->redirect(route('occu.ipd'));
-    } 
+    }
 
     public function render()
     {

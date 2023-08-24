@@ -154,20 +154,44 @@ class Home extends Component
 
     public function saveIpdRecord()
     {
-        $cc_record = IpdRecordList::selectRaw('ipd_record_id,count(*)')
-        ->whereIn('ipd_id', OccuIpdDetail::where('occu_ipd_id', $this->editing->id)
-            ->where('is_getout', true)->pluck('ipd_id'))
-        ->whereIn('ipd_bedmove_id', OccuIpdDetail::where('occu_ipd_id', $this->editing->id)
-            ->where('is_getout', true)->pluck('ipd_bedmove_id'))
-        ->groupBy('ipd_record_id')
-        ->orderBy('ipd_record_id')->get();
-        foreach ($cc_record as $cc_rc) {
+        $cc_record1 = IpdRecord::where('is_occu', true)
+            ->orderBy('display_order', 'asc')
+            ->get();
+        foreach ($cc_record1 as $cc_rc1) {
             OccuIpdRecord::create([
                 'occu_ipd_id' => $this->editing->id,
-                'ipd_record_id' => $cc_rc->ipd_record_id,
-                'qty' => $cc_rc->count,
+                'ipd_record_id' => $cc_rc1->id,
+                'qty' => 0,
             ]);
         }
+
+        $cc_record2 = IpdRecordList::selectRaw('ipd_record_id,count(*)')
+            ->whereIn('ipd_id', OccuIpdDetail::where('occu_ipd_id', $this->editing->id)
+                ->where('is_getout', true)->pluck('ipd_id'))
+            ->whereIn('ipd_bedmove_id', OccuIpdDetail::where('occu_ipd_id', $this->editing->id)
+                ->where('is_getout', true)->pluck('ipd_bedmove_id'))
+            ->groupBy('ipd_record_id')
+            ->orderBy('ipd_record_id')->get();
+        foreach ($cc_record2 as $cc_rc2) {
+            if ($cc_rc2->count > 0) {
+                OccuIpdRecord::upsert(
+                    ['occu_ipd_id' => $this->editing->id,'ipd_record_id' => $cc_rc2->ipd_record_id,'qty' => $cc_rc2->count, 'updated_by' => $this->userId],
+                    ['occu_ipd_id','ipd_record_id'],
+                    ['qty', 'updated_by']
+
+                );
+            }
+        }
+
+
+        //     OccuIpd::where('id', $this->editing->id)->update(['getin' => $i_getin]);
+
+        //     OccuIpdRecord::create([
+        //         'occu_ipd_id' => $this->editing->id,
+        //         'ipd_record_id' => $cc_rc->ipd_record_id,
+        //         'qty' => $cc_rc->count,
+        //     ]);
+        // }
     }
 
     public function saveOccuDetail()
@@ -319,7 +343,7 @@ class Home extends Component
                 ->update(['severe_' . $cc_sv->severe_type_id => $cc_sv->count]);
         }
     }
-    
+
     public function save()
     {
         //dd($this->editing);

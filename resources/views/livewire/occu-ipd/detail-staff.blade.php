@@ -1,5 +1,4 @@
 <div>
-    hello staff{{ $occu_ipd_id }}
     <table class="min-w-full text-left text-sm font-light dark:text-gray-50">
         <thead class="border-b bg-white font-medium dark:border-gray-500 dark:bg-gray-600">
             <tr>
