@@ -62,7 +62,7 @@ class Ipd extends Model
         $str = '';
         if($this->current_bedmove_id) {
             $row = IpdBedmove::find($this->current_bedmove_id);
-            $str = $row->bed_name;
+            $str = $row?->bed_name;
         }
         return $str;
     }

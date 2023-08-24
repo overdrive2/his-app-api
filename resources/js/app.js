@@ -46,6 +46,7 @@ window.Quill = Quill;
 window.Select = Select;
 window.Offcanvas = Offcanvas;
 window.Button = Button;
+window.Dropdown = Dropdown;
 /* Load Nurse const for nurse ipd list*/
 window.bedMoveProps = bedMoveProps;
 //window.nurseListProps = nurseListProps;

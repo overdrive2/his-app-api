@@ -69,6 +69,7 @@ class IpdList extends Component
         $this->showOff = true;
     }
 
+    /** Commit AN to HIS */
     public function tranferCommit($an)
     {
         $row = [
@@ -86,26 +87,13 @@ class IpdList extends Component
         $this->editing->ward_id = $this->to_ward_id;
         $this->bedMoveValidate('err-message');
 
-        $an = $this->editing->an;
         $move_type = $this->editing->bedmove_type_id;
         $saved = $this->editing->save();
 
-        if($move_type == config('ipd.newcase') && $saved) {
-            $this->tranferCommit($an);
+        if($move_type == config('ipd.newcase') && $saved)
             return $this->dispatchBrowserEvent('newcase-success');
-        }
 
         $this->dispatchBrowserEvent('move-success');
-       // $this->editing->moved_at = Carbon::parse($this->editing->movedate . ' ' . $this->editing->movetime);
-/*
-        $this->withValidator(function (Validator $validator) {
-            $validator->after(function ($validator) {
-                if ($validator->errors()->isNotEmpty()) {
-                    $errorMsg =  $validator->errors()->messages();
-                    $this->dispatchBrowserEvent('err-message', ['errors' => json_encode($errorMsg)]);
-                }
-            });
-        })->validate();*/
     }
 
     public function bedsQuery($empty)

@@ -153,16 +153,20 @@ class NurseIpdNewcaseList extends Component
             });
         })->validate();
 
-        $saved = $this->editing->save();
+        $this->editing->save();
 
-        if($saved) {
+        $this->dispatchBrowserEvent('toast-event', [
+            'text' => 'ดำเนินการสำเร็จ'
+        ]);
+
+       /* if($saved) {
 
             $this->tranferCommit(); // Make a new record his transfer data
 
             $this->dispatchBrowserEvent('toast-event', [
                 'text' => 'ดำเนินการสำเร็จ'
             ]);
-        }
+        }*/
     }
 
     public function mount()

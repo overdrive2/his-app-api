@@ -21,6 +21,11 @@ class Bed extends Model
        // return $val ? $val : null;
     }
 
+    public function bedmove()
+    {
+        return $this->last_bedmove_id ? IpdBedmove::find($this->last_bedmove_id) : null;
+    }
+
     public function getIpdAttribute()
     {
         $lbmId = $this->last_bedmove_id;

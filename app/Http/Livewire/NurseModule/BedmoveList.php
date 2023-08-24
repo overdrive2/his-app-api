@@ -14,10 +14,28 @@ class BedmoveList extends Component
 
     public $bed_id;
     public $bed;
+    public $selectedId;
+    protected $listeners = ['delete:bedmove' => 'delete'];
 
     protected $queryString = [
         'bed_id' => ['except' => '', 'as' => 'id']
     ];
+
+    public function deleteConfirm($id)
+    {
+        $this->selectedId = $id;
+
+        $this->dispatchBrowserEvent('delete:confirm', [
+            'action' => 'delete:bedmove'
+        ]);
+    }
+
+    public function delete()
+    {
+        $bm = IpdBedmove::where('id', $this->selectedId)->first();
+        $bm->delete();
+        $this->dispatchBrowserEvent('toastify');
+    }
 
     public function getRowsQueryProperty()
     {

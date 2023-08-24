@@ -17,18 +17,39 @@
         ward_id:@entangle('ward_id'),
         room_id:@entangle('room_id'),
         to_ward_id:@entangle('to_ward_id'),
+
         showActionModal: async (id) => {
             $dispatch('cat:progress')
             await $wire.edit(id)
             acModal.show()
             $dispatch('swal:close')
         },
+
         selectRow: async (val) => {
             await $wire.selectRow(val.bed.id)
             $store.bed.set({id: val.bed.id, name: val.bed.name, wardId: val.wardId})
             $dispatch('get-newcase');
             offCanvas.show()
         },
+
+        move:async (type, id)=>{
+            $dispatch('cat:progress')
+            moveType = type
+            if(type == 'bed') {
+                await $wire.bedmove(id)
+            }
+            else if(type == 'ward') {
+                await $wire.wardmove(id)
+            }
+            else {
+
+            }
+
+            $dispatch('swal:close')
+            acModal.hide()
+            bmModal.show()
+        },
+
         save: async () => {
             clearError()
             $dispatch('cat:progress')
@@ -74,7 +95,7 @@
         errors = JSON.parse(e.detail.errors);
     }"
 >
-    <div class="flex">
+    <div class="flex lg:flex-row flex-col">
         <div  class="flex-none mt-2 w-full max-w-xs" wire:ignore>
             <select x-ref="wardFilterSelect" x-model="ward_id" data-te-select-init>
                 <option value="0">-- เลือกหอผู้ป่วย --</option>
@@ -89,8 +110,8 @@
             <x-nurse.top-menu />
         </div>
     </div>
-    <div class="flex gap-2 border-t">
-        <div  class="flex-none w-full max-w-xs py-1.5" wire:ignore>
+    <div class="flex lg:flex-row flex-col gap-2 border-t">
+        <div class="flex-none w-full max-w-xs py-1.5" wire:ignore>
             <select x-bind:disabled="ward_id == 0" x-ref="roomFilterSelect" x-model="room_id" data-te-select-init>
                 <option value="0">-- ทั้งหมด --</option>
                 <template x-for="room in rooms">
@@ -118,45 +139,111 @@
             </x-button.icon>
         </div>
     </div>
-    <div wire:target="search" wire:loading.class="opacity-25" class="gap-2" :class="$store.ipdViewMode.value == 'flex' ? 'flex flex-col' : 'grid grid-cols-4'">
+    <div wire:target="search" wire:loading.class="opacity-25" class="gap-2" :class="$store.ipdViewMode.value == 'flex' ? 'flex flex-col' : 'grid lg:grid-cols-4 grid-cols-1'">
         @foreach($rows as $key=>$row)
+            @php
+                $ipd = $row->ipd;
+                $bm = $row->bedmove();
+            @endphp
             <div
                 wire:target="selectRow('{{ $row->id }}')"
                 wire:loading.class="opacity-50"
-                class="dark:text-gray-100 relative hover:bg-primary-100 flex px-4 py-2 border rounded {{ $selectedId == $row->id ? 'border-primary' : '' }}" wire:key="row-{{$key}}">
+                class="dark:text-gray-100 relative flex px-4 py-2 border rounded {{ $selectedId == $row->id ? 'border-primary' : '' }}"
+                wire:key="row-{{$key}}"
+            >
                 <div wire:target="selectRow('{{ $row->id }}')" wire:loading wire:loading.delay.longest class="absolute left-1/2 gap-4 flex"><x-spinner /><div class="inline-block">Loading...</div></div>
                 <div
-                    x-on:click.prevent="selectRow({bed: @js(['id'=>$row->id, 'name' => $row->bed_name]), wardId: ward_id})"
-                    role="button"
-                    class="grow flex gap-2">
-                    <div class="p-2 flex-none w-28 font-medium">{{ $row->bed_name }}</div>
-                    <div class="p-2">
+                    class="grow flex gap-4">
+                    <div class="flex-none w-auto">
+                        @if($row->empty_flag)
+                        <button
+                            x-on:click.prevent="selectRow({bed: @js(['id'=>$row->id, 'name' => $row->bed_name]), wardId: ward_id})"
+                            class="p-2.5 font-medium border rounded hover:bg-gray-200 h-12">{{ $row->bed_name }}</button>
+                        @else
+                        <div class="p-2.5 font-medium border rounded h-12">
+                            <div class="h-full">{{ $row->bed_name }}</div>
+                        </div>
+                        @endif
+                    </div>
+                    <div class="grow flex">
                         @if(!$row->empty_flag)
-                        {{ $row->ipd ? $row->ipd->patient_name : '' }}
+                        @php
+                            $icon = match($bm->bedmove_type_id) {
+                                1 => 'text-lg text-green-500 fas fa-file-medical',
+                                2 => 'text-lg text-indigo-500 fas fa-people-arrows',
+                                3 => 'text-lg text-blue-500 fas fa-compress-alt',
+                                4 => 'text-lg text-amber-500 fas fa-retweet',
+                                default => '',
+                            }
+                        @endphp
+                        <div class="flex-none w-[200px] text-left">
+                            <div class="font-bold text-gray-600 text-md">{{ $ipd->patient_name }}</div>
+                            <div>
+                                AN: {{ $ipd->an }}
+                            </div>
+                        </div>
+                        <div class="flex-none text-left">
+                            <div><i class="{{$icon}}"></i> {{ $bm->date_for_thai }} {{ substr($bm->movetime, 0, 5) }}</div>
+                            <div>
+
+                            </div>
+                        </div>
                         @endif
                     </div>
                 </div>
-                <div class="flex-none w-14 flex flex-col">
-                    <button x-on:click.prevent="showActionModal('{{ $row->id }}')" type="button">
-                        <i class="fa-solid fa-ellipsis"></i>
-                    </button>
+                <div class="flex-none w-12">
+                    <div class="relative" data-te-dropdown-ref>
+                        <button
+                            class="hover:bg-gray-500 hover:text-white border rounded-full w-7 h-7 mt-2"
+                            data-te-dropdown-toggle-ref
+                            aria-expanded="false"
+                            data-te-ripple-init
+                            data-te-ripple-color="light"
+                        >
+                            <i class="fa-solid fa-ellipsis"></i>
+                        </button>
+                        <ul class="absolute z-[1000] float-left m-0 py-2 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block"  data-te-dropdown-menu-ref>
+                            <li class="hover:bg-gray-200" role="button" x-on:click.prevent="move('bed', {{$row->id}})">
+                                <div class="px-4 py-1">
+                                    <i class="text-sm mr-1 fas fa-people-arrows"></i> ย้ายเตียง</div>
+                            </li>
+                            <li class="hover:bg-gray-200" role="button" x-on:click.prevent="move('ward', row.id)">
+                                <div class="px-4 py-1">
+                                    <i class="text-sm mr-1 fas fa-compress-alt"></i> ย้ายวอร์ด</div>
+                            </li>
+                            <li class="hover:bg-gray-200" role="button" x-on:click="() => location.assign('{{ route('nurse.asm.list') }}?id='+row.id)">
+                                <div class="px-4 py-1">
+                                    <i class="text-md mr-1 far fa-file-alt"></i> บันทึกการพยาบาล</div>
+                            </li>
+                            <li class="hover:bg-gray-200" role="button">
+                                <div class="px-4 py-1">
+                                    <i class="text-sm mr-1 fas fa-house-user"></i> จำหน่าย</div>
+                            </li>
+                            <li class="hover:bg-gray-200" role="button" x-on:click="() => window.open('{{ route('nurse.bedmove.list') }}?id={{$row->id}}', '_bedmove')">
+                                <div class="px-4 py-1">
+                                    <i class="text-sm mr-1 fas fa-list"></i> ประวัติเตียง</div>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         @endforeach
     </div>
 
     <!-- Action Menu modal-->
-    <x-tw-modal.dialog x-ref="actionModal">
-        <x-slot name="title">IPD Actions Menu</x-slot>
-        <x-slot name="content">
-            <x-nurse.ipd-action />
-        </x-slot>
-        <x-slot name="footer">
-            <x-button.secondary data-te-modal-dismiss>
-                Close
-            </x-button.secondary>
-        </x-slot>
-    </x-tw-modal.dialog>
+    <div wire:ignore>
+        <x-tw-modal.dialog x-ref="actionModal">
+            <x-slot name="title">IPD Actions Menu</x-slot>
+            <x-slot name="content">
+                <x-menu.ipd-action />
+            </x-slot>
+            <x-slot name="footer">
+                <x-button.secondary data-te-modal-dismiss>
+                    Close
+                </x-button.secondary>
+            </x-slot>
+        </x-tw-modal.dialog>
+    </div>
 
     <div
         wire:ignore
@@ -186,7 +273,7 @@
                             -
                         </h5>
                         <!--Close button-->
-                        <x-button.icon data-te-modal-dismiss aria-label="Close">
+                        <x-button.icon @click="bmModal.hide()">
                             <x-icon.close />
                         </x-button.icon>
                     </div>
@@ -263,7 +350,7 @@
                             <label for="checkShowBedEmpty" class="inline-block mb-1">แสดงเฉพาะเตียงว่าง</label>
                         </div>
                         <div class="grow text-right">
-                            <x-button.secondary data-te-modal-dismiss aria-label="Close">ยกเลิก</x-button.secondary>
+                            <x-button.secondary @click="bmModal.hide()">ยกเลิก</x-button.secondary>
                             <x-button.primary x-on:click="save">บันทึก</x-button.primary>
                         </div>
                     </x-tw-modal.footer>
@@ -300,8 +387,9 @@
                 @newcase-success.window="()=>{
                     Swal.close()
                     $dispatch('toastify');
-                    $dispatch('get-newcase');
+                   // $dispatch('get-newcase');
                     edit = false
+                    offCanvas.hide()
                 }"
             >
                 <x-nurse.ipd-newcase-list />

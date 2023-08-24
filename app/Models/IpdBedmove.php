@@ -6,11 +6,11 @@ use App\Helpers\FunctionDateTimes;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class IpdBedmove extends Model
 {
-    use HasFactory, FunctionDateTimes;
+    use HasFactory, FunctionDateTimes, SoftDeletes;
 
     protected $fillable = [
         'ipd_id',
@@ -30,13 +30,13 @@ class IpdBedmove extends Model
         'moved_at',
     ];
 
-    protected $appends = ['date_for_editing', 'time_for_editing', 'date_for_thai', 'ward_name', 'room_name', 'ipd'];
+    protected $appends = ['date_for_editing', 'an', 'time_for_editing', 'date_for_thai', 'ward_name', 'room_name', 'ipd'];
 
-    protected static function boot()
+    /*protected static function boot()
     {
         parent::boot();
 
-        self::saved(function($model){
+        self::saved(function($model) {
             if($model->from_ref_id) {
                 $bedmove = IpdBedmove::find($model->from_ref_id);
                 $bedmove->to_ref_id = $model->id;
@@ -79,6 +79,18 @@ class IpdBedmove extends Model
 
         });
 
+    }*/
+
+    public function getMoveIconAttribute()
+    {
+        $icon = match($this->bedmove_type_id){
+            1 => 'text-lg text-green-500 fas fa-file-medical',
+            2 => 'text-lg fas fa-people-arrows',
+            3 => 'text-lg fas fa-compress-alt',
+            4 => 'text-lg text-yellow-500 fas fa-retweet',
+            default => '',
+        };
+        return $icon;
     }
 
     public function getDateForThaiAttribute()
@@ -129,6 +141,11 @@ class IpdBedmove extends Model
     public function getIpdAttribute()
     {
         return Ipd::find($this->ipd_id);
+    }
+
+    public function getAnAttribute()
+    {
+        return $this->ipd_id ?Ipd::find($this->ipd_id)->an : '';
     }
 
     public function ipd()
