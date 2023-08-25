@@ -13,15 +13,28 @@ class BedmoveList extends Component
     use WithCachedRows, WithPerPagePagination;
 
     public $bed_id = null;
+    public $ipd_id = null;
     public $bed;
     public $selectedId;
+    public $viewMode = 'ipd';
     public $isOpen = false;
 
-    protected $listeners = ['delete:bedmove' => 'delete'];
+    protected $listeners = [
+        'delete:bedmove' => 'delete',
+        'bml:open' => 'setOpen'
+    ];
 
     protected $queryString = [
         'bed_id' => ['except' => '', 'as' => 'id']
     ];
+
+    public function setOpen($val)
+    {
+        $this->bed_id = $val['bed_id'];
+        $this->ipd_id = $val['ipd_id'];
+        $this->viewMode = (($this->ipd_id != null)&&($this->ipd_id != '')) ? 'ipd' : 'bed';
+        $this->isOpen = true;
+    }
 
     public function deleteConfirm($id)
     {
@@ -41,7 +54,13 @@ class BedmoveList extends Component
 
     public function getRowsQueryProperty()
     {
-        return IpdBedmove::where('bed_id', $this->bed_id);
+        return
+            IpdBedmove::when(($this->viewMode == 'ipd'), function($query) {
+                return $query->where('ipd_id', $this->ipd_id);
+            })
+            ->when(($this->viewMode == 'bed'), function($query) {
+                return $query->where('bed_id', $this->bed_id);
+            });
     }
 
     public function update()

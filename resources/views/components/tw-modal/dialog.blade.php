@@ -26,6 +26,8 @@ $class = $scrollable ?
     data-te-modal-init
     {{ $attributes->merge(['class'=>'fixed left-0 top-0 z-[1055] hidden h-full w-full overflow-y-auto overflow-x-hidden outline-none']) }}
     tabindex="-1"
+    data-te-backdrop="static"
+    data-te-keyboard="false"
     aria-modal="true"
     role="dialog"
 >

@@ -237,8 +237,10 @@
                             <li class="hover:bg-gray-200"
                                 role="button"
                                 x-on:click="() => {
-                                    bmlModal.show()
-                                    $dispatch('load-bedmove')
+                                    $dispatch('load-bedmove', {
+                                        'bed_id':{{$row->id}},
+                                        'ipd_id':'{{$ipd?->id}}'
+                                    })
                                 }"
                             >
                                 <div class="px-4 py-1">
@@ -271,14 +273,23 @@
         <x-tw-modal.dialog
             x-ref="bmlModal"
             maxWidth="5xl"
-            @load-bedmove.window="() => console.log('move list')"
+            aria-hidden="true"
+            @load-bedmove.window="async(e) => {
+                await $wire.emit('bml:open', e.detail)
+                bmlModal.show()
+            }"
         >
             <x-slot name="title">Bedmove List</x-slot>
             <x-slot name="content">
-                @livewire('nurse-module.bedmove-list')
+                @livewire('nurse-module.bedmove-list', key('bmlModal'))
             </x-slot>
             <x-slot name="footer">
-                <x-button.secondary @click="bmlModal.hide()">
+                <x-button.secondary
+                    @click="() => {
+                        bmlModal.hide()
+                        $wire.emit('ipd-list:refresh')
+                    }"
+                >
                     Close
                 </x-button.secondary>
             </x-slot>

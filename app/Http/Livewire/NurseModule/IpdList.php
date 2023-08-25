@@ -29,6 +29,9 @@ class IpdList extends Component
     public $search;
     public $showOff = false;
 
+    protected $listeners = [
+        'ipd-list:refresh' => '$refresh'
+    ];
 
     public function mount()
     {

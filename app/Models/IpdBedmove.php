@@ -145,7 +145,8 @@ class IpdBedmove extends Model
 
     public function getAnAttribute()
     {
-        return $this->ipd_id ?Ipd::find($this->ipd_id)->an : '';
+        $ipd = Ipd::find($this->ipd_id);
+        return $ipd ? $ipd->an : '';
     }
 
     public function ipd()

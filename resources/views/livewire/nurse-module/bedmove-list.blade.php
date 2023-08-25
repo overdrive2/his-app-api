@@ -22,7 +22,6 @@
             <th class="text-center w-32">Type</th>
             <th class="text-center w-32">From</th>
             <th class="text-center w-32">To</th>
-            <th class="text-center">Status</th>
             <th class="text-center">Action</th>
         </tr>
     </x-slot>
@@ -42,15 +41,6 @@
             <x-table.cell>{{ $row->movetype_name }}</x-table.cell>
             <x-table.cell>{{ $from ? $from->bed_name : '-' }}</x-table.cell>
             <x-table.cell>{{ $to ? ($to->bed_id > 0 ? $to->bed_name : $to->ward_name ) : '-' }}</x-table.cell>
-            <x-table.cell>
-                @if($row)
-                    @if($row->delflag)
-                        <span class="text-red-600">Deleted</span>
-                    @else
-                        <span class="text-green-600">Active</span>
-                    @endif
-                @endif
-            </x-table.cell>
             <x-table.cell>
                 <div class="flex gap-1">
                     <x-button.small-gray type="button">แก้ไข</x-button.small-gray>

@@ -85,8 +85,15 @@ class IpdBedmoveObserver
                 ->where('value', $ipd->an)
                 ->delete();
 
-            $ipd->current_bedmove_id = null;
-            $ipd->save();
+            $ipd->delete();
+
+            $bed = Bed::find($ipdBedmove->bed_id);
+
+            if($bed) {
+                $bed->empty_flag = true;
+                $bed->last_bedmove_id = null;
+                $bed->save();
+            }
         }
     }
 
