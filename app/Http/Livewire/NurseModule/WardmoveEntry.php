@@ -3,7 +3,6 @@
 namespace App\Http\Livewire\NurseModule;
 
 use App\Models\IpdBedmove;
-use App\Http\Livewire\Traits\BedmoveService;
 use App\Models\Ipd;
 use App\Models\Ward;
 use Carbon\Carbon;
@@ -11,8 +10,6 @@ use Livewire\Component;
 
 class WardmoveEntry extends Component
 {
-    use BedmoveService;
-
     public IpdBedmove $wm;
 
     protected $listeners = [

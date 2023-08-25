@@ -34,7 +34,7 @@
 
     <div id="container">
         <div class="mb-4 w-full border-t flex justify-between py-2 px-2" id="header">
-            <div class="flex gap-2 text-lg">
+            <div class="flex gap-2 text-lg"> {{ $occuIpd->id }}
                 <div>วันที่ : <span class="font-semibold">{{ $occuIpd->date_for_thai }}</span></div>
                 <div>เวร : <span class="font-semibold">{{ $occuIpd->ipd_nurse_shift_name }}</span></div>
                 <div>Ward : <span class="font-semibold">{{ $occuIpd->ward_name }}</span></div>
@@ -44,7 +44,18 @@
                 <x-button.success wire:click="confirmCommit">ยืนยันส่งเวร</x-button.success>
             </div>
         </div>
+        
+        <div class="flex lg:flex-row flex-col justify-between">
+            <div class="lg:w-1/2 w-full">
+                @livewire('occu-ipd.detail-staff', ['occu_ipd_id' => $occuIpd->id],key('detailStaff'.$occuIpd->id))  
+            </div>
+            <div class="lg:w-1/2 w-full">
+                @livewire('occu-ipd.detail-record', ['occu_ipd_id' => $occuIpd->id],key('detailRecord'.$occuIpd->id))  
 
+            </div>
+
+        </div>
+<!-- detail part -->
         <div class="flex justify-start gap-2">
             <button wire:click="$set('pageId',0)" class="border px-2 py-1 rounded-md shadow-md {{ $pageId == 0 ? 'bg-gray-300':'' }}"><i class="fa-regular fa-rectangle-list"></i> ทั้งหมด {{ $this->RowCount }}</button>
             <button wire:click="$set('pageId',1)" class="border px-2 py-1 rounded-md shadow-md {{ $pageId == 1 ? 'bg-gray-300':'' }}"><i class="fa-solid fa-retweet"></i> ยกมา {{ $occuIpd->getin }}</button>

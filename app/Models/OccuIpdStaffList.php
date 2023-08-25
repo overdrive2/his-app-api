@@ -12,6 +12,16 @@ class OccuIpdStaffList extends Model
     protected $fillable = [
         'occu_ipd_id',
         'staff_id',
-        'value',
+        'qty',
+        'created_by',
+        'updated_by',
     ];
+
+    protected $appends = ['staff_name'];
+
+    public function getStaffNameAttribute()
+    {
+        return OccuIpdStaff::find($this->staff_id)
+            ->occu_staff_name;
+    }
 }
