@@ -60,6 +60,8 @@
     x-init="
         acModal = new Modal($refs.actionModal)
         bmModal = new Modal($refs.bmModal)
+        bmlModal = new Modal($refs.bmlModal)
+
         offCanvas = new Offcanvas($refs.offCanvas)
         refreshAward = ()=>{
             $wire.awardRefresh()
@@ -139,7 +141,7 @@
             </x-button.icon>
         </div>
     </div>
-    <div wire:target="search" wire:loading.class="opacity-25" class="gap-2" :class="$store.ipdViewMode.value == 'flex' ? 'flex flex-col' : 'grid lg:grid-cols-4 grid-cols-1'">
+    <div wire:target="search" wire:loading.class="opacity-25" class="gap-2" :class="$store.ipdViewMode.value == 'flex' ? 'flex flex-col' : 'grid lg:grid-cols-3 grid-cols-1'">
         @foreach($rows as $key=>$row)
             @php
                 $ipd = $row->ipd;
@@ -166,20 +168,20 @@
                         @endif
                     </div>
                     <div class="grow flex">
-                        @if(!$row->empty_flag)
+                        @if(!$row->empty_flag && $bm)
                         @php
                             $icon = match($bm->bedmove_type_id) {
-                                1 => 'text-lg text-green-500 fas fa-file-medical',
-                                2 => 'text-lg text-indigo-500 fas fa-people-arrows',
+                                1 => 'text-lg text-green-500 fa-solid fa-user-plus',
+                                2 => 'text-lg text-indigo-500 fa-solid fa-person-arrow-down-to-line',
                                 3 => 'text-lg text-blue-500 fas fa-compress-alt',
-                                4 => 'text-lg text-amber-500 fas fa-retweet',
+                                4 => 'text-lg text-amber-500 fas fas fa-people-arrows',
                                 default => '',
                             }
                         @endphp
                         <div class="flex-none w-[200px] text-left">
-                            <div class="font-bold text-gray-600 text-md">{{ $ipd->patient_name }}</div>
+                            <div class="font-bold text-gray-600 text-md">{{ $ipd?->patient_name }}</div>
                             <div>
-                                AN: {{ $ipd->an }}
+                                AN: {{ $ipd?->an }}
                             </div>
                         </div>
                         <div class="flex-none text-left">
@@ -203,6 +205,18 @@
                             <i class="fa-solid fa-ellipsis"></i>
                         </button>
                         <ul class="absolute z-[1000] float-left m-0 py-2 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:block"  data-te-dropdown-menu-ref>
+                            @if($row->empty_flag)
+                            <li class="hover:bg-gray-200" role="button" x-on:click.prevent="selectRow({bed: @js(['id'=>$row->id, 'name' => $row->bed_name]), wardId: ward_id})">
+                                <div class="px-4 py-1">
+                                    <i class="fa-solid fa-user-plus text-sm mr-1"></i> รับใหม่
+                                </div>
+                            </li>
+                            <li class="hover:bg-gray-200" role="button" x-on:click.prevent="move('bed', {{$row->id}})">
+                                <div class="px-4 py-1">
+                                    <i class="fa-solid fa-person-arrow-down-to-line text-sm mr-1"></i> รับย้าย
+                                </div>
+                            </li>
+                            @else
                             <li class="hover:bg-gray-200" role="button" x-on:click.prevent="move('bed', {{$row->id}})">
                                 <div class="px-4 py-1">
                                     <i class="text-sm mr-1 fas fa-people-arrows"></i> ย้ายเตียง</div>
@@ -219,7 +233,14 @@
                                 <div class="px-4 py-1">
                                     <i class="text-sm mr-1 fas fa-house-user"></i> จำหน่าย</div>
                             </li>
-                            <li class="hover:bg-gray-200" role="button" x-on:click="() => window.open('{{ route('nurse.bedmove.list') }}?id={{$row->id}}', '_bedmove')">
+                            @endif
+                            <li class="hover:bg-gray-200"
+                                role="button"
+                                x-on:click="() => {
+                                    bmlModal.show()
+                                    $dispatch('load-bedmove')
+                                }"
+                            >
                                 <div class="px-4 py-1">
                                     <i class="text-sm mr-1 fas fa-list"></i> ประวัติเตียง</div>
                             </li>
@@ -239,6 +260,25 @@
             </x-slot>
             <x-slot name="footer">
                 <x-button.secondary data-te-modal-dismiss>
+                    Close
+                </x-button.secondary>
+            </x-slot>
+        </x-tw-modal.dialog>
+    </div>
+
+    <!-- Bedmove List modal-->
+    <div>
+        <x-tw-modal.dialog
+            x-ref="bmlModal"
+            maxWidth="5xl"
+            @load-bedmove.window="() => console.log('move list')"
+        >
+            <x-slot name="title">Bedmove List</x-slot>
+            <x-slot name="content">
+                @livewire('nurse-module.bedmove-list')
+            </x-slot>
+            <x-slot name="footer">
+                <x-button.secondary @click="bmlModal.hide()">
                     Close
                 </x-button.secondary>
             </x-slot>
@@ -405,7 +445,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- End Newcase List Component -->
           </x-off-canvas>
         </div>

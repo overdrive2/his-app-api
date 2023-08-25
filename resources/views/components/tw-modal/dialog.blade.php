@@ -15,6 +15,7 @@ $maxWidth = [
     '4xl' => 'sm:max-w-4xl',
     '5xl' => 'sm:max-w-5xl',
     '6xl' => 'sm:max-w-6xl',
+    'full' => 'sm:max-w-full',
 ][$maxWidth ?? 'md'];
 $class = $scrollable ?
     'pointer-events-none relative h-[calc(100%-1rem)] w-auto translate-y-[-50px] opacity-0 transition-all duration-300 ease-in-out min-[576px]:mx-auto min-[576px]:mt-7 min-[576px]:h-[calc(100%-3.5rem)] min-[576px]:max-w-[500px]' :

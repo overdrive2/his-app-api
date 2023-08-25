@@ -12,9 +12,11 @@ class BedmoveList extends Component
 {
     use WithCachedRows, WithPerPagePagination;
 
-    public $bed_id;
+    public $bed_id = null;
     public $bed;
     public $selectedId;
+    public $isOpen = false;
+
     protected $listeners = ['delete:bedmove' => 'delete'];
 
     protected $queryString = [
@@ -45,8 +47,11 @@ class BedmoveList extends Component
     public function update()
     {
         $lbm = $this->bed->lastBedmove();
-        $empty = ($lbm->to_ref_id != 0 && $lbm->to_ref_id != null && $lbm->bedmove_type_id != config('ipd.moveout'))
-            ||($lbm->bedmove_type_id == config('ipd.moveout'));
+
+        $empty = $lbm ?
+                (($lbm->to_ref_id != 0 && $lbm->to_ref_id != null && $lbm->bedmove_type_id != config('ipd.moveout'))||($lbm->bedmove_type_id == config('ipd.moveout')))
+                :
+                true;
         $this->bed->empty_flag = $empty;
         $this->bed->save();
         $this->dispatchBrowserEvent('toastify');
@@ -68,7 +73,7 @@ class BedmoveList extends Component
     public function render()
     {
         return view('livewire.nurse-module.bedmove-list', [
-            'rows' => $this->rows,
+            'rows' => $this->isOpen ? $this->rows : [],
         ]);
     }
 }
