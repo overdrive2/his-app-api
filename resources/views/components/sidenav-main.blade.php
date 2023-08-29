@@ -1,16 +1,6 @@
-<nav
-    x-init="
+<nav x-init="
         $dispatch('resize')
-    "
-    id="sidenav-main"
-    class="fixed left-0 top-0 z-[1036] h-screen w-60 -translate-x-full overflow-hidden bg-white shadow-[0_4px_12px_0_rgba(0,0,0,0.07),_0_2px_4px_rgba(0,0,0,0.05)] dark:bg-neutral-800 xl:data-[te-sidenav-hidden='false']:translate-x-0 sidenav-primary ps--active-y group/ps [overflow-anchor:none] [overflow-style:none] touch-none"
-    data-te-sidenav-init
-    data-te-sidenav-mode-breakpoint-over="0"
-    data-te-sidenav-mode-breakpoint-side="xl"
-    data-te-sidenav-hidden="false"
-    data-te-sidenav-mode="side"
-    data-te-sidenav-content="#page-content"
-    data-te-sidenav-accordion="true">
+    " id="sidenav-main" class="fixed left-0 top-0 z-[1036] h-screen w-60 -translate-x-full overflow-hidden bg-white shadow-[0_4px_12px_0_rgba(0,0,0,0.07),_0_2px_4px_rgba(0,0,0,0.05)] dark:bg-neutral-800 xl:data-[te-sidenav-hidden='false']:translate-x-0 sidenav-primary ps--active-y group/ps [overflow-anchor:none] [overflow-style:none] touch-none" data-te-sidenav-init data-te-sidenav-mode-breakpoint-over="0" data-te-sidenav-mode-breakpoint-side="xl" data-te-sidenav-hidden="false" data-te-sidenav-mode="side" data-te-sidenav-content="#page-content" data-te-sidenav-accordion="true">
     <a href="/" class="sticky top-0 z-50 shadow-sm mb-3 flex items-center bg-white dark:bg-neutral-800 justify-center rounded-md py-6 pr-3 outline-none dark:text-neutral-100" aria-current="page">
         <x-icon.hospital class="text-teal-700" />
         <span class="ml-2 text-lg font-bold text-teal-500">HIS Go</span>
@@ -37,18 +27,8 @@
                 </li>
 
                 <li class="relative">
-                    <a href="/learn/te-foundations/basics/introduction/" class="flex h-6 cursor-pointer items-center truncate rounded-[5px] py-4 pl-[3.4rem] pr-6 text-[0.78rem] text-gray-600 outline-none transition duration-300 ease-linear hover:bg-slate-50 hover:text-inherit hover:outline-none focus:bg-slate-50 focus:text-inherit focus:outline-none active:bg-slate-50 active:text-inherit active:outline-none data-[te-sidenav-state-active]:text-inherit data-[te-sidenav-state-focus]:outline-none motion-reduce:transition-none dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10 relative overflow-hidden align-bottom" data-te-sidenav-link-ref="" tabindex="0">
-                        New cases</a>
-                </li>
-
-                <li class="relative">
-                    <a href="/docs/standard/getting-started/optimization/" class="flex h-6 cursor-pointer items-center truncate rounded-[5px] py-4 pl-[3.4rem] pr-6 text-[0.78rem] text-gray-600 outline-none transition duration-300 ease-linear hover:bg-slate-50 hover:text-inherit hover:outline-none focus:bg-slate-50 focus:text-inherit focus:outline-none active:bg-slate-50 active:text-inherit active:outline-none data-[te-sidenav-state-active]:text-inherit data-[te-sidenav-state-focus]:outline-none motion-reduce:transition-none dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10 relative overflow-hidden align-bottom" data-te-sidenav-link-ref="" tabindex="0">
-                        Nurse shift</a>
-                </li>
-
-                <li class="relative">
                     <a href="/docs/standard/getting-started/dark-mode/" class="flex h-6 cursor-pointer items-center truncate rounded-[5px] py-4 pl-[3.4rem] pr-6 text-[0.78rem] text-gray-600 outline-none transition duration-300 ease-linear hover:bg-slate-50 hover:text-inherit hover:outline-none focus:bg-slate-50 focus:text-inherit focus:outline-none active:bg-slate-50 active:text-inherit active:outline-none data-[te-sidenav-state-active]:text-inherit data-[te-sidenav-state-focus]:outline-none motion-reduce:transition-none dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10 relative overflow-hidden align-bottom" data-te-sidenav-link-ref="" tabindex="0">
-                        Assessment</a>
+                        Nurse Note</a>
                 </li>
 
                 <li class="relative">
@@ -60,13 +40,40 @@
                     <a href="/docs/standard/getting-started/changelog/" class="flex h-6 cursor-pointer items-center truncate rounded-[5px] py-4 pl-[3.4rem] pr-6 text-[0.78rem] text-gray-600 outline-none transition duration-300 ease-linear hover:bg-slate-50 hover:text-inherit hover:outline-none focus:bg-slate-50 focus:text-inherit focus:outline-none active:bg-slate-50 active:text-inherit active:outline-none data-[te-sidenav-state-active]:text-inherit data-[te-sidenav-state-focus]:outline-none motion-reduce:transition-none dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10 relative overflow-hidden inline-block align-bottom" data-te-sidenav-link-ref="" tabindex="0">
                         Summary discharge</a>
                 </li>
+            </ul>
+        </li>
 
-                <li class="relative">
-                    <a href="/docs/standard/getting-started/contribute/" class="flex h-6 cursor-pointer items-center truncate rounded-[5px] py-4 pl-[3.4rem] pr-6 text-[0.78rem] text-gray-600 outline-none transition duration-300 ease-linear hover:bg-slate-50 hover:text-inherit hover:outline-none focus:bg-slate-50 focus:text-inherit focus:outline-none active:bg-slate-50 active:text-inherit active:outline-none data-[te-sidenav-state-active]:text-inherit data-[te-sidenav-state-focus]:outline-none motion-reduce:transition-none dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10 relative overflow-hidden inline-block align-bottom" data-te-sidenav-link-ref="" tabindex="0">
-                        Doctor orders</a>
+        <li class="relative">
+            <a class="flex h-12 cursor-pointer items-center truncate rounded-[5px] px-6 py-4 text-[0.875rem] text-gray-600 outline-none transition duration-300 ease-linear hover:bg-slate-50 hover:text-inherit hover:outline-none focus:bg-slate-50 focus:text-inherit focus:outline-none active:bg-slate-50 active:text-inherit active:outline-none data-[te-sidenav-state-active]:text-inherit data-[te-sidenav-state-focus]:outline-none motion-reduce:transition-none dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10 relative overflow-hidden align-bottom" data-te-sidenav-link-ref="" data-te-collapse-init="" href="#sidenav-collapse-404971-0-1" role="button" data-te-collapse-collapsed="" aria-expanded="false" tabindex="0">
+                <span class="mr-4 [&>svg]:h-3.5 [&>svg]:w-3.5 [&>svg]:text-gray-400 dark:[&>svg]:text-gray-300">
+                    <i class="fa-solid fa-user-doctor"></i>
+                </span>
+                <span>Nurse Shift Management</span>
+                <span class=" absolute right-0 ml-auto mr-[0.8rem] transition-transform duration-300 ease-linear motion-reduce:transition-none [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-gray-600 dark:[&>svg]:text-gray-300" data-te-sidenav-rotate-icon-ref="">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"></path>
+                    </svg>
+                </span>
+            </a>
+            <ul class="!visible relative m-0 hidden list-none p-0 data-[te-collapse-show]:block" data-te-sidenav-collapse-ref="" id="sidenav-collapse-404971-0-1" data-te-collapse-item="">
+
+                <li>
+                    <a href="{{ route('occu.ins') }}" class="flex h-6 cursor-pointer items-center truncate rounded-[5px] py-4 pl-[3.4rem] pr-6 text-[0.78rem] text-gray-600 outline-none transition duration-300 ease-linear hover:bg-slate-50 hover:text-inherit hover:outline-none focus:bg-slate-50 focus:text-inherit focus:outline-none active:bg-slate-50 active:text-inherit active:outline-none data-[te-sidenav-state-active]:text-inherit data-[te-sidenav-state-focus]:outline-none motion-reduce:transition-none dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10 relative overflow-hidden inline-block align-bottom" data-te-sidenav-link-ref="" tabindex="0">
+                        Inspector Shift
+                    </a>
                 </li>
 
+                <li>
+                    <a href="{{ route('occu.ipd') }}" class="flex h-6 cursor-pointer items-center truncate rounded-[5px] py-4 pl-[3.4rem] pr-6 text-[0.78rem] text-gray-600 outline-none transition duration-300 ease-linear hover:bg-slate-50 hover:text-inherit hover:outline-none focus:bg-slate-50 focus:text-inherit focus:outline-none active:bg-slate-50 active:text-inherit active:outline-none data-[te-sidenav-state-active]:text-inherit data-[te-sidenav-state-focus]:outline-none motion-reduce:transition-none dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10 relative overflow-hidden inline-block align-bottom" data-te-sidenav-link-ref="" tabindex="0">
+                        IPD Shift
+                    </a>
+                </li>
 
+                <li>
+                    <a href="/docs/standard/integrations/express-integration/" class="flex h-6 cursor-pointer items-center truncate rounded-[5px] py-4 pl-[3.4rem] pr-6 text-[0.78rem] text-gray-600 outline-none transition duration-300 ease-linear hover:bg-slate-50 hover:text-inherit hover:outline-none focus:bg-slate-50 focus:text-inherit focus:outline-none active:bg-slate-50 active:text-inherit active:outline-none data-[te-sidenav-state-active]:text-inherit data-[te-sidenav-state-focus]:outline-none motion-reduce:transition-none dark:text-gray-300 dark:hover:bg-white/10 dark:focus:bg-white/10 dark:active:bg-white/10 relative overflow-hidden inline-block align-bottom" data-te-sidenav-link-ref="" tabindex="0">
+                        OPD Shift
+                    </a>
+                </li>
             </ul>
         </li>
 

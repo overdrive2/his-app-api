@@ -87,27 +87,40 @@ class Home extends Component
 
     public function save()
     {
-        $this->withValidator(function (Validator $validator) {
-            $validator->after(function ($validator) {
-                if ($validator->errors()->isNotEmpty()) {
-                    $errorMsg =  $validator->errors()->messages();
-                    $this->dispatchBrowserEvent('err-message', ['errors' => json_encode($errorMsg)]);
-                }
-            });
-        })->validate();
+        $checkex = OccuIns::where('nurse_shift_date', $this->editing->nurse_shift_date)
+            ->where('occu_ins_branch_id', $this->editing->occu_ins_branch_id)
+            ->where('ipd_nurse_shift_id', $this->editing->ipd_nurse_shift_id)
+            ->where('delflag', false)->count();
 
-        $saved = $this->editing->save();
-
-        if (!$saved)
+        if ($checkex > 0) {
             return $this->dispatchBrowserEvent('swal:error', [
-                'title' => 'ABC title',
-                'text' => 'ABC text',
+                'title' => 'พบการส่งเวรซ้ำ',
+                'text' => 'กรุณาตรวจสอบการส่งเวรซ้ำ',
             ]);
-        //$saved = false;
+        } else {
 
-        $this->dispatchBrowserEvent('insmain-modal-close', [
-            'msgstatus' => 'done',
-        ]);
+            $this->withValidator(function (Validator $validator) {
+                $validator->after(function ($validator) {
+                    if ($validator->errors()->isNotEmpty()) {
+                        $errorMsg =  $validator->errors()->messages();
+                        $this->dispatchBrowserEvent('err-message', ['errors' => json_encode($errorMsg)]);
+                    }
+                });
+            })->validate();
+
+            $saved = $this->editing->save();
+
+            if (!$saved)
+                return $this->dispatchBrowserEvent('swal:error', [
+                    'title' => 'ABC title',
+                    'text' => 'ABC text',
+                ]);
+            //$saved = false;
+
+            $this->dispatchBrowserEvent('insmain-modal-close', [
+                'msgstatus' => 'done',
+            ]);
+        }
     }
 
     public function setDate($date)
@@ -128,8 +141,8 @@ class Home extends Component
 
                 return $query->whereBetween('nurse_shift_date', [$sdate, $edate]);
             })
-            ->orderBy('nurse_shift_date','asc')
-            ->orderBy('nurse_shift_time','asc');
+            ->orderBy('nurse_shift_date', 'asc')
+            ->orderBy('nurse_shift_time', 'asc');
         return $query;
     }
 

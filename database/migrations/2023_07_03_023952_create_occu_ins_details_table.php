@@ -16,6 +16,7 @@ return new class extends Migration
             $table->date('occu_ins_id');
             $table->text('occu_ins_event')->nullable(); 
             $table->text('occu_ins_solve')->nullable(); 
+            $table->boolean('delflag');
             $table->integer('updated_by')->nullable();
             $table->integer('created_by')->nullable();
             $table->timestamps();

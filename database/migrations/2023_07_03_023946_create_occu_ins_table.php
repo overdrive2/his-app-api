@@ -28,6 +28,7 @@ return new class extends Migration
             $table->boolean('line_noti');
             $table->integer('updated_by')->nullable();
             $table->integer('created_by')->nullable();
+            $table->boolean('delflag');
             $table->timestamps();
         });
     }

@@ -16,8 +16,6 @@ return new class extends Migration
             $table->integer('occu_ipd_id');
             $table->integer('ipd_record_id');
             $table->integer('qty'); 
-            $table->integer('created_by')->nullable();  
-            $table->integer('updated_by')->nullable(); 
             $table->timestamps();
         });
     }

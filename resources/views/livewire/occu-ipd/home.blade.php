@@ -1,5 +1,4 @@
-<div 
-    x-data="{
+<div x-data="{
         errors:[],
         nurseshifts: @js($nurseshifts),
         wards: @js($wards),
@@ -11,27 +10,19 @@
             $dispatch('cat:progress');
             $wire.edit(id);
         }
-    }" 
-    
-    x-init="ipdmainModal = new Modal($refs.ipdmainModal);"
-    
-    @ipdmain-modal-show.window="()=>{
+    }" x-init="ipdmainModal = new Modal($refs.ipdmainModal);" @ipdmain-modal-show.window="()=>{
         errors = [];
         ipdmainModal.show();
         $dispatch('swal:close');
-    }"
-    @ipdmain-modal-close.window="(e)=> {
+    }" @ipdmain-modal-close.window="(e)=> {
         console.log(e.detail.msgstatus);
         $dispatch('swal:close');
         ipdmainModal.hide();
-    }"
-
-    @err-message.window = "(e) => {
+    }" @err-message.window="(e) => {
         errors = JSON.parse(e.detail.errors);
         $dispatch('swal:close');
         console.log(errors);
-    }"
->
+    }">
 
     <div id="container">
         <!-- sdate: {{ $filters['sdate'] }}
@@ -43,13 +34,13 @@
                 <x-input.date wire:model="filters.sdate" />
                 <x-input.date wire:model="filters.edate" />
                 <div wire:ignore>
-                <x-input.select :label="__('เลือกเวร')" wire:model="filters.shiftId">
-                    <option value="0">ทั้งหมด</option>
-                    <template x-for="nf in nurseshifts">
-                        <option :value='nf.id' x-text='nf.nurse_shift_name'>
-                        </option>
-                    </template>
-                </x-input.select>
+                    <x-input.select :label="__('เลือกเวร')" wire:model="filters.shiftId">
+                        <option value="0">ทั้งหมด</option>
+                        <template x-for="nf in nurseshifts">
+                            <option :value='nf.id' x-text='nf.nurse_shift_name'>
+                            </option>
+                        </template>
+                    </x-input.select>
                 </div>
             </div>
             <div>
@@ -58,28 +49,35 @@
         </div>
 
         <table class="min-w-full text-left text-sm font-light dark:text-gray-50">
-        <thead class="border-b bg-white font-medium dark:border-gray-500 dark:bg-gray-600">
-            <tr>
-                <th scope="col" class="px-6 py-4">ลำดับ</th>
-                <th scope="col" class="px-6 py-4">Ward</th>
-                <th scope="col" class="px-6 py-4">วันที่เวร</th>
-                <th scope="col" class="px-6 py-4">เวร</th>
-                <th scope="col" class="px-6 py-4">ยกมา</th>
-                <th scope="col" class="px-6 py-4">รับใหม่</th>
-                <th scope="col" class="px-6 py-4">รับย้าย</th>
-                <th scope="col" class="px-6 py-4">ย้าย Ward</th>
-                <th scope="col" class="px-6 py-4">จำหน่าย</th>
-                <th scope="col" class="px-6 py-4">ยกไป</th>
-                <th scope="col" class="px-6 py-4 text-center">ผู้บันทึก</th>
-                <th scope="col" class="px-6 py-4 text-center">วันเวลาบันทึก</th>
-                <th scope="col" class="px-6 py-4 text-center">คำสั่ง</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse ($rows as $key => $row)
-                <tr
-                    class="border-b {{ $key % 2 == 0 ? 'bg-gray-100 dark:border-gray-500 dark:bg-gray-700' : 'bg-white dark:border-gray-500 dark:bg-gray-600' }}">
+            <thead class="border-b bg-white font-medium dark:border-gray-500 dark:bg-gray-600">
+                <tr>
+                    <th scope="col" class="px-6 py-4">ลำดับ</th>
+                    <th scope="col" class="px-6 py-4">ยืนยัน</th>
+                    <th scope="col" class="px-6 py-4">Ward</th>
+                    <th scope="col" class="px-6 py-4">วันที่เวร</th>
+                    <th scope="col" class="px-6 py-4">เวร</th>
+                    <th scope="col" class="px-6 py-4">ยกมา</th>
+                    <th scope="col" class="px-6 py-4">รับใหม่</th>
+                    <th scope="col" class="px-6 py-4">รับย้าย</th>
+                    <th scope="col" class="px-6 py-4">ย้าย Ward</th>
+                    <th scope="col" class="px-6 py-4">จำหน่าย</th>
+                    <th scope="col" class="px-6 py-4">ยกไป</th>
+                    <th scope="col" class="px-6 py-4 text-center">ผู้บันทึก</th>
+                    <th scope="col" class="px-6 py-4 text-center">วันเวลาบันทึก</th>
+                    <th scope="col" class="px-6 py-4 text-center">คำสั่ง</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($rows as $key => $row)
+                <tr class="border-b {{ $key % 2 == 0 ? 'bg-gray-100 dark:border-gray-500 dark:bg-gray-700' : 'bg-white dark:border-gray-500 dark:bg-gray-600' }}">
                     <td class="whitespace-nowrap px-6 py-4 font-medium">{{ $key + 1 }}</td>
+                    <td class="whitespace-nowrap px-6 py-4">
+                        @if ($row->saved)
+                        <x-icon.check class="text-green-500" />
+                        @else
+                        <x-icon.x-mark class="text-red-500" />
+                        @endif
+                    </td>
                     <td class="whitespace-nowrap px-6 py-4">{{ $row->ward_name }}</td>
                     <td class="whitespace-nowrap px-6 py-4">{{ $row->nurse_shift_date }}</td>
                     <td class="whitespace-nowrap px-6 py-4">{{ $row->ipd_nurse_shift_name }}</td>
@@ -101,23 +99,23 @@
                         <x-button.trash wire:click="deleteConfirm('{{ $row->id }}')">
                             <x-icon.trash class="w-4 h-4" /> ลบ
                         </x-button.trash>
-                    
+
                     </td>
                 </tr>
-            @empty
+                @empty
                 <tr>
                     <td colspan="4" class="whitespace-nowrap px-6 py-4 text-center font-medium">
                         -- Empty --
                     </td>
                 </tr>
-            @endforelse
-        </tbody>
-    </table>
-    @if ($rows)
+                @endforelse
+            </tbody>
+        </table>
+        @if ($rows)
         <div class="py-4">
             {{ $rows->links() }}
         </div>
-    @endif
+        @endif
     </div>
 
     <!-- Edit Modal -->
@@ -130,42 +128,33 @@
             </div>
             <div class="flex justify-between gap-2 mb-3">
                 <div class="w-1/2">
-                <x-input.select :label="__('เลือกเวร')" wire:model.defer="editing.ipd_nurse_shift_id">
-                    <option value="0">-- เลือกเวร --</option>
-                    <template x-for="nf in nurseshifts">
-                        <option :value='nf.id' x-text='nf.nurse_shift_name'>
-                        </option>
-                    </template>
-                </x-input.select>
-                <x-error
-                    x-show="errors['editing.ipd_nurse_shift_id']"
-                    x-text="errors['editing.ipd_nurse_shift_id']"
-                />
+                    <x-input.select :label="__('เลือกเวร')" wire:model.defer="editing.ipd_nurse_shift_id">
+                        <option value="0">-- เลือกเวร --</option>
+                        <template x-for="nf in nurseshifts">
+                            <option :value='nf.id' x-text='nf.nurse_shift_name'>
+                            </option>
+                        </template>
+                    </x-input.select>
+                    <x-error x-show="errors['editing.ipd_nurse_shift_id']" x-text="errors['editing.ipd_nurse_shift_id']" />
                 </div>
                 <div class="w-1/2">
-                <x-input.select :label="__('เลือกตึก')" wire:model.defer="editing.ward_id">
-                    <option value="0">-- เลือกตึก --</option>
-                    <template x-for="ward in wards">
-                        <option :value='ward.id' x-text='ward.name'>
-                        </option>
-                    </template>
-                </x-input.select>
-                <x-error
-                    x-show="errors['editing.ward_id']"
-                    x-text="errors['editing.ward_id']"
-                />
+                    <x-input.select :label="__('เลือกตึก')" wire:model.defer="editing.ward_id">
+                        <option value="0">-- เลือกตึก --</option>
+                        <template x-for="ward in wards">
+                            <option :value='ward.id' x-text='ward.name'>
+                            </option>
+                        </template>
+                    </x-input.select>
+                    <x-error x-show="errors['editing.ward_id']" x-text="errors['editing.ward_id']" />
                 </div>
             </div>
 
             <div>
                 <x-input.tw-textarea :label="__('หมายเหตุ')" id="note" wire:model.defer="editing.note" />
             </div>
-            <x-error
-                    x-show="errors['editing.nurse_shift_date']"
-                    x-text="errors['editing.nurse_shift_date']"
-            />
+            <x-error x-show="errors['editing.nurse_shift_date']" x-text="errors['editing.nurse_shift_date']" />
         </x-slot>
-        
+
         <x-slot name="footer">
             <x-button.secondary data-te-modal-dismiss>ยกเลิก</x-button.secondary>
             <x-button.primary x-on:click="save">บันทึก</x-button.primary>

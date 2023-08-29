@@ -175,23 +175,12 @@ class Home extends Component
         foreach ($cc_record2 as $cc_rc2) {
             if ($cc_rc2->count > 0) {
                 OccuIpdRecord::upsert(
-                    ['occu_ipd_id' => $this->editing->id,'ipd_record_id' => $cc_rc2->ipd_record_id,'qty' => $cc_rc2->count, 'updated_by' => $this->userId],
-                    ['occu_ipd_id','ipd_record_id'],
-                    ['qty', 'updated_by']
-
+                    ['occu_ipd_id' => $this->editing->id, 'ipd_record_id' => $cc_rc2->ipd_record_id, 'qty' => $cc_rc2->count],
+                    ['occu_ipd_id', 'ipd_record_id'],
+                    ['qty'],
                 );
             }
         }
-
-
-        //     OccuIpd::where('id', $this->editing->id)->update(['getin' => $i_getin]);
-
-        //     OccuIpdRecord::create([
-        //         'occu_ipd_id' => $this->editing->id,
-        //         'ipd_record_id' => $cc_rc->ipd_record_id,
-        //         'qty' => $cc_rc->count,
-        //     ]);
-        // }
     }
 
     public function saveOccuDetail()
@@ -347,31 +336,43 @@ class Home extends Component
     public function save()
     {
         //dd($this->editing);
-        $this->withValidator(function (Validator $validator) {
-            $validator->after(function ($validator) {
-                if ($validator->errors()->isNotEmpty()) {
-                    $errorMsg =  $validator->errors()->messages();
-                    $this->dispatchBrowserEvent('err-message', ['errors' => json_encode($errorMsg)]);
-                }
-            });
-        })->validate();
+        $checkex = OccuIpd::where('nurse_shift_date', $this->editing->nurse_shift_date)
+            ->where('ward_id', $this->editing->ward_id)
+            ->where('ipd_nurse_shift_id', $this->editing->ipd_nurse_shift_id)
+            ->where('delflag', false)->count();
 
-        $editmode = $this->editing->id ? true : false;
-        $saved = $this->editing->save();
-
-        if (!$saved)
+        if ($checkex > 0) { 
             return $this->dispatchBrowserEvent('swal:error', [
-                'title' => 'ABC title',
-                'text' => 'ABC text',
+                'title' => 'พบการส่งเวรซ้ำ',
+                'text' => 'กรุณาตรวจสอบการส่งเวรซ้ำ',
             ]);
+        } else {
+            $this->withValidator(function (Validator $validator) {
+                $validator->after(function ($validator) {
+                    if ($validator->errors()->isNotEmpty()) {
+                        $errorMsg =  $validator->errors()->messages();
+                        $this->dispatchBrowserEvent('err-message', ['errors' => json_encode($errorMsg)]);
+                    }
+                });
+            })->validate();
 
-        if (!$editmode) {
-            $this->saveDraft();
+            $editmode = $this->editing->id ? true : false;
+            $saved = $this->editing->save();
+
+            if (!$saved)
+                return $this->dispatchBrowserEvent('swal:error', [
+                    'title' => 'ABC title',
+                    'text' => 'ABC text',
+                ]);
+
+            if (!$editmode) {
+                $this->saveDraft();
+            }
+
+            $this->dispatchBrowserEvent('ipdmain-modal-close', [
+                'msgstatus' => 'done',
+            ]);
         }
-
-        $this->dispatchBrowserEvent('ipdmain-modal-close', [
-            'msgstatus' => 'done',
-        ]);
     }
 
     public function deleteConfirm($id)

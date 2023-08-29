@@ -29,7 +29,6 @@
     }"
 >
     <div id="container">
-        {{ $occu_ins_id }}
         <div class="mb-4 w-full border-t flex justify-between py-2 px-2" id="header">
             <div class="flex gap-2 text-lg">
                 <div>วันที่ : <span class="font-semibold">{{ $occuIns->date_for_thai }}</span></div>

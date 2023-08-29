@@ -58,7 +58,7 @@
         <div id="list" class="mt-2 overflow-x-auto grid grid-flow-row dark:text-white">
             <x-grid.header>
                 <div class="">ลำดับ</div>
-                <div class="">Status</div>
+                <div class="">สถานะ</div>
                 <div class="">สาขา</div>
                 <div class="">วันที่เวร</div>
                 <div class="">เวร</div>
@@ -72,7 +72,7 @@
                 <div class="">{{$row->occu_status_name}}</div>
                 <div class="">{{$row->occu_ins_branch_name}}</div>
                 <div class="">{{$row->nurse_shift_date}}</div>
-                <div class="">{{$row->ipd_nurse_shift_id}}</div>
+                <div class="">{{$row->ipd_nurse_shift_name}}</div>
                 <div class="">{{$row->updated_name}}</div>
                 <div class="">{{$row->updated_at}}</div>
                 <div class="py-1">

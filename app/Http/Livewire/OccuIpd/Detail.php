@@ -149,13 +149,14 @@ class Detail extends Component
     }
 
     public function commit()
-    {
-        OccuIpd::find($this->occu_ipd_id)->orderBy('id', 'asc')->update([
-            'updated_by' => $this->userId,
-            'saved' => true,
-        ]);
+    {  
+        $occu = OccuIpd::find($this->occu_ipd_id);
+        $occu->saved = true;
+        $occu->updated_by = $this->userId;
+        $occu->save();
+
         //update detail
-        OccuIpdDetail::where('occu_ipd_id', $this->occu_ipd_id)->update(['saved' => true]);
+        // OccuIpdDetail::where('occu_ipd_id', $this->occu_ipd_id)->update(['saved' => true]);
         $this->redirect(route('occu.ipd'));
     }
 

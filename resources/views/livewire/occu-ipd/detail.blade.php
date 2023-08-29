@@ -34,7 +34,7 @@
 
     <div id="container">
         <div class="mb-4 w-full border-t flex justify-between py-2 px-2" id="header">
-            <div class="flex gap-2 text-lg"> {{ $occuIpd->id }}
+            <div class="flex gap-2 text-lg">
                 <div>วันที่ : <span class="font-semibold">{{ $occuIpd->date_for_thai }}</span></div>
                 <div>เวร : <span class="font-semibold">{{ $occuIpd->ipd_nurse_shift_name }}</span></div>
                 <div>Ward : <span class="font-semibold">{{ $occuIpd->ward_name }}</span></div>
