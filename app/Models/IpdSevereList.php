@@ -16,7 +16,8 @@ class IpdSevereList extends Model
         'severe_start',
         'severe_end',
         'duration',
-        'ward_id',
-        'bed_id'                  
+        'ipd_bedmove_id',     
+        'created_by',
+        'updated_by',    
     ];
 }

@@ -22,7 +22,7 @@ return new class extends Migration
             $table->integer('spclty_id')->nullable();
             $table->integer('firstward_id')->nullable();
             $table->integer('pttype_id')->nullable();
-            $table->integer('severe_type_id')->nullable();
+            $table->integer('ipd_severe_id')->nullable();
             $table->integer('ipd_admit_type_id')->nullable();
             $table->boolean('confirm_discharge');
             $table->date('dchdate')->nullable();
@@ -30,7 +30,7 @@ return new class extends Migration
             $table->integer('dch_status_id')->nullable();
             $table->integer('dch_type_id')->nullable();
             $table->integer('dch_officer_id')->nullable();
-            $table->integer('dch_severe_type_id')->nullable();
+            $table->integer('dch_ipd_severe_id')->nullable();
             $table->integer('dch_spclty_id')->nullable();
             $table->text('admit_for',150)->nullable();
             $table->jsonb('drainages',150)->nullable();

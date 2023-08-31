@@ -214,6 +214,7 @@ class Home extends Component
                     'updated_by' => $this->userId,
                     'created_by' => $this->userId,
                     'saved' => false,
+                    'ipd_admit_type_id' => $bm1->ipd_admit_type_id,
                 ]);
             }
         }
@@ -236,6 +237,7 @@ class Home extends Component
                 'updated_by' => $this->userId,
                 'created_by' => $this->userId,
                 'saved' => false,
+                'ipd_admit_type_id' => $bm2->ipd_admit_type_id,
             ]);
             $i_getnew++;
         }
@@ -261,6 +263,7 @@ class Home extends Component
                 'updated_by' => $this->userId,
                 'created_by' => $this->userId,
                 'saved' => false,
+                'ipd_admit_type_id' => $bm2->ipd_admit_type_id,
             ]);
             $i_getmove++;
         }
@@ -286,6 +289,7 @@ class Home extends Component
                 'updated_by' => $this->userId,
                 'created_by' => $this->userId,
                 'saved' => false,
+                'ipd_admit_type_id' => $bm2->ipd_admit_type_id,
             ]);
             $i_moveout++;
         }
@@ -311,6 +315,7 @@ class Home extends Component
                 'updated_by' => $this->userId,
                 'created_by' => $this->userId,
                 'saved' => false,
+                'ipd_admit_type_id' => $bm2->ipd_admit_type_id,
             ]);
             $i_dc++;
         }
@@ -323,13 +328,13 @@ class Home extends Component
     public function saveSevere()
     {
         //update severe
-        $cc_severe = Ipd::selectRaw('severe_type_id,count(*)')
+        $cc_severe = Ipd::selectRaw('ipd_severe_id,count(*)')
             ->whereIn('id', OccuIpdDetail::where('occu_ipd_id', $this->editing->id)
                 ->where('is_getout', true)->pluck('ipd_id'))
-            ->groupBy('severe_type_id')->get();
+            ->groupBy('ipd_severe_id')->get();
         foreach ($cc_severe as $cc_sv) {
             OccuIpd::where('id', $this->editing->id)
-                ->update(['severe_' . $cc_sv->severe_type_id => $cc_sv->count]);
+                ->update(['severe_' . $cc_sv->ipd_severe_id => $cc_sv->count]);
         }
     }
 

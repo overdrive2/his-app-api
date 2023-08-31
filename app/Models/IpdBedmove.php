@@ -14,7 +14,6 @@ class IpdBedmove extends Model
 
     protected $fillable = [
         'ipd_id',
-        'an',
         'movedate',
         'movetime',
         'ward_id',
@@ -30,7 +29,7 @@ class IpdBedmove extends Model
         'moved_at',
     ];
 
-    protected $appends = ['date_for_editing', 'an', 'time_for_editing', 'date_for_thai', 'ward_name', 'room_name', 'ipd'];
+    protected $appends = ['date_for_editing', 'an', 'time_for_editing', 'date_for_thai', 'ward_name', 'room_name', 'ipd','ipd_admit_type_id','ipd_admit_type_name'];
 
     /*protected static function boot()
     {
@@ -157,6 +156,16 @@ class IpdBedmove extends Model
     public function getOccuIpdTypeAttribute()
     {
         return IpdBedmoveType::find($this->bedmove_type_id)->occu_ipd_type_id;
+    }
+
+    public function getIpdAdmitTypeIdAttribute()
+    {
+        return Ipd::find($this->ipd_id)->ipd_admit_type_id;
+    }
+
+    public function getIpdAdmitTypeNameAttribute()
+    {
+        return IpdAdmitType::find($this->ipd_admit_type_id)->name;
     }
 
     public function toRef()

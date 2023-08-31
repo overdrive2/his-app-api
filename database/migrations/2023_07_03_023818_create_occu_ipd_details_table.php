@@ -18,6 +18,8 @@ return new class extends Migration
             $table->integer('occu_ipd_type_id');
             $table->boolean('is_getout');
             $table->integer('ipd_bedmove_id');
+            $table->boolean('saved');
+            $table->integer('ipd_admit_type_id');
             $table->integer('updated_by')->nullable(); 
             $table->integer('created_by')->nullable(); 
             $table->timestamps();

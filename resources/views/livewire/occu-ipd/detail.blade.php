@@ -70,6 +70,8 @@
                 <tr>
                     <th scope="col" class="px-6 py-4">ลำดับ</th>
                     <th scope="col" class="px-6 py-4">an</th>
+                    <th scope="col" class="px-6 py-4">ชื่อ-สกุลผู้ป่วย</th>
+                    <th scope="col" class="px-6 py-4">ประเภท</th>
                     <th scope="col" class="px-6 py-4">เตียง</th>
                     <th scope="col" class="px-6 py-4">ประเภท</th>
                     <th scope="col" class="px-6 py-4">วันเวลาย้ายเตียง</th>
@@ -78,12 +80,18 @@
             </thead>
             <tbody>
                 @forelse ($rows as $key => $row)
+                    @php
+                        $bedmove = $row->bedmove();
+                        $ipd = $bedmove->ipd();
+                    @endphp
                 <tr class="border-b {{ $key % 2 == 0 ? 'bg-gray-100 dark:border-gray-500 dark:bg-gray-700' : 'bg-white dark:border-gray-500 dark:bg-gray-600' }}">
                     <td class="whitespace-nowrap px-6 py-4 font-medium">{{ $key + 1 }}</td>
-                    <td class="whitespace-nowrap px-6 py-4">{{ $row->an }}</td>
-                    <td class="whitespace-nowrap px-6 py-4">{{ $row->bedmove()->bed_name ?? '' }}</td>
+                    <td class="whitespace-nowrap px-6 py-4">{{ $ipd->an }}</td>
+                    <td class="whitespace-nowrap px-6 py-4">{{ $ipd->patient_name }}</td>
+                    <td class="whitespace-nowrap px-6 py-4">{{ $row->ipd_admit_type_name }}</td>
+                    <td class="whitespace-nowrap px-6 py-4">{{ $bedmove->bed_name ?? '' }}</td>
                     <td class="whitespace-nowrap px-6 py-4">{{ $row->occu_ipd_type_name }}</td>
-                    <td class="whitespace-nowrap px-6 py-4">{{ $row->bedmove()->moved_at }}</td>
+                    <td class="whitespace-nowrap px-6 py-4">{{ $bedmove->moved_at }}</td>
                     <td class="whitespace-nowrap px-6 py-4">
                         <!-- <x-button.trash wire:click="deleteConfirm('{{ $row->id }}')">
                             <x-icon.trash class="w-4 h-4" /> ลบ

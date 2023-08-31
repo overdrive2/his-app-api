@@ -9,7 +9,7 @@ class OccuIpdDetail extends Model
 {
     use HasFactory;
 
-    protected $appends = ['occu_ipd_type_name', 'an'];
+    protected $appends = ['occu_ipd_type_name','ipd_admit_type_name'];
 
     protected $fillable = [
         'occu_ipd_id',
@@ -19,7 +19,8 @@ class OccuIpdDetail extends Model
         'ipd_bedmove_id',      
         'updated_by',
         'created_by',
-        'saved',                       
+        'saved', 
+        'ipd_admit_type_id',                      
     ];
 
     public function getOccuIpdTypeNameAttribute()
@@ -29,14 +30,11 @@ class OccuIpdDetail extends Model
         return $data ? $data->type_name : '';
     } 
 
-    public function getAnAttribute()
+    public function getIpdAdmitTypeNameAttribute()
     {
-        $data = Ipd::find($this->ipd_id);
+        $data = IpdAdmitType::find($this->ipd_admit_type_id);
     
-        return $data ? $data->an : '';
-
-        $data = Ipd::select('an','hn','ward_id')->where('id',$this->ipd_id)->first();
-
+        return $data ? $data->name : '';
     } 
 
     public function bedmove()

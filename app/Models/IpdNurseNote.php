@@ -18,9 +18,11 @@ class IpdNurseNote extends Model
         'ipd_nurse_shift_id',
         'note_type_id',
         'note_type_desc',
-        'bed_id',
+        'ipd_bedmove_id',
         'severe_id',
         'spclty_id',
-        'delflag'
+        'delflag',
+        'created_by',
+        'updated_by',
     ];
 }
