@@ -36,6 +36,7 @@ class Home extends Component
             'editing.reported' => '',
             'editing.approved' => '',
             'editing.line_noti' => '',
+            'editing.delflag' => '',
             'editing.created_by' => '',
             'editing.updated_by' => '',
             'editing.time_for_editing' => '',
@@ -58,6 +59,7 @@ class Home extends Component
             'approved' => false,
             'line_noti' => false,
             'note' => '',
+            'delflag' => false,
         ]);
     }
 

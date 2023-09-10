@@ -11,20 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('occu_ipds', function (Blueprint $table) {
+        Schema::create('occu_ipd_subs', function (Blueprint $table) {
             $table->id();
-            $table->date('nurse_shift_date');
-            $table->time('nurse_shift_time');
-            $table->integer('ward_id');
+            $table->integer('occu_ipd_id');
+            $table->integer('ipd_admit_type_id');
             $table->integer('getin');
             $table->integer('getnew');
             $table->integer('getmove');
             $table->integer('moveout');
             $table->integer('discharge');
             $table->integer('getout');
-            $table->integer('occu_status_id');
-            $table->text('note')->nullable();
-            $table->integer('ipd_nurse_shift_id');
             $table->integer('severe_1');
             $table->integer('severe_2');
             $table->integer('severe_3');
@@ -36,9 +32,6 @@ return new class extends Migration
             $table->integer('dc_agnt');
             $table->integer('dc_esc');
             $table->integer('dc_dead');
-            $table->integer('updated_by')->nullable();
-            $table->integer('created_by')->nullable();  
-            $table->decimal('occu_percent',10,2)->nullable(); 
             $table->timestamps();
         });
     }
@@ -48,6 +41,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('occu_ipds');
+        Schema::dropIfExists('occu_ipd_subs');
     }
 };

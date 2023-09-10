@@ -1,5 +1,4 @@
-<div 
-    x-data="{
+<div x-data="{
         errors:[],
         save: () => {
             $dispatch('cat:progress');
@@ -9,25 +8,17 @@
             $dispatch('cat:progress');
             $wire.edit(id);
         }
-    }" 
-    
-    x-init="insdetailModal = new Modal($refs.insdetailModal);"
-    
-    @insdetail-modal-show.window="()=>{
+    }" x-init="insdetailModal = new Modal($refs.insdetailModal);" @insdetail-modal-show.window="()=>{
         insdetailModal.show();
         $dispatch('swal:close');
-    }"
-    @insdetail-modal-close.window="(e)=> {
+    }" @insdetail-modal-close.window="(e)=> {
         console.log(e.detail.msgstatus);
         $dispatch('swal:close');
         insdetailModal.hide();
-    }"
-
-    @err-message.window = "(e) => {
+    }" @err-message.window="(e) => {
         errors = JSON.parse(e.detail.errors);
         $dispatch('swal:close');
-    }"
->
+    }">
     <div id="container">
         <div class="mb-4 w-full border-t flex justify-between py-2 px-2" id="header">
             <div class="flex gap-2 text-lg">
@@ -36,6 +27,9 @@
                 <div>สาขา : <span class="font-semibold">{{ $occuIns->occu_ins_branch_name }}</span></div>
             </div>
             <div>
+                @if ($occuIns->reported == true)
+                <x-button.success wire:click="confirmCommit">ยืนยันส่งเวร</x-button.success>
+                @endif
                 <x-button.primary wire:click="new">เขียนบันทึก</x-button.primary>
             </div>
         </div>
@@ -72,7 +66,7 @@
             <div class="lg:flex-none lg:w-8 flex w-full lg:bg-white bg-primary lg:text-black text-white px-2">
                 <span class="lg:hidden font-semibold mr-4">ลำดับ</span>
                 <span class="font-semibold">{{ $key+1 }}</span>
-                
+
             </div>
             <div class="grow">
                 <div class="lg:flex gap-4 justify-between">
@@ -89,12 +83,12 @@
             <div class="flex-none w-full max-w-sm">
                 <div class="flex gap-2 justify-between">
                     <div>
-                    <h3 class="lg:hidden font-semibold">การบันทึก</h3>    
+                        <h3 class="lg:hidden font-semibold">การบันทึก</h3>
                         <div>{{ $row->updated_name }}</div>
                         <div>{{ $row->updated_at }}</div>
                     </div>
                     <div>
-                    <h3 class="lg:hidden font-semibold">คำสั่ง</h3>   
+                        <h3 class="lg:hidden font-semibold">คำสั่ง</h3>
                         <x-button.secondary x-on:click="edit('{{ $row->id }}')">
                             <x-icon.pencil-square class="w-4 h-4" /> แก้ไข
                         </x-button.secondary>
@@ -108,10 +102,10 @@
         @endforeach
     </div>
 
-     <!-- Edit Modal -->
-     <x-tw-modal.dialog x-ref="insdetailModal" maxWidth="3xl" wire:ignore>
+    <!-- Edit Modal -->
+    <x-tw-modal.dialog x-ref="insdetailModal" maxWidth="3xl" wire:ignore>
         <x-slot name="title">รายละเอียดการบันทึก</x-slot>
-        <x-slot name="content" >
+        <x-slot name="content">
             <div>
                 <x-input.tw-textarea :label="__('เหตุการณ์อื่นๆ')" id="occu_ins_event" rows="6" wire:model.defer="editing.occu_ins_event" />
             </div>

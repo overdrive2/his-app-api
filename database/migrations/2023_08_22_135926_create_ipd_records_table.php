@@ -15,7 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('record_name', 100);
             $table->boolean('is_occu');
+            $table->boolean('is_adding');
+            $table->boolean('is_report');
             $table->smallInteger('display_order')->nullable();  
+            $table->smallInteger('report_order')->nullable();  
             $table->integer('created_by')->nullable();  
             $table->integer('updated_by')->nullable();  
             $table->timestamps();

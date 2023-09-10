@@ -4,7 +4,6 @@ namespace App\Http\Livewire\OccuIpd;
 
 use App\Http\Livewire\DataTable\WithPerPagePagination;
 use App\Http\Livewire\Traits\DateTimeHelpers;
-use App\Models\Bed;
 use App\Models\Ipd;
 use App\Models\IpdBedmove;
 use App\Models\IpdNurseShift;
@@ -15,9 +14,8 @@ use App\Models\OccuIpdDetail;
 use App\Models\OccuIpdRecord;
 use App\Models\OccuIpdStaff;
 use App\Models\OccuIpdStaffList;
-use App\Models\Room;
+use App\Models\Ward;
 use Carbon\Carbon;
-use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
 use Livewire\Component;
 
@@ -64,6 +62,11 @@ class Home extends Component
             'editing.severe_4' => '',
             'editing.severe_5' => '',
             'editing.severe_6' => '',
+            'editing.dc_appr' => '',
+            'editing.dc_refer' => '',
+            'editing.dc_agnt' => '',
+            'editing.dc_esc' => '',
+            'editing.dc_dead' => '',
             'editing.created_by' => '',
             'editing.updated_by' => '',
             'editing.delflag' => '',
@@ -91,6 +94,11 @@ class Home extends Component
             'severe_4' => 0,
             'severe_5' => 0,
             'severe_6' => 0,
+            'dc_appr' => 0,
+            'dc_refer' => 0,
+            'dc_agnt' => 0,
+            'dc_esc' => 0,
+            'dc_dead' => 0,
             'created_by' => $this->userId,
             'updated_by' => $this->userId,
             'delflag' => false,
@@ -136,6 +144,7 @@ class Home extends Component
         $this->saveSevere();
         $this->saveStaff();
         $this->saveIpdRecord();
+        $this->savePercent();
     }
 
     public function saveStaff()
@@ -145,7 +154,7 @@ class Home extends Component
             OccuIpdStaffList::create([
                 'occu_ipd_id' => $this->editing->id,
                 'staff_id' => $os->id,
-                'value' => 0,
+                'qty' => 0,
                 'updated_by' => $this->userId,
                 'created_by' => $this->userId,
             ]);
@@ -183,12 +192,23 @@ class Home extends Component
         }
     }
 
+    public function savePercent()
+    {
+        $bedc = Ward::where('id',$this->editing->ward_id)->get();
+        $getout = OccuIpd::where('id',$this->editing->id)->get();
+
+        $cc = $getout[0]->getout*100;
+        $cc = $cc / $bedc[0]->bedcount;
+        OccuIpd::where('id', $this->editing->id)->update(['occu_percent' => $cc]);
+    }    
+
     public function saveOccuDetail()
     {
         //update to_ref_id to last shift
         $occuipd = OccuIpd::where('ward_id', $this->editing->ward_id)
             ->whereNull('to_ref_id')
             ->where('id', '<>', $this->editing->id)
+            ->where('delflag',false)
             ->orderBy('nurse_shift_date', 'desc')
             ->orderBy('nurse_shift_time', 'desc')->first();
 
@@ -215,6 +235,7 @@ class Home extends Component
                     'created_by' => $this->userId,
                     'saved' => false,
                     'ipd_admit_type_id' => $bm1->ipd_admit_type_id,
+                    'ipd_severe_id' => $bm1->ipd_severe_id,
                 ]);
             }
         }
@@ -227,7 +248,6 @@ class Home extends Component
             ->orderBy('moved_at', 'asc')->get();
         $i_getnew = 0;
         foreach ($bedmoves_t2 as $bm2) {
-
             OccuIpdDetail::create([
                 'occu_ipd_id' => $this->editing->id,
                 'ipd_id' => $bm2->ipd_id,
@@ -238,6 +258,7 @@ class Home extends Component
                 'created_by' => $this->userId,
                 'saved' => false,
                 'ipd_admit_type_id' => $bm2->ipd_admit_type_id,
+                'ipd_severe_id' => $bm2->ipd_severe_id,
             ]);
             $i_getnew++;
         }
@@ -263,7 +284,8 @@ class Home extends Component
                 'updated_by' => $this->userId,
                 'created_by' => $this->userId,
                 'saved' => false,
-                'ipd_admit_type_id' => $bm2->ipd_admit_type_id,
+                'ipd_admit_type_id' => $bm3->ipd_admit_type_id,
+                'ipd_severe_id' => $bm3->ipd_severe_id,
             ]);
             $i_getmove++;
         }
@@ -289,7 +311,8 @@ class Home extends Component
                 'updated_by' => $this->userId,
                 'created_by' => $this->userId,
                 'saved' => false,
-                'ipd_admit_type_id' => $bm2->ipd_admit_type_id,
+                'ipd_admit_type_id' => $bm4->ipd_admit_type_id,
+                'ipd_severe_id' => $bm4->ipd_severe_id,
             ]);
             $i_moveout++;
         }
@@ -315,7 +338,8 @@ class Home extends Component
                 'updated_by' => $this->userId,
                 'created_by' => $this->userId,
                 'saved' => false,
-                'ipd_admit_type_id' => $bm2->ipd_admit_type_id,
+                'ipd_admit_type_id' => $bm5->ipd_admit_type_id,
+                'ipd_severe_id' => $bm5->ipd_severe_id,
             ]);
             $i_dc++;
         }
@@ -331,6 +355,7 @@ class Home extends Component
         $cc_severe = Ipd::selectRaw('ipd_severe_id,count(*)')
             ->whereIn('id', OccuIpdDetail::where('occu_ipd_id', $this->editing->id)
                 ->where('is_getout', true)->pluck('ipd_id'))
+                ->whereIn('ipd_severe_id',[1,2,3,4,5,6])
             ->groupBy('ipd_severe_id')->get();
         foreach ($cc_severe as $cc_sv) {
             OccuIpd::where('id', $this->editing->id)
@@ -366,8 +391,8 @@ class Home extends Component
 
             if (!$saved)
                 return $this->dispatchBrowserEvent('swal:error', [
-                    'title' => 'ABC title',
-                    'text' => 'ABC text',
+                    'title' => '',
+                    'text' => 'ไม่สามารถบันทึกส่งเวรได้ กรุณาตรวจสอบ',
                 ]);
 
             if (!$editmode) {

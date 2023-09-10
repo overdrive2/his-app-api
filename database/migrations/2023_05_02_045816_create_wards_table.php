@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('ward_code',30)->nullable();
             $table->boolean('active');
             $table->text('detail')->nullable();
+            $table->integer('ward_type_id');
+            $table->integer('bedcount');
             $table->integer('hospital_department_id')->nullable();
             $table->integer('display_order')->nullable();
             $table->integer('updated_by')->nullable();

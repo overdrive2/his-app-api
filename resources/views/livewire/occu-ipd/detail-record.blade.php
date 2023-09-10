@@ -1,4 +1,4 @@
-<div>
+<div> 
     <table class="min-w-full text-left text-sm font-light dark:text-gray-50">
         <thead class="border-b bg-white font-medium dark:border-gray-500 dark:bg-gray-600">
             <tr>
@@ -13,7 +13,14 @@
             <tr class="border-b {{ $key % 2 == 0 ? 'bg-gray-100 dark:border-gray-500 dark:bg-gray-700' : 'bg-white dark:border-gray-500 dark:bg-gray-600' }}">
                 <td class="whitespace-nowrap px-6 py-4 font-medium">{{ $key + 1 }}</td>
                 <td class="whitespace-nowrap px-6 py-4">{{ $row->record_name }}</td>
-                <td class="whitespace-nowrap px-6 py-4">{{ $row->qty }}</td>
+                <td class="whitespace-nowrap px-6 py-4">
+                @if (($cursor == $row->id) && ($saved == false))   
+                <input type="number" maxlength="3" autofocus wire:model.lazy="editing.qty" /></td>
+                @else
+                <button type="button" wire:click="setCursor({{ $row->id }})">{{ $row->qty }}</button>                
+                @endif
+                <td class="whitespace-nowrap px-6 py-4">
+                </td>
             </tr>
             @empty
             <tr>

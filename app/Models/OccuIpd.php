@@ -33,6 +33,11 @@ class OccuIpd extends Model
         'severe_4',
         'severe_5',
         'severe_6',
+        'dc_appr',
+        'dc_refer',
+        'dc_agnt',
+        'dc_esc',
+        'dc_dead',
         'delflag',
         'saved',
         'updated_by',
@@ -40,6 +45,7 @@ class OccuIpd extends Model
         'created_at',
         'updated_at',
         'to_ref_id',
+        'occu_percent',
     ];
 
     public function getOccuStatusNameAttribute()

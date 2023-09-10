@@ -32,6 +32,7 @@ class OccuIns extends Model
         'created_by',
         'created_at',
         'updated_at',
+        'delflag',
     ];
 
     public function getOccuStatusNameAttribute()

@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('occu_staff_name',100);
             $table->integer('display_order')->nullable(); 
+            $table->string('report_type',100)->nullable(); 
+            $table->integer('report_order')->nullable(); 
             $table->timestamps();
         });
     }

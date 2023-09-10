@@ -8,6 +8,7 @@ use Livewire\Component;
 class DetailStaff extends Component
 {
     public $occu_ipd_id;
+    public $saved = false;
     public $editing;
     public $cursor = '';
     public $edValue = 0;
@@ -16,6 +17,7 @@ class DetailStaff extends Component
     protected $listeners = [
         'detail-staff:refresh' => '$refresh'
     ];
+
     public function rules()
     {
         return ['editing.qty' => 'required' ];
@@ -26,7 +28,6 @@ class DetailStaff extends Component
         $this->editing = OccuIpdStaffList::find($id);
         $this->cursor = $id;
         $this->emit('detail-staff:refresh');
-
     }
 
     public function updatedEditing($value,$name)

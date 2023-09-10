@@ -29,7 +29,7 @@ class IpdBedmove extends Model
         'moved_at',
     ];
 
-    protected $appends = ['date_for_editing', 'an', 'time_for_editing', 'date_for_thai', 'ward_name', 'room_name', 'ipd','ipd_admit_type_id','ipd_admit_type_name'];
+    protected $appends = ['date_for_editing', 'an', 'time_for_editing', 'date_for_thai', 'ward_name', 'room_name', 'ipd','ipd_admit_type_id','ipd_admit_type_name','ipd_severe_id'];
 
     /*protected static function boot()
     {
@@ -79,6 +79,13 @@ class IpdBedmove extends Model
         });
 
     }*/
+
+    public function getIpdSevereIdAttribute()
+    {
+        $data = ipd::find($this->ipd_id);
+    
+        return $data ? $data->ipd_severe_id : '';
+    } 
 
     public function getMoveIconAttribute()
     {

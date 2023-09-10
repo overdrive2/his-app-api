@@ -9,7 +9,7 @@ class Ward extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'ward_code', 'active'];
+    protected $fillable = ['name', 'ward_code', 'active','bedcount'];
 
     protected $appends = ['wait_bed_id'];
 

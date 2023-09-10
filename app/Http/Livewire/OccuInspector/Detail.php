@@ -6,6 +6,8 @@ use App\Http\Livewire\DataTable\WithPerPagePagination;
 use App\Http\Livewire\Traits\DateTimeHelpers;
 use App\Models\OccuIns;
 use App\Models\OccuInsDetail;
+use App\Models\OccuInsSum;
+use App\Models\OccuIpd;
 use Illuminate\Validation\Validator;
 use Livewire\Component;
 
@@ -16,9 +18,14 @@ class Detail extends Component
     public $occu_ins_id;
     public OccuInsDetail $editing;
     public $occuIns;
+    public $userId;
 
     protected $queryString = [
-        'occu_ins_id' => ['except' => '', 'as'=> 'id']
+        'occu_ins_id' => ['except' => '', 'as' => 'id']
+    ];
+
+    protected $listeners = [
+        'confirm:commit' => 'commit'
     ];
 
     public function rules()
@@ -45,6 +52,7 @@ class Detail extends Component
 
     public function mount()
     {
+        $this->userId = auth()->user()->id;
         $this->occuIns = OccuIns::find($this->occu_ins_id);
         $this->editing = $this->makeBlank();
     }
@@ -88,13 +96,78 @@ class Detail extends Component
         ]);
     }
 
+    public function confirmCommit()
+    {
+        $this->dispatchBrowserEvent('delete:confirm', [
+            'title' => 'ยืนยันการส่งเวรใช่หรือไม่?',
+            'text' => '',
+            'confirmButtonText' => 'ยืนยัน',
+            'cancelButtonText' => 'ยกเลิก',
+            'action' => 'confirm:commit',
+        ]);
+    }
+
+    public function commit()
+    {
+        $occu = OccuIns::find($this->occu_ins_id);
+        $occu->reported = true;
+        $occu->reported_at = now();
+        $occu->reported_by = $this->userId;
+        $occu->save();
+        $this->savesum();
+
+        //$this->redirect(route('occu.ins'));
+    }
+
+    public function savesum()
+    {
+        $cc_1 = OccuIpd::where('nurse_shift_date', $this->occuIns->nurse_shift_date)
+            ->where('ipd_nurse_shift_id', $this->occuIns->ipd_nurse_shift_id)
+            ->where('saved', true)
+            ->orderBy('getout', 'desc')->first()->get();
+        
+        foreach ($cc_1 as $cc1) {
+            OccuInsSum::upsert(
+                ['occu_ins_id' => $this->occu_ins_id, 'max_ward_id' => $cc1->ward_id, 'max_qty1' => $cc1->getout, 'max_qty2' => $cc1->severe_5],
+                ['occu_ins_id'],
+                ['max_ward_id', 'max_qty1', 'max_qty2'],
+            );
+        }
+
+        $cc_1 = OccuIpd::where('nurse_shift_date', $this->occuIns->nurse_shift_date)
+            ->where('ipd_nurse_shift_id', $this->occuIns->ipd_nurse_shift_id)
+            ->where('saved', true)
+            ->orderBy('severe_5', 'desc')->first()->get();
+
+        foreach ($cc_1 as $cc1) {
+            OccuInsSum::upsert(
+                ['occu_ins_id' => $this->occu_ins_id, 'max_s5_ward_id' => $cc1->ward_id, 'max_s5_qty1' => $cc1->severe_5, 'max_s5_qty2' => $cc1->getout],
+                ['occu_ins_id'],
+                ['max_s5_ward_id', 'max_s5_qty1', 'max_s5_qty2'],
+            );
+        }
+
+        $cc_1 = OccuIpd::where('nurse_shift_date', $this->occuIns->nurse_shift_date)
+            ->where('ipd_nurse_shift_id', $this->occuIns->ipd_nurse_shift_id)
+            ->where('saved', true)
+            ->orderBy('occu_percent', 'desc')->first()->get();
+
+        foreach ($cc_1 as $cc1) {
+            OccuInsSum::upsert(
+                ['occu_ins_id' => $this->occu_ins_id, 'max_occu_ward_id' => $cc1->ward_id, 'max_occu_qty' => $cc1->occu_percent],
+                ['occu_ins_id'],
+                ['max_occu_ward_id', 'max_occu_qty'],
+            );
+        }
+    }    
+    
     public function getRowsQueryProperty()
     {
         $query =  OccuInsDetail::query()
             ->when($this->occu_ins_id, function ($query, $sid) {
                 return $query->where('occu_ins_id', $sid);
             })
-            ->orderBy('id','asc');
+            ->orderBy('id', 'asc');
         return $query;
     }
 

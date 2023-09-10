@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('ipd_bedmove_id');
             $table->boolean('saved');
             $table->integer('ipd_admit_type_id');
+            $table->integer('ipd_severe_id');
             $table->integer('updated_by')->nullable(); 
             $table->integer('created_by')->nullable(); 
             $table->timestamps();

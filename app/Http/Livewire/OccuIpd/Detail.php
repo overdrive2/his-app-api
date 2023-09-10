@@ -4,8 +4,11 @@ namespace App\Http\Livewire\OccuIpd;
 
 use App\Http\Livewire\DataTable\WithPerPagePagination;
 use App\Http\Livewire\Traits\DateTimeHelpers;
+use App\Models\DchType;
+use App\Models\Ipd;
 use App\Models\OccuIpd;
 use App\Models\OccuIpdDetail;
+use App\Models\OccuIpdSub;
 use Illuminate\Validation\Validator;
 use Livewire\Component;
 
@@ -19,6 +22,7 @@ class Detail extends Component
     public $delId;
     public $userId;
     public $pageId = 0;
+    public $pageSvId = 0;
 
     protected $listeners = [
         'delete:occu-ipd-detail' => 'delete',
@@ -106,6 +110,9 @@ class Detail extends Component
             ->when($this->pageId > 0, function ($query) {
                 return $query->where('occu_ipd_type_id', $this->pageId);
             })
+            ->when($this->pageSvId > 0, function ($query) {
+                return $query->where('ipd_severe_id', $this->pageSvId);
+            })
             ->orderBy('id', 'asc');
         return $query;
     }
@@ -149,15 +156,168 @@ class Detail extends Component
     }
 
     public function commit()
-    {  
+    {
         $occu = OccuIpd::find($this->occu_ipd_id);
         $occu->saved = true;
         $occu->updated_by = $this->userId;
         $occu->save();
+        $this->saveIpdDches();
 
-        //update detail
-        // OccuIpdDetail::where('occu_ipd_id', $this->occu_ipd_id)->update(['saved' => true]);
+        //add sub detail
+        //getin
+        $cc_1 = OccuIpdDetail::selectRaw('ipd_admit_type_id,count(*)')
+            ->where('occu_ipd_id', $this->occu_ipd_id)
+            ->where('occu_ipd_type_id', 1)
+            ->groupBy('ipd_admit_type_id')
+            ->orderBy('ipd_admit_type_id')->get();
+        foreach ($cc_1 as $cc1) {
+            if ($cc1->count > 0) {
+                OccuIpdSub::upsert(
+                    ['occu_ipd_id' => $this->occu_ipd_id, 'ipd_admit_type_id' => $cc1->ipd_admit_type_id, 'getin' => $cc1->count],
+                    ['occu_ipd_id', 'ipd_admit_type_id'],
+                    ['getin'],
+                );
+            }
+        }
+
+        // getnew
+        $cc_1 = OccuIpdDetail::selectRaw('ipd_admit_type_id,count(*)')
+            ->where('occu_ipd_id', $this->occu_ipd_id)
+            ->where('occu_ipd_type_id', 2)
+            ->groupBy('ipd_admit_type_id')
+            ->orderBy('ipd_admit_type_id')->get();
+        foreach ($cc_1 as $cc1) {
+            if ($cc1->count > 0) {
+                OccuIpdSub::upsert(
+                    ['occu_ipd_id' => $this->occu_ipd_id, 'ipd_admit_type_id' => $cc1->ipd_admit_type_id, 'getnew' => $cc1->count],
+                    ['occu_ipd_id', 'ipd_admit_type_id'],
+                    ['getnew'],
+                );
+            }
+        }
+
+        // getmove
+        $cc_1 = OccuIpdDetail::selectRaw('ipd_admit_type_id,count(*)')
+            ->where('occu_ipd_id', $this->occu_ipd_id)
+            ->where('occu_ipd_type_id', 3)
+            ->groupBy('ipd_admit_type_id')
+            ->orderBy('ipd_admit_type_id')->get();
+        foreach ($cc_1 as $cc1) {
+            if ($cc1->count > 0) {
+                OccuIpdSub::upsert(
+                    ['occu_ipd_id' => $this->occu_ipd_id, 'ipd_admit_type_id' => $cc1->ipd_admit_type_id, 'getmove' => $cc1->count],
+                    ['occu_ipd_id', 'ipd_admit_type_id'],
+                    ['getmove'],
+                );
+            }
+        }
+
+        // moveout
+        $cc_1 = OccuIpdDetail::selectRaw('ipd_admit_type_id,count(*)')
+            ->where('occu_ipd_id', $this->occu_ipd_id)
+            ->where('occu_ipd_type_id', 4)
+            ->groupBy('ipd_admit_type_id')
+            ->orderBy('ipd_admit_type_id')->get();
+        foreach ($cc_1 as $cc1) {
+            if ($cc1->count > 0) {
+                OccuIpdSub::upsert(
+                    ['occu_ipd_id' => $this->occu_ipd_id, 'ipd_admit_type_id' => $cc1->ipd_admit_type_id, 'moveout' => $cc1->count],
+                    ['occu_ipd_id', 'ipd_admit_type_id'],
+                    ['moveout'],
+                );
+            }
+        }
+
+        // discharge
+        $cc_1 = OccuIpdDetail::selectRaw('ipd_admit_type_id,count(*)')
+            ->where('occu_ipd_id', $this->occu_ipd_id)
+            ->where('occu_ipd_type_id', 5)
+            ->groupBy('ipd_admit_type_id')
+            ->orderBy('ipd_admit_type_id')->get();
+        foreach ($cc_1 as $cc1) {
+            if ($cc1->count > 0) {
+                OccuIpdSub::upsert(
+                    ['occu_ipd_id' => $this->occu_ipd_id, 'ipd_admit_type_id' => $cc1->ipd_admit_type_id, 'discharge' => $cc1->count],
+                    ['occu_ipd_id', 'ipd_admit_type_id'],
+                    ['discharge'],
+                );
+            }
+        }
+
+        // getout
+        $cc_1 = OccuIpdDetail::selectRaw('ipd_admit_type_id,count(*)')
+            ->where('occu_ipd_id', $this->occu_ipd_id)
+            ->where('is_getout', true)
+            ->groupBy('ipd_admit_type_id')
+            ->orderBy('ipd_admit_type_id')->get();
+        foreach ($cc_1 as $cc1) {
+            if ($cc1->count > 0) {
+                OccuIpdSub::upsert(
+                    ['occu_ipd_id' => $this->occu_ipd_id, 'ipd_admit_type_id' => $cc1->ipd_admit_type_id, 'getout' => $cc1->count],
+                    ['occu_ipd_id', 'ipd_admit_type_id'],
+                    ['getout'],
+                );
+            }
+        }
+
+        for ($i = 1; $i < 6; $i++) {
+            // severe_1
+            $cc_1 = OccuIpdDetail::selectRaw('ipd_admit_type_id,count(*)')
+                ->where('occu_ipd_id', $this->occu_ipd_id)
+                ->where('ipd_severe_id', $i)
+                ->groupBy('ipd_admit_type_id')
+                ->orderBy('ipd_admit_type_id')->get();
+
+            foreach ($cc_1 as $cc1) {
+                if ($cc1->count > 0) {
+                    OccuIpdSub::upsert(
+                        ['occu_ipd_id' => $this->occu_ipd_id, 'ipd_admit_type_id' => $cc1->ipd_admit_type_id, 'severe_' . $i => $cc1->count],
+                        ['occu_ipd_id', 'ipd_admit_type_id'],
+                        ['severe_' . $i],
+                    );
+                }
+            }
+        }
+
         $this->redirect(route('occu.ipd'));
+    }
+
+    public function saveIpdDches()
+    {
+        $cc_1 = Ipd::selectRaw('ipd_admit_type_id,dch_type_id,count(*)')
+            ->whereIn('id', OccuIpdDetail::where('occu_ipd_id', $this->occu_ipd_id)
+                ->where('occu_ipd_type_id', 5)->pluck('ipd_id'))
+            ->groupBy('ipd_admit_type_id')
+            ->groupBy('dch_type_id')
+            ->orderBy('ipd_admit_type_id')
+            ->orderBy('dch_type_id')->get();
+
+        foreach ($cc_1 as $cc1) {
+            if ($cc1->count > 0) {
+                $field = DchType::find($cc1->dch_type_id);
+
+                OccuIpdSub::upsert(
+                    ['occu_ipd_id' => $this->occu_ipd_id, 'ipd_admit_type_id' => $cc1->ipd_admit_type_id, $field->occu_field_name => $cc1->count],
+                    ['occu_ipd_id', 'ipd_admit_type_id'],
+                    [$field->occu_field_name],
+                );
+            }
+        }
+
+        $cc_1 = OccuIpdSub::selectRaw('occu_ipd_id,sum(dc_appr) dc_appr,sum(dc_refer) dc_refer,sum(dc_agnt) dc_agnt,sum(dc_esc) dc_esc,sum(dc_dead) dc_dead')
+            ->where('occu_ipd_id', $this->occu_ipd_id)
+            ->groupBy('occu_ipd_id')
+            ->get();
+        foreach ($cc_1 as $cc1) {
+            OccuIpd::where('id', $this->occu_ipd_id)
+                ->update([
+                    'dc_appr' => $cc1->dc_appr,
+                    'dc_refer' => $cc1->dc_refer,
+                    'dc_agnt' => $cc1->dc_agnt,
+                    'dc_esc' => $cc1->dc_esc,
+                    'dc_dead' => $cc1->dc_dead,
+                ]);
+        }
     }
 
     public function render()

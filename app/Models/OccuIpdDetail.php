@@ -9,7 +9,7 @@ class OccuIpdDetail extends Model
 {
     use HasFactory;
 
-    protected $appends = ['occu_ipd_type_name','ipd_admit_type_name'];
+    protected $appends = ['occu_ipd_type_name','ipd_admit_type_name','ipd_severe_name'];
 
     protected $fillable = [
         'occu_ipd_id',
@@ -20,8 +20,16 @@ class OccuIpdDetail extends Model
         'updated_by',
         'created_by',
         'saved', 
-        'ipd_admit_type_id',                      
+        'ipd_admit_type_id',   
+        'ipd_severe_id',                      
     ];
+
+    public function getIpdSevereNameAttribute()
+    {
+        $data = IpdSevere::find($this->ipd_severe_id);
+    
+        return $data ? $data->name : '';
+    } 
 
     public function getOccuIpdTypeNameAttribute()
     {

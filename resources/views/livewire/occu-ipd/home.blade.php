@@ -62,6 +62,7 @@
                     <th scope="col" class="px-6 py-4">ย้าย Ward</th>
                     <th scope="col" class="px-6 py-4">จำหน่าย</th>
                     <th scope="col" class="px-6 py-4">ยกไป</th>
+                    <th scope="col" class="px-6 py-4">ร้อยละครองเตียง</th>
                     <th scope="col" class="px-6 py-4 text-center">ผู้บันทึก</th>
                     <th scope="col" class="px-6 py-4 text-center">วันเวลาบันทึก</th>
                     <th scope="col" class="px-6 py-4 text-center">คำสั่ง</th>
@@ -87,6 +88,7 @@
                     <td class="whitespace-nowrap px-6 py-4">{{ $row->moveout }}</td>
                     <td class="whitespace-nowrap px-6 py-4">{{ $row->discharge }}</td>
                     <td class="whitespace-nowrap px-6 py-4">{{ $row->getout }}</td>
+                    <td class="whitespace-nowrap px-6 py-4">{{ $row->occu_percent }}%</td>
                     <td class="whitespace-nowrap px-6 py-4">{{ $row->updated_name }}</td>
                     <td class="whitespace-nowrap px-6 py-4">{{ $row->updated_at }}</td>
                     <td class="whitespace-nowrap px-6 py-4">

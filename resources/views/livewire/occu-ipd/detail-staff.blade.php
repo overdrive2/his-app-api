@@ -14,8 +14,8 @@
                 <td class="whitespace-nowrap px-6 py-4 font-medium">{{ $key + 1 }}</td>
                 <td class="whitespace-nowrap px-6 py-4">{{ $row->staff_name }}</td>
                 <td class="whitespace-nowrap px-6 py-4">
-                @if ($cursor == $row->id)    
-                <input type="number" maxlength="5" autofocus wire:model.lazy="editing.qty" /></td>
+                @if (($cursor == $row->id) && ($saved == false))   
+                <input type="number" maxlength="3" autofocus wire:model.lazy="editing.qty" /></td>
                 @else
                 <button type="button" wire:click="setCursor({{ $row->id }})">{{ $row->qty }}</button>                
                 @endif

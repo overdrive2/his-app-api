@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('dch_types', function (Blueprint $table) {
+        Schema::create('ward_types', function (Blueprint $table) {
             $table->id();
-            $table->string('name',150);
-            $table->string('code',30);
-            $table->string('occu_field_name',100);
+            $table->string('type_name', 100);  
             $table->timestamps();
         });
     }
@@ -25,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('dch_types');
+        Schema::dropIfExists('ward_types');
     }
 };

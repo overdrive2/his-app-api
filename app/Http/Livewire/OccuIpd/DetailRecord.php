@@ -3,12 +3,39 @@
 namespace App\Http\Livewire\OccuIpd;
 
 use App\Models\OccuIpdRecord;
-use App\Models\OccuIpdStaffList;
 use Livewire\Component;
 
 class DetailRecord extends Component
 {
     public $occu_ipd_id;
+    public $saved = false;
+    public $editing;
+    public $cursor = '';
+    public $edValue = 0;
+
+    protected $listeners = [
+        'detail-record:refresh' => '$refresh'
+    ];
+
+    public function rules()
+    {
+        return ['editing.qty' => 'required' ];
+    }
+
+    public function setCursor($id)
+    {
+        $this->editing = OccuIpdRecord::find($id);
+        $this->cursor = $id;
+        $this->emit('detail-record:refresh');
+    }
+
+    public function updatedEditing($value,$name)
+    {        
+        if ($value > 100) return $this->dispatchBrowserEvent('swal:error',['text'=>'จำนวนไม่ถูกต้อง','title'=>'']);
+        $this->editing->save();
+        $this->cursor = '';
+        $this->dispatchBrowserEvent('toastify');
+    }
 
     public function getRowsQueryProperty()
     {

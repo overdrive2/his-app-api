@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('fname',100)->nullable();
             $table->string('lname',100)->nullable();
             $table->text('cid',13)->nullable();
-            $table->date('birthday')->nullable();
+            $table->date('birthday');
             $table->integer('sex')->nullable();
             $table->boolean('is_death')->nullable();
             $table->string('mobile_phone_number',50)->nullable();
